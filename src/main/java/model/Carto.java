@@ -56,44 +56,21 @@ public class Carto {
             vectors[i] = crearVector(3, 10, i);
             Arrays.sort(vectors[i]);
             int k;
-            System.out.println("Vector[" + i + "]:");
             for(k = 0; k< 3; k++){
-                System.out.println(vectors[i][k] +" ");
             }
-              System.out.println("***");  
         }
 
         //2.Assignar-los de forma atzarosa dins el cartó 
-        posicionsX = mesclarPoscionsX(posicionsX);
-        for (i = 0; i < 9; i++) {
-            int posicionsY = (int) Math.floor(Math.random() * 2) + 1;
-            for (j = 0; j < 3; j++) {
-                if (posicionsX[i] == 1) {
-                    if (j == posicionsY) {
-                        this.linies[j][i] = vectors[i][j];
-                    } 
-                } else {
-                    if (posicionsY == 1) {
-                        if ((j == 0) || (j == 1)) {
-                            this.linies[j][i] = vectors[i][j];
-                        }
-                    }
-                    if (posicionsY == 2) {
-                        if ((j == 0) || (j == 2)) {
-                            this.linies[j][i] = vectors[i][j];
-                        }
-                    }
-                    if (posicionsY == 3) {
-                        System.out.println("j:" + j);
-                        if ((j == 1) || (j == 2)) {
-                            this.linies[j][i] = vectors[i][j];
-                        }
-                    }
-                }
+        
+        for(i = 0; i < 3; i++){
+            //Cercam els 5 que han d'estar descubert
+            //Per això collim 9 números, els mesclam i collim els 5 primers
+            int[] mascaraFila = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+            mascaraFila = mesclarPoscionsX(mascaraFila);
+            for(j = 0; j<5; j++){
+                this.linies[i][mascaraFila[j]] = vectors[mascaraFila[j]][i];
             }
-        }
-        System.out.println("Fi de iterar");
-
+        }                
     }
 
     public int[] crearVector(int longitud, int valorMaxim, int columna) {

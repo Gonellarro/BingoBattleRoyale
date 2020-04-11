@@ -22,6 +22,9 @@ public class MenuControler extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getParameterMap().containsKey("nom")) {
             HttpSession session = request.getSession();
+            
+            //TODO:
+            //Guardar l'usuari en un hashmap
 
             Carto carto1 = new Carto();
             Carto carto2 = new Carto();
@@ -38,13 +41,18 @@ public class MenuControler extends HttpServlet {
             if (num > 0) {
                 Carto carto1 = new Carto();
                 Carto carto2 = new Carto();
-                HttpSession session = request.getSession();
                 
+                HttpSession session = request.getSession();
                 
                 carto1 = (Carto) session.getAttribute("carto1");
                 carto2 = (Carto) session.getAttribute("carto2");
                 carto1.tachaNumero(num);
                 carto2.tachaNumero(num);
+                
+                //TODO: 
+                //Hem de comprovar si té linia
+                //Hem de comprovar si té bingo
+                
                 request.setAttribute("carto1", carto1);
                 request.setAttribute("carto2", carto2);
                 request.getRequestDispatcher("cartons.jsp").forward(request, response);
