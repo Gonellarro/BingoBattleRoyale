@@ -26,17 +26,20 @@
                         <c:if test="${valor > 0}">  
                             <c:if test="${valor < 100}">
                                 <td class="table-primary">  
-                                </c:if>
-                                <c:if test="${valor > 100}">
+                            </c:if>
+                            <c:if test="${(valor > 100) && (valor < 200)}">
                                 <td class="table-danger">  
-                                    <c:set var="valor" value="${valor - 100}" />
-                                </c:if>
-
+                                <c:set var="valor" value="${valor - 100}" />
+                            </c:if>
+                            <c:if test="${(valor > 200)}">
+                                <td class="table-warning">  
+                                <c:set var="valor" value="${valor - 200}" />
+                            </c:if>
                                 <c:out value="${valor}"/>
-                            </c:if>
-                            <c:if test="${valor < 1}">
+                        </c:if>
+                        <c:if test="${valor < 1}">
                             <td class="table-secondary">
-                            </c:if>
+                        </c:if>
                         </td>
                     </c:forEach>
                 </tr><tr>
@@ -50,24 +53,31 @@
                         <c:if test="${valor > 0}">  
                             <c:if test="${valor < 100}">
                                 <td class="table-primary">  
-                                </c:if>
-                                <c:if test="${valor > 100}">
+                            </c:if>
+                            <c:if test="${(valor > 100) && (valor < 200)}">
                                 <td class="table-danger">  
-                                    <c:set var="valor" value="${valor - 100}" />
-                                </c:if>
-
+                                <c:set var="valor" value="${valor - 100}" />
+                            </c:if>
+                            <c:if test="${(valor > 200)}">
+                                <td class="table-warning">  
+                                <c:set var="valor" value="${valor - 200}" />
+                            </c:if>
                                 <c:out value="${valor}"/>
-                            </c:if>
-                            <c:if test="${valor < 1}">
+                        </c:if>
+                        <c:if test="${valor < 1}">
                             <td class="table-secondary">
-                            </c:if>
+                        </c:if>
                         </td>
                     </c:forEach>
                 </tr><tr>
                 </c:forEach>
             </tr>
         </table>
-
+        <br>
+        <c:if test="${linia}">
+            Has cantat LÍNIA!
+        </c:if>
+        <br>
         <form action="${pageContext.request.contextPath}/MenuControler" method="post">
             <label>Numero</label>
             <input type="text" class="form-control" id="numero" name ="numero" placeholder="Introdueix el número que ha sortit">

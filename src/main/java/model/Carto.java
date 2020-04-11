@@ -1,20 +1,20 @@
 package model;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class Carto {
 
     //Tenim 3 linies que són un array multidimensional de sencers
     private int[][] linies = new int[3][9];
+    private int[] linea = new int[3];
     private int maxValor;
 
     public Carto() {
         int i;
         int j;
         for (j = 0; j < 3; j++) {
+            this.linea[j] = 0;
             for (i = 0; i < 9; i++) {
                 this.linies[j][i] = 0;
             }
@@ -29,6 +29,22 @@ public class Carto {
 
     public void setLinies(int[][] linies) {
         this.linies = linies;
+    }
+
+    public int getMaxValor() {
+        return maxValor;
+    }
+
+    public void setMaxValor(int maxValor) {
+        this.maxValor = maxValor;
+    }
+
+    public int[] getLinea() {
+        return linea;
+    }
+
+    public void setLinea(int[] linea) {
+        this.linea = linea;
     }
 
     @Override
@@ -56,21 +72,20 @@ public class Carto {
             vectors[i] = crearVector(3, 10, i);
             Arrays.sort(vectors[i]);
             int k;
-            for(k = 0; k< 3; k++){
+            for (k = 0; k < 3; k++) {
             }
         }
 
         //2.Assignar-los de forma atzarosa dins el cartó 
-        
-        for(i = 0; i < 3; i++){
+        for (i = 0; i < 3; i++) {
             //Cercam els 5 que han d'estar descubert
             //Per això collim 9 números, els mesclam i collim els 5 primers
             int[] mascaraFila = {0, 1, 2, 3, 4, 5, 6, 7, 8};
             mascaraFila = mesclarPoscionsX(mascaraFila);
-            for(j = 0; j<5; j++){
+            for (j = 0; j < 5; j++) {
                 this.linies[i][mascaraFila[j]] = vectors[mascaraFila[j]][i];
             }
-        }                
+        }
     }
 
     public int[] crearVector(int longitud, int valorMaxim, int columna) {
@@ -116,16 +131,49 @@ public class Carto {
         }
         return posicions;
     }
-    
-    public void tachaNumero(int numero){
+
+    public void tachaNumero(int numero) {
         int i;
         int j;
-        for(i = 0; i < 9; i++){
-            for(j = 0; j < 3; j++){
-                if (this.linies[j][i] == numero){
+        for (i = 0; i < 9; i++) {
+            for (j = 0; j < 3; j++) {
+                if (this.linies[j][i] == numero) {
                     this.linies[j][i] = numero + 100;
                 }
             }
+        }
+    }
+
+    public boolean esLinea() {
+        int i;
+        int j;
+        int aux;
+        int linies = 0;
+        for (i = 0; i < 3; i++) {
+            aux = 0;
+            if (this.linea[i] == 0) {
+                for (j = 0; j < 9; j++) {
+                    //System.out.println(this.linies[i][j]);
+                    if (this.linies[i][j] > 100) {
+                        aux++;
+                    }
+                }
+                if (aux == 5) {
+                    //Linea. Sumam 100 mes
+                    for (j = 0; j < 9; j++) {
+                        if (this.linies[i][j] > 0) {
+                            this.linies[i][j] = this.linies[i][j] + 100;
+                        }
+                    }
+                    this.linea[i] = 1;
+                    linies++;
+                }
+            }
+        }
+        if (linies > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 

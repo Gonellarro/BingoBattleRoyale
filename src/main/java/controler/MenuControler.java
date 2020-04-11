@@ -2,7 +2,9 @@ package controler;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,10 +24,9 @@ public class MenuControler extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getParameterMap().containsKey("nom")) {
             HttpSession session = request.getSession();
-            
+
             //TODO:
             //Guardar l'usuari en un hashmap
-
             Carto carto1 = new Carto();
             Carto carto2 = new Carto();
             carto1.generaCarto();
@@ -38,21 +39,27 @@ public class MenuControler extends HttpServlet {
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
             int num = Integer.parseInt(numero);
+            boolean linia = false;
+            
             if (num > 0) {
                 Carto carto1 = new Carto();
                 Carto carto2 = new Carto();
-                
+
                 HttpSession session = request.getSession();
-                
+
                 carto1 = (Carto) session.getAttribute("carto1");
                 carto2 = (Carto) session.getAttribute("carto2");
                 carto1.tachaNumero(num);
                 carto2.tachaNumero(num);
-                
+                    
+                linia = false;
+                if ((carto2.esLinea()) || (carto1.esLinea())){
+                   linia = true;
+                }
+
                 //TODO: 
-                //Hem de comprovar si té linia
                 //Hem de comprovar si té bingo
-                
+                request.setAttribute("linia", linia);
                 request.setAttribute("carto1", carto1);
                 request.setAttribute("carto2", carto2);
                 request.getRequestDispatcher("cartons.jsp").forward(request, response);
