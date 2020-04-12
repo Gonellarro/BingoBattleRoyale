@@ -11,14 +11,14 @@
         <!-- Check Image CSS -->
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
 
-        <title>Menu bingo</title>
+        <title>BingoWeb NoEstamBollats</title>
     </head>
 
     <body>
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
         
-        <h4 class="text-center">1.Escollim el nostre jugador</h4>
+        <h4 class="text-center">Escolliu el vostre jugador</h4>
         <br>
         <form action="${pageContext.request.contextPath}/MenuControler" method="post">
             <div class="section m-2 p-2 border text-center">

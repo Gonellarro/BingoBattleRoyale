@@ -11,7 +11,7 @@
         <!-- Check Image CSS -->
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
 
-        <title>Menu bingo</title>
+        <title>BingoWeb NoEstamBollats</title>
     </head>
     <body>
         <!-- Capçalera -->
