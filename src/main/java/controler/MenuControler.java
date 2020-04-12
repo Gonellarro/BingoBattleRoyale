@@ -3,9 +3,7 @@ package controler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +18,7 @@ public class MenuControler extends HttpServlet {
     private static HashMap<String, String> usuaris = new HashMap<>();
     private static HashMap<String, String> avatars = new HashMap<>();
     private static String missatges;
+    private int numeroCartons = 2;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,16 +28,11 @@ public class MenuControler extends HttpServlet {
 
             switch (accio) {
                 case "reiniciar":
+                    List<Carto> cartons = new ArrayList();
+                    cartons = iniciaCartons();
+                    this.missatges = "";
 
-                    Carto carto1 = new Carto();
-                    Carto carto2 = new Carto();
-                    carto1.generaCarto();
-                    carto2.generaCarto();
-                    
-                    this.missatges="";
-
-                    session.setAttribute("carto1", carto1);
-                    session.setAttribute("carto2", carto2);
+                    session.setAttribute("cartons", cartons);
                     request.setAttribute("avatar", this.avatars.get(session.getId()));
                     request.setAttribute("nom", this.usuaris.get(session.getId()));
                     System.out.println("Nom: " + this.usuaris.get(session.getId()));
@@ -63,68 +57,67 @@ public class MenuControler extends HttpServlet {
             HttpSession session = request.getSession();
             String nom = request.getParameter("nom");
             String avatar = request.getParameter("avatar");
+            List<Carto> cartons = new ArrayList();
 
             this.usuaris.put(session.getId(), nom);
             this.avatars.put(session.getId(), avatar);
+            cartons = iniciaCartons();
+            this.missatges = "";
 
-            Carto carto1 = new Carto();
-            Carto carto2 = new Carto();
-            carto1.generaCarto();
-            carto2.generaCarto();
-            this.missatges="";
-
-            session.setAttribute("carto1", carto1);
-            session.setAttribute("carto2", carto2);
+            session.setAttribute("cartons", cartons);
             request.setAttribute("avatar", avatar);
             request.setAttribute("nom", nom);
             request.setAttribute("missatges", missatges);
-            request.getRequestDispatcher("cartons.jsp").forward(request, response);
+            request.getRequestDispatcher("cartons_1.jsp").forward(request, response);
         }
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
             int num = Integer.parseInt(numero);
             boolean linia = false;
             boolean bingo = false;
+            List<Carto> cartons = new ArrayList();
 
             if (num > 0) {
-                Carto carto1 = new Carto();
-                Carto carto2 = new Carto();
-
                 HttpSession session = request.getSession();
-
-                carto1 = (Carto) session.getAttribute("carto1");
-                carto2 = (Carto) session.getAttribute("carto2");
-                carto1.tachaNumero(num);
-                carto2.tachaNumero(num);
-
-                if ((carto2.esLinea()) || (carto1.esLinea())) {
-                    linia = true;
-                    this.missatges=this.missatges + this.usuaris.get(session.getId()) + " ha cantado linea\r\n";
-                }
-
-                if (carto1.isBingo()) {
-                    carto1.bingo();
-                    bingo = true;
-                    linia = false;
-                    this.missatges=this.missatges + this.usuaris.get(session.getId()) + " ha cantado bingo";
-                }
-                if (carto2.isBingo()) {
-                    carto2.bingo();
-                    bingo = true;
-                    linia = false;
-                    this.missatges=this.missatges + this.usuaris.get(session.getId()) + " ha cantado bingo";
-                }
+                cartons = (List<Carto>) session.getAttribute("cartons");
+                int i;
+                for(i=0; i<this.numeroCartons; i++){
+                    cartons.get(i).tachaNumero(num);
+                    if(cartons.get(i).esLinea()){
+                        linia = true;
+                        this.missatges = this.missatges + this.usuaris.get(session.getId()) + " ha cantado linea\r\n";
+                    }
+                    if(cartons.get(i).isBingo()){
+                        cartons.get(i).bingo();
+                        bingo = true;
+                        linia = false;
+                        this.missatges = this.missatges + this.usuaris.get(session.getId()) + " ha cantado bingo";
+                    }
+                }                
+                
+                session.setAttribute("cartons", cartons);
                 request.setAttribute("avatar", this.avatars.get(session.getId()));
                 request.setAttribute("nom", this.usuaris.get(session.getId()));
                 request.setAttribute("linia", linia);
                 request.setAttribute("bingo", bingo);
                 request.setAttribute("missatges", this.missatges);
-                request.setAttribute("carto1", carto1);
-                request.setAttribute("carto2", carto2);
-                request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                request.getRequestDispatcher("cartons_1.jsp").forward(request, response);
             }
         }
 
+    }
+
+    public List<Carto> iniciaCartons() {
+        int i;
+        List<Carto> cartonsX = new ArrayList();
+
+        for (i = 0; i < this.numeroCartons; i++) {
+            Carto cartoX = new Carto();
+            cartoX.generaCarto();
+            cartonsX.add(cartoX);
+        }
+
+        return cartonsX;
     }
 
 }
