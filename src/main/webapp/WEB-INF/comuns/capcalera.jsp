@@ -11,7 +11,7 @@
             <c:if test="${not empty nom}">
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/menu.jsp">
-                        <img src="${pageContext.request.contextPath}/resources/img/hippiicons/<c:out value="${avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                        <img src="${pageContext.request.contextPath}/resources/img/starwars/<c:out value="${avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
                         Canviar d'usuari</a>
                 </li>
             </c:if>

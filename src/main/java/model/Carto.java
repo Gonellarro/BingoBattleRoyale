@@ -8,6 +8,7 @@ public class Carto {
     //Tenim 3 linies que són un array multidimensional de sencers
     private int[][] linies = new int[3][9];
     private int[] linea = new int[3];
+    private boolean bingo;
     private int maxValor;
 
     public Carto() {
@@ -21,6 +22,7 @@ public class Carto {
         }
         //Podem canviar el màxim del valor del bingo aquí
         this.maxValor = 90;
+        this.bingo = false;
     }
 
     public int[][] getLinies() {
@@ -45,6 +47,14 @@ public class Carto {
 
     public void setLinea(int[] linea) {
         this.linea = linea;
+    }
+
+    public boolean isBingo() {
+        return bingo;
+    }
+
+    public void setBingo(boolean bingo) {
+        this.bingo = bingo;
     }
 
     @Override
@@ -170,10 +180,33 @@ public class Carto {
                 }
             }
         }
+        //Comprovam si tenim 3 linies -> Bingo!
+        int total = 0;
+        for (i = 0; i < 3; i++) {
+            total = total + this.linea[i];
+        }
+        if (total == 3) {
+            this.bingo = true;
+            System.out.println("BINGO!!!");
+        }
+        //Si hi ha una linea, tenim una linea
         if (linies > 0) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void bingo() {
+        int i;
+        int j;
+        System.out.println("ENTAM A FER LA SUMA DEL BINGO");
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 9; j++) {
+                if (this.linies[i][j] > 0) {
+                    this.linies[i][j] = this.linies[i][j] + 100;
+                }
+            }
         }
     }
 

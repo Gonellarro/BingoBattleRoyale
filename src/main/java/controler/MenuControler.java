@@ -33,7 +33,7 @@ public class MenuControler extends HttpServlet {
                     Carto carto2 = new Carto();
                     carto1.generaCarto();
                     carto2.generaCarto();
-                    
+
                     session.setAttribute("carto1", carto1);
                     session.setAttribute("carto2", carto2);
                     request.setAttribute("avatar", this.avatars.get(session.getId()));
@@ -78,6 +78,7 @@ public class MenuControler extends HttpServlet {
             String numero = request.getParameter("numero");
             int num = Integer.parseInt(numero);
             boolean linia = false;
+            boolean bingo = false;
 
             if (num > 0) {
                 Carto carto1 = new Carto();
@@ -90,14 +91,24 @@ public class MenuControler extends HttpServlet {
                 carto1.tachaNumero(num);
                 carto2.tachaNumero(num);
 
-                linia = false;
                 if ((carto2.esLinea()) || (carto1.esLinea())) {
                     linia = true;
                 }
 
-                //TODO: 
-                //Hem de comprovar si té bingo
+                if (carto1.isBingo()) {
+                    carto1.bingo();
+                    bingo = true;
+                    linia = false;
+                }
+                if (carto2.isBingo()) {
+                    carto2.bingo();
+                    bingo = true;
+                    linia = false;
+                }
+                request.setAttribute("avatar", this.avatars.get(session.getId()));
+                request.setAttribute("nom", this.usuaris.get(session.getId()));
                 request.setAttribute("linia", linia);
+                request.setAttribute("bingo", bingo);
                 request.setAttribute("carto1", carto1);
                 request.setAttribute("carto2", carto2);
                 request.getRequestDispatcher("cartons.jsp").forward(request, response);

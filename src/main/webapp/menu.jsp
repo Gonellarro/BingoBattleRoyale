@@ -42,6 +42,12 @@
                         <label class="drinkcard-cc face2"for="face2"></label>                 
                         <input id="face3" type="radio" name="avatar" value="face3" />
                         <label class="drinkcard-cc face3"for="face3"></label>                 
+                        <input id="face4" type="radio" name="avatar" value="face4" />
+                        <label class="drinkcard-cc face4" for="face4"></label>
+                        <input id="face5" type="radio" name="avatar" value="face5" />
+                        <label class="drinkcard-cc face5"for="face5"></label>                 
+                        <input id="face6" type="radio" name="avatar" value="face6" />
+                        <label class="drinkcard-cc face6"for="face6"></label>                 
                     </div>
                 </div>
                 <br>

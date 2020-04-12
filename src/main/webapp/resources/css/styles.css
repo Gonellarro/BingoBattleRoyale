@@ -4,9 +4,16 @@
        -moz-appearance:none;
             appearance:none;
 }
-.face1{background-image:url("../img/hippiicons/face1.png");}
-.face2{background-image:url("../img/hippiicons/face2.png");}
-.face3{background-image:url("../img/hippiicons/face3.png");}
+.face1{background-image:url("../img/starwars/face1.png");}
+.face2{background-image:url("../img/starwars/face2.png");}
+.face3{background-image:url("../img/starwars/face3.png");}
+.face4{background-image:url("../img/starwars/face4.png");}
+.face5{background-image:url("../img/starwars/face5.png");}
+.face6{background-image:url("../img/starwars/face6.png");}
+.face7{background-image:url("../img/starwars/face7.png");}
+.face8{background-image:url("../img/starwars/face8.png");}
+.face9{background-image:url("../img/starwars/face9.png");}
+
 
 .cc-selector input:active +.drinkcard-cc{opacity: .9;}
 .cc-selector input:checked +.drinkcard-cc{
@@ -23,9 +30,9 @@
     -webkit-transition: all 100ms ease-in;
        -moz-transition: all 100ms ease-in;
             transition: all 100ms ease-in;
-    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
-       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
-            filter: brightness(1.8) grayscale(1) opacity(.7);
+    -webkit-filter: brightness(1.5) grayscale(1) opacity(.8);
+       -moz-filter: brightness(1.5) grayscale(1) opacity(.8);
+            filter: brightness(1.5) grayscale(1) opacity(.8);
 }
 .drinkcard-cc:hover{
     -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
