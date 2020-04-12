@@ -19,6 +19,7 @@ public class MenuControler extends HttpServlet {
 
     private static HashMap<String, String> usuaris = new HashMap<>();
     private static HashMap<String, String> avatars = new HashMap<>();
+    private static String missatges;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,11 +34,14 @@ public class MenuControler extends HttpServlet {
                     Carto carto2 = new Carto();
                     carto1.generaCarto();
                     carto2.generaCarto();
+                    
+                    this.missatges="";
 
                     session.setAttribute("carto1", carto1);
                     session.setAttribute("carto2", carto2);
                     request.setAttribute("avatar", this.avatars.get(session.getId()));
                     request.setAttribute("nom", this.usuaris.get(session.getId()));
+                    System.out.println("Nom: " + this.usuaris.get(session.getId()));
                     request.getRequestDispatcher("cartons.jsp").forward(request, response);
                     break;
                 case "sortir":
@@ -67,11 +71,13 @@ public class MenuControler extends HttpServlet {
             Carto carto2 = new Carto();
             carto1.generaCarto();
             carto2.generaCarto();
+            this.missatges="";
 
             session.setAttribute("carto1", carto1);
             session.setAttribute("carto2", carto2);
             request.setAttribute("avatar", avatar);
             request.setAttribute("nom", nom);
+            request.setAttribute("missatges", missatges);
             request.getRequestDispatcher("cartons.jsp").forward(request, response);
         }
         if (request.getParameterMap().containsKey("numero")) {
@@ -93,22 +99,26 @@ public class MenuControler extends HttpServlet {
 
                 if ((carto2.esLinea()) || (carto1.esLinea())) {
                     linia = true;
+                    this.missatges=this.missatges + this.usuaris.get(session.getId()) + " ha cantado linea\r\n";
                 }
 
                 if (carto1.isBingo()) {
                     carto1.bingo();
                     bingo = true;
                     linia = false;
+                    this.missatges=this.missatges + this.usuaris.get(session.getId()) + " ha cantado bingo";
                 }
                 if (carto2.isBingo()) {
                     carto2.bingo();
                     bingo = true;
                     linia = false;
+                    this.missatges=this.missatges + this.usuaris.get(session.getId()) + " ha cantado bingo";
                 }
                 request.setAttribute("avatar", this.avatars.get(session.getId()));
                 request.setAttribute("nom", this.usuaris.get(session.getId()));
                 request.setAttribute("linia", linia);
                 request.setAttribute("bingo", bingo);
+                request.setAttribute("missatges", this.missatges);
                 request.setAttribute("carto1", carto1);
                 request.setAttribute("carto2", carto2);
                 request.getRequestDispatcher("cartons.jsp").forward(request, response);
