@@ -75,7 +75,7 @@ public class Carto {
         int i;
         int j;
         int[][] vectors = new int[9][3];
-        int[] posicionsX = {1, 1, 1, 2, 2, 2, 2, 2, 2};
+        //int[] posicionsX = {1, 1, 1, 2, 2, 2, 2, 2, 2};
 
         //1.Generar els 9 vectors
         for (i = 0; i < 9; i++) {
@@ -112,15 +112,16 @@ public class Carto {
 
         //Posam el valor a l'atzar comprovant que no està repetit
         for (i = 0; i < longitud; i++) {
-            valor = (int) Math.floor(Math.random() * valorMaxim + 1) + (columna * 10);
+            valor = (int) Math.floor(Math.random() * valorMaxim) + (columna * 10);
+            //No pot sortir el 0
             repeteix = true;
             while (repeteix) {
                 repeteix = false;
                 for (j = 0; j < i; j++) {
                     //Miram tots els valors d'aquesta linea
-                    if (vector[j] == valor) {
+                    if ((vector[j] == valor || (valor == 0))) {
                         repeteix = true;
-                        valor = (int) Math.floor(Math.random() * valorMaxim + 1) + (columna * 10);
+                        valor = (int) Math.floor(Math.random() * valorMaxim) + (columna * 10);
                     }
                 }
             }

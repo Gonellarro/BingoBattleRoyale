@@ -1,7 +1,11 @@
 package controler;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -17,9 +21,11 @@ public class MenuControler extends HttpServlet {
 
     private static HashMap<String, String> usuaris = new HashMap<>();
     private static HashMap<String, String> avatars = new HashMap<>();
+    private static HashMap<String, String> partida = new HashMap<>();
+    private static HashMap<String, String> invitacions = new HashMap<>();
     private static String missatges;
+    private boolean invitacioNecessaria = false;
     private int numeroCartons = 2;
-    private static int numeroJugadors = 0;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,11 +38,11 @@ public class MenuControler extends HttpServlet {
                     List<Carto> cartons = new ArrayList();
                     cartons = iniciaCartons();
                     this.missatges = "";
+
                     request.setAttribute("jugadors", this.usuaris.size());
                     session.setAttribute("cartons", cartons);
                     request.setAttribute("avatar", this.avatars.get(session.getId()));
                     request.setAttribute("nom", this.usuaris.get(session.getId()));
-                    System.out.println("Nom: " + this.usuaris.get(session.getId()));
                     request.getRequestDispatcher("cartons.jsp").forward(request, response);
                     break;
                 case "sortir":
@@ -52,27 +58,48 @@ public class MenuControler extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         if (request.getParameterMap().containsKey("nom")) {
-
+            boolean permes = false;
+            carregaInvitacions();
             HttpSession session = request.getSession();
-            String nom = request.getParameter("nom");
-            String avatar = request.getParameter("avatar");
-            List<Carto> cartons = new ArrayList();
+            String invitacio = request.getParameter("invitacio");
+            if (invitacioNecessaria) {
+                //Cercam la invitació
+                if (invitacions.containsKey(invitacio)) {
+                    //Si la data no ha acabat
+                    LocalDate avui = LocalDate.now();
+                    LocalDate dataFi = LocalDate.parse(invitacions.get(invitacio));
+                    if (avui.isAfter(dataFi)) {
+                        //No se pot accedir al bingo
+                        permes = false;
+                    } else {
+                        //Se pot accedir per no tenir
+                        permes = true;
+                    }
+                }
+            } else {
+                permes = true;
+            }
 
-            this.usuaris.put(session.getId(), nom);
-            this.avatars.put(session.getId(), avatar);
-            this.numeroJugadors++;
-            cartons = iniciaCartons();
-            this.missatges = "";
-            System.out.println("Num jugadors: " + this.usuaris.size());
-            
-            session.setAttribute("cartons", cartons);
-            request.setAttribute("avatar", avatar);
-            request.setAttribute("nom", nom);
-            request.setAttribute("jugadors", this.usuaris.size());
-            request.setAttribute("missatges", missatges);
-            request.getRequestDispatcher("cartons.jsp").forward(request, response);
+            if (permes) {
+                String nom = request.getParameter("nom");
+                String avatar = request.getParameter("avatar");
+                List<Carto> cartons = new ArrayList();
+
+                this.usuaris.put(session.getId(), nom);
+                this.avatars.put(session.getId(), avatar);
+                cartons = iniciaCartons();
+                this.missatges = "";
+
+                session.setAttribute("cartons", cartons);
+                request.setAttribute("avatar", avatar);
+                request.setAttribute("nom", nom);
+                request.setAttribute("jugadors", this.usuaris.size());
+                request.setAttribute("missatges", missatges);
+                request.getRequestDispatcher("cartons.jsp").forward(request, response);
+            } else {
+                //Enviar a jsp de no tenir codi o estar caducat
+            }
         }
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
@@ -85,20 +112,20 @@ public class MenuControler extends HttpServlet {
                 HttpSession session = request.getSession();
                 cartons = (List<Carto>) session.getAttribute("cartons");
                 int i;
-                for(i=0; i<this.numeroCartons; i++){
+                for (i = 0; i < this.numeroCartons; i++) {
                     cartons.get(i).tachaNumero(num);
-                    if(cartons.get(i).esLinea()){
+                    if (cartons.get(i).esLinea()) {
                         linia = true;
                         this.missatges = this.missatges + this.usuaris.get(session.getId()) + " ha cantado linea\r\n";
                     }
-                    if(cartons.get(i).isBingo()){
+                    if (cartons.get(i).isBingo()) {
                         cartons.get(i).bingo();
                         bingo = true;
                         linia = false;
                         this.missatges = this.missatges + this.usuaris.get(session.getId()) + " ha cantado bingo";
                     }
-                }                
-                
+                }
+
                 session.setAttribute("cartons", cartons);
                 request.setAttribute("avatar", this.avatars.get(session.getId()));
                 request.setAttribute("nom", this.usuaris.get(session.getId()));
@@ -121,6 +148,11 @@ public class MenuControler extends HttpServlet {
             cartonsX.add(cartoX);
         }
         return cartonsX;
+    }
+
+    public void carregaInvitacions() {
+        invitacions.put("permanent", "2050-04-13");
+        invitacions.put("67890", "2020-04-11");
     }
 
 }

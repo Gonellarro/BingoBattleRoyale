@@ -93,7 +93,6 @@
                         </div>
                         <br>
                         <label><strong>Missatges</strong></label>
-
                         <div class="text-left">
                             <textarea class="form-control" readonly="true" rows="3" id="log" placeholder="En construcció..."><c:out value="${missatges}"/></textarea>
                         </div>
