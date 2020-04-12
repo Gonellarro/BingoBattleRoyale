@@ -2,7 +2,7 @@
 <nav class="navbar bg-dark">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand text-light" href="#">Joc de Daus Online</a>
+            <a class="navbar-brand text-light" href="#">Bingo NoEstamBollats!</a>
         </div>
     </div>
 </nav>
