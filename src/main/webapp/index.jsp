@@ -15,11 +15,11 @@
     <body>
 
         <div class="container text-center">
-            <h1 class="mb-1 mt-5">Benvingut</h1>
-            <h3 class="mb-5">
-                <em>Bingo NoEstamBollats!</em>
-            </h3>
-            <a class="btn btn-primary" href="${pageContext.request.contextPath}/menu.jsp">Iniciar</a>
+            <h3 class="mb-1 mt-5">Bingo NoEstamBollats!</h3>
+
+            <img src="${pageContext.request.contextPath}/resources/img/portada.jpg" class="img-fluid" alt="Bingo No estam bollats!">
+            <br>
+            <a class="btn btn-primary btn-block" href="${pageContext.request.contextPath}/menu.jsp">Iniciar</a>
         </div>
 
 

@@ -21,69 +21,41 @@
         <div class="section m-2 p-2 border text-center">
             <div class="row">
                 <div class="col-12">
-                    <table class="table table-bordered table-sm">
-                        <tr>
-                            <c:forEach var="linia" items="${carto1.linies}">
-                                <c:forEach var="valor" items="${linia}">
-                                    <c:if test="${valor > 0}">  
-                                        <c:if test="${valor < 100}">
-                                            <td class="table-primary">  
+                    <c:forEach var ="carto" items="${cartons}">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <c:forEach var="linia" items="${carto.linies}">
+                                    <c:forEach var="valor" items="${linia}">
+                                        <c:if test="${valor > 0}">  
+                                            <c:if test="${valor < 100}">
+                                                <td class="table-primary">  
+                                                </c:if>
+                                                <c:if test="${(valor > 100) && (valor < 200)}">
+                                                <td class="table-danger">  
+                                                    <c:set var="valor" value="${valor - 100}" />
+                                                </c:if>
+                                                <c:if test="${(valor > 200) && (valor < 300)}">
+                                                <td class="table-warning">  
+                                                    <c:set var="valor" value="${valor - 200}" />
+                                                </c:if>
+                                                <c:if test="${valor > 300}">
+                                                <td class="table-success">  
+                                                    <c:set var="valor" value="${valor - 300}" />
+                                                </c:if>
+                                                <c:out value="${valor}"/>
                                             </c:if>
-                                            <c:if test="${(valor > 100) && (valor < 200)}">
-                                            <td class="table-danger">  
-                                                <c:set var="valor" value="${valor - 100}" />
+                                            <c:if test="${valor < 1}">
+                                            <td class="table-secondary">
+                                                <img src="${pageContext.request.contextPath}/resources/img/logo.png" width="20" height="20" alt="">
                                             </c:if>
-                                            <c:if test="${(valor > 200) && (valor < 300)}">
-                                            <td class="table-warning">  
-                                                <c:set var="valor" value="${valor - 200}" />
-                                            </c:if>
-                                            <c:if test="${valor > 300}">
-                                            <td class="table-success">  
-                                                <c:set var="valor" value="${valor - 300}" />
-                                            </c:if>
-                                            <c:out value="${valor}"/>
-                                        </c:if>
-                                        <c:if test="${valor < 1}">
-                                        <td class="table-secondary">
-                                        </c:if>
-                                    </td>
+                                        </td>
+                                    </c:forEach>
+                                </tr><tr>
                                 </c:forEach>
-                            </tr><tr>
-                            </c:forEach>
-                        </tr>
-                    </table>
-                    <table class="table table-bordered table-sm">
-                        <tr>
-                            <c:forEach var="linia" items="${carto2.linies}">
-                                <c:forEach var="valor" items="${linia}">
-                                    <c:if test="${valor > 0}">  
-                                        <c:if test="${valor < 100}">
-                                            <td class="table-primary">  
-                                            </c:if>
-                                            <c:if test="${(valor > 100) && (valor < 200)}">
-                                            <td class="table-danger">  
-                                                <c:set var="valor" value="${valor - 100}" />
-                                            </c:if>
-                                            <c:if test="${(valor > 200) && (valor < 300)}">
-                                            <td class="table-warning">  
-                                                <c:set var="valor" value="${valor - 200}" />
-                                            </c:if>
-                                            <c:if test="${valor > 300}">
-                                            <td class="table-success">  
-                                                <c:set var="valor" value="${valor - 300}" />
-                                            </c:if>
-                                            <c:out value="${valor}"/>
-                                        </c:if>
-                                        <c:if test="${valor < 1}">
-                                        <td class="table-secondary">
-                                        </c:if>
-                                    </td>
-                                </c:forEach>
-                            </tr><tr>
-                            </c:forEach>
-                        </tr>
-                    </table>
+                            </tr>
 
+                        </table>
+                    </c:forEach>
                 </div> 
             </div>
             <div class="row">
@@ -98,26 +70,42 @@
                         <div class="alert alert-success" role="alert">
                             Bingo!
                         </div>
-                    </c:if>                    
-                    <form action="${pageContext.request.contextPath}/MenuControler" method="post">
+                    </c:if>     
+                </div>
+            </div>
+            <form action="${pageContext.request.contextPath}/MenuControler" method="post">
+                <div class="row">
+                    <div class="col-6">
                         <label><strong>Número</strong></label>
                         <input type="number" class="form-control" id="numero" name ="numero" placeholder="Introdueix el número que ha sortit">
+                    </div>
+                    <div class="col-6">
+                        <label><strong>Participants</strong></label>
+                        <h1 class="display-3">
+                            <c:out value = "${jugadors}"/>
+                        </h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">                    
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary" >Enviar</button>
+                        </div>
                         <br>
                         <label><strong>Missatges</strong></label>
+
                         <div class="text-left">
                             <textarea class="form-control" readonly="true" rows="3" id="log" placeholder="En construcció..."><c:out value="${missatges}"/></textarea>
                         </div>
-                        <div class="text-center">
-                            <br>
-                            <button type="submit" class="btn btn-primary" >Enviar</button>
-                    </form>
+                    </div>
                 </div>
+            </form>    
+        </div>
 
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-                <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-                <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-                </body>
-                </html>
+    </body>
+</html>

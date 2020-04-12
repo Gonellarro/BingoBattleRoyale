@@ -19,6 +19,7 @@ public class MenuControler extends HttpServlet {
     private static HashMap<String, String> avatars = new HashMap<>();
     private static String missatges;
     private int numeroCartons = 2;
+    private static int numeroJugadors = 0;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,7 +32,7 @@ public class MenuControler extends HttpServlet {
                     List<Carto> cartons = new ArrayList();
                     cartons = iniciaCartons();
                     this.missatges = "";
-
+                    request.setAttribute("jugadors", this.usuaris.size());
                     session.setAttribute("cartons", cartons);
                     request.setAttribute("avatar", this.avatars.get(session.getId()));
                     request.setAttribute("nom", this.usuaris.get(session.getId()));
@@ -61,14 +62,17 @@ public class MenuControler extends HttpServlet {
 
             this.usuaris.put(session.getId(), nom);
             this.avatars.put(session.getId(), avatar);
+            this.numeroJugadors++;
             cartons = iniciaCartons();
             this.missatges = "";
-
+            System.out.println("Num jugadors: " + this.usuaris.size());
+            
             session.setAttribute("cartons", cartons);
             request.setAttribute("avatar", avatar);
             request.setAttribute("nom", nom);
+            request.setAttribute("jugadors", this.usuaris.size());
             request.setAttribute("missatges", missatges);
-            request.getRequestDispatcher("cartons_1.jsp").forward(request, response);
+            request.getRequestDispatcher("cartons.jsp").forward(request, response);
         }
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
@@ -98,10 +102,11 @@ public class MenuControler extends HttpServlet {
                 session.setAttribute("cartons", cartons);
                 request.setAttribute("avatar", this.avatars.get(session.getId()));
                 request.setAttribute("nom", this.usuaris.get(session.getId()));
+                request.setAttribute("jugadors", this.usuaris.size());
                 request.setAttribute("linia", linia);
                 request.setAttribute("bingo", bingo);
                 request.setAttribute("missatges", this.missatges);
-                request.getRequestDispatcher("cartons_1.jsp").forward(request, response);
+                request.getRequestDispatcher("cartons.jsp").forward(request, response);
             }
         }
 
@@ -110,13 +115,11 @@ public class MenuControler extends HttpServlet {
     public List<Carto> iniciaCartons() {
         int i;
         List<Carto> cartonsX = new ArrayList();
-
         for (i = 0; i < this.numeroCartons; i++) {
             Carto cartoX = new Carto();
             cartoX.generaCarto();
             cartonsX.add(cartoX);
         }
-
         return cartonsX;
     }
 
