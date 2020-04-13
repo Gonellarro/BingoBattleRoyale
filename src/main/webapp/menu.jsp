@@ -18,49 +18,61 @@
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
 
-        <h4 class="text-center">Escolliu el vostre jugador</h4>
-        <br>
         <form action="${pageContext.request.contextPath}/MenuControler" method="post">
-            <div class="section m-2 p-2 border text-center">
-                <div class="row">
-                    <div class="col-2">
-                        <label>Nom</label>
-                    </div>		
-                    <div class="col-10">
-                        <input type="text" class="form-control" id="nom" name ="nom" placeholder="Introduïu nom" required>
-                    </div>
-                </div>	 
-                <br>
-                <div class="row">
-                    <div class="col-2">
-                        <label>Avatar</label>
-                    </div>
-                    <div class="col-10 cc-selector">
-                        <input id="face1" type="radio" name="avatar" value="face1" />
-                        <label class="drinkcard-cc face1" for="face1"></label>
-                        <input id="face2" type="radio" name="avatar" value="face2" />
-                        <label class="drinkcard-cc face2"for="face2"></label>                 
-                        <input id="face3" type="radio" name="avatar" value="face3" />
-                        <label class="drinkcard-cc face3"for="face3"></label>                 
-                        <input id="face4" type="radio" name="avatar" value="face4" />
-                        <label class="drinkcard-cc face4" for="face4"></label>
-                        <input id="face5" type="radio" name="avatar" value="face5" />
-                        <label class="drinkcard-cc face5"for="face5"></label>                 
-                        <input id="face6" type="radio" name="avatar" value="face6" />
-                        <label class="drinkcard-cc face6"for="face6"></label>                 
+            <div class ="container">
+                <div id="login-overlay" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button> -->
+                            <h4 class="modal-title" id="myModalLabel">Escolliu el vostre jugador</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label>Nom</label>
+                                </div>		
+                                <div class="col-10">
+                                    <input type="text" class="form-control" id="nom" name ="nom" placeholder="Introduïu nom" required>
+                                </div>
+                            </div>	 
+                            <br>
+                            <div class="row">
+                                <div class="col-2">
+                                    <label>Avatar</label>
+                                </div>
+                                <div class="col-10 cc-selector">
+                                    <input id="face1" type="radio" name="avatar" value="face1" />
+                                    <label class="drinkcard-cc face1" for="face1"></label>
+                                    <input id="face2" type="radio" name="avatar" value="face2" />
+                                    <label class="drinkcard-cc face2"for="face2"></label>                 
+                                    <input id="face3" type="radio" name="avatar" value="face3" />
+                                    <label class="drinkcard-cc face3"for="face3"></label>                 
+                                    <input id="face4" type="radio" name="avatar" value="face4" />
+                                    <label class="drinkcard-cc face4" for="face4"></label>
+                                    <input id="face5" type="radio" name="avatar" value="face5" />
+                                    <label class="drinkcard-cc face5"for="face5"></label>                 
+                                    <input id="face6" type="radio" name="avatar" value="face6" />
+                                    <label class="drinkcard-cc face6"for="face6"></label>                 
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-2">
+                                    <label>Codi</label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" class="form-control" id="invitacio" name ="invitacio" placeholder="Introduïu codi d'invitació">
+                                </div>
+                                <br>
+                            </div>	
+                            <br>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="${pageContext.request.contextPath}" class="btn btn-secondary">Sortir</a>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-2">
-                        <label>Invitació</label>
-                    </div>
-                    <div class="col-10">
-                        <input type="text" class="form-control" id="invitacio" name ="invitacio" placeholder="Introduïu codi d'invitació">
-                    </div>
-                    <br>
-                </div>	
-                <br>
-                <button type="submit" class="btn btn-primary" >Enviar</button>
+            </div>
         </form>
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
