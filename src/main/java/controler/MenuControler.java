@@ -20,9 +20,10 @@ public class MenuControler extends HttpServlet {
     private static HashMap<String, String> avatars = new HashMap<>();
     private static HashMap<String, String> partida = new HashMap<>();
     private static HashMap<String, String> invitacions = new HashMap<>();
-    private static String missatges;
+    private static String missatges = "";
     private boolean invitacioNecessaria = false;
     private int numeroCartons = 2;
+    private boolean lineaGlobal = false;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -86,7 +87,7 @@ public class MenuControler extends HttpServlet {
                 this.usuaris.put(session.getId(), nom);
                 this.avatars.put(session.getId(), avatar);
                 cartons = iniciaCartons();
-                this.missatges = "";
+                this.missatges = this.missatges  + "S'ha afegit el jugador " + nom + "\r\n";
 
                 session.setAttribute("cartons", cartons);
                 request.setAttribute("avatar", avatar);
@@ -113,7 +114,10 @@ public class MenuControler extends HttpServlet {
                     cartons.get(i).tachaNumero(num);
                     if (cartons.get(i).esLinea()) {
                         linia = true;
-                        this.missatges = this.missatges + this.usuaris.get(session.getId()) + " ha cantado linea\r\n";
+                        if(!this.lineaGlobal){
+                            this.missatges = this.missatges + this.usuaris.get(session.getId()) + " ha cantado linea\r\n";
+                            this.lineaGlobal = true;
+                        }
                     }
                     if (cartons.get(i).isBingo()) {
                         cartons.get(i).bingo();
