@@ -94,16 +94,15 @@
                         <div class="modal-footer">          
                             <div class="row">
                                 <div class="col-12">                    
-                                        <button type="submit" class="btn btn-primary btn-block" >Enviar</button>
-                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block" >Enviar</button>
                                 </div>
                             </div>
                         </div>
-
-                        <label><strong>Missatges</strong></label>
-                        <div class="text-left">
-                            <textarea class="form-control" readonly="true" rows="3" id="log" placeholder="En construcció..."><c:out value="${missatges}"/></textarea>
-                        </div>
+                    </div>
+                    <br>
+                    <label><strong>Missatges</strong></label>
+                    <div class="text-left">
+                        <textarea class="form-control" readonly="true" rows="3" id="log" placeholder="En construcció..."><c:out value="${missatges}"/></textarea>
                     </div>
                 </div>
             </div>

@@ -81,9 +81,6 @@ public class Carto {
         for (i = 0; i < 9; i++) {
             vectors[i] = crearVector(3, 10, i);
             Arrays.sort(vectors[i]);
-            int k;
-            for (k = 0; k < 3; k++) {
-            }
         }
 
         //2.Assignar-los de forma atzarosa dins el cartó 
@@ -91,8 +88,10 @@ public class Carto {
             //Cercam els 5 que han d'estar descubert
             //Per això collim 9 números, els mesclam i collim els 5 primers
             int[] mascaraFila = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+            System.out.println("X: " + i);
             mascaraFila = mesclarPoscionsX(mascaraFila);
             for (j = 0; j < 5; j++) {
+                System.out.println("Y: " + mascaraFila[j]);
                 this.linies[i][mascaraFila[j]] = vectors[mascaraFila[j]][i];
             }
         }
