@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import model.Carto;
 
 @WebServlet("/MenuControler")
-public class MenuControler extends HttpServlet {
+public class CartonsControler extends HttpServlet {
 
     private static HashMap<String, String> usuaris = new HashMap<>();
     private static HashMap<String, String> avatars = new HashMap<>();
@@ -36,6 +36,7 @@ public class MenuControler extends HttpServlet {
                     List<Carto> cartons = new ArrayList();
                     cartons = iniciaCartons();
                     this.missatges = "";
+                    this.lineaGlobal = false;
 
                     request.setAttribute("jugadors", this.usuaris.size());
                     session.setAttribute("cartons", cartons);
@@ -76,6 +77,7 @@ public class MenuControler extends HttpServlet {
                     }
                 }
             } else {
+                //Si no és necessaria la invitacio
                 permes = true;
             }
 
@@ -84,10 +86,13 @@ public class MenuControler extends HttpServlet {
                 String avatar = request.getParameter("avatar");
                 List<Carto> cartons = new ArrayList();
 
-                this.usuaris.put(session.getId(), nom);
-                this.avatars.put(session.getId(), avatar);
+                //Hem de veure si aquest usuari ja existeix
+                if (!this.usuaris.containsKey(session.getId())) {
+                    this.usuaris.put(session.getId(), nom);
+                    this.avatars.put(session.getId(), avatar);
+                }
                 cartons = iniciaCartons();
-                this.missatges = this.missatges  + "S'ha afegit el jugador " + nom + "\r\n";
+                this.missatges = this.missatges + "S'ha afegit el jugador " + nom + "\r\n";
 
                 session.setAttribute("cartons", cartons);
                 request.setAttribute("avatar", avatar);
@@ -114,7 +119,7 @@ public class MenuControler extends HttpServlet {
                     cartons.get(i).tachaNumero(num);
                     if (cartons.get(i).esLinea()) {
                         linia = true;
-                        if(!this.lineaGlobal){
+                        if (!this.lineaGlobal) {
                             this.missatges = this.missatges + this.usuaris.get(session.getId()) + " ha cantado linea\r\n";
                             this.lineaGlobal = true;
                         }
