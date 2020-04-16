@@ -50,7 +50,7 @@
                                                                 </c:if>
                                                                 <c:out value="${valor}"/>
                                                             </c:if>
-                                                            <c:if test="${valor < 1}">
+                                                            <c:if test="${valor < 0}">
                                                             <td class="table-secondary">
                                                                 <img src="${pageContext.request.contextPath}/resources/img/logo.png" width="20" height="20" alt="">
                                                             </c:if>

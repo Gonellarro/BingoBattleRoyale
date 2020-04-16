@@ -4,14 +4,24 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.ServerEndpoint;
 import model.Carto;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 
 @WebServlet("/MenuControler")
 public class CartonsControler extends HttpServlet {
@@ -24,6 +34,53 @@ public class CartonsControler extends HttpServlet {
     private boolean invitacioNecessaria = false;
     private int numeroCartons = 2;
     private boolean lineaGlobal = false;
+    
+    //COMENÇAM AMB EL MANEIG DEL WEBSOCKET
+    
+    //Se crea un set de sessions per guardar la sesssio de tots els que se connecten
+     private Set<Session> sessions = new HashSet<>();
+    @OnOpen
+    public void open(Session session) {
+        System.out.println("Session opened ==>");
+        //Quan s'obre una nova sessio s'afageix a sessions
+        sessions.add(session);
+    }    
+    
+    @OnMessage
+    public void handleMessage(String message, Session session) {
+        //Quan es reb un missatge, s'imprimeix
+        System.out.println("new message ==> " + message);
+        try {
+            for (int c = 0; c < 100; c++) {
+                for (Session s : sessions) {
+                    //Per cada sessió, s'envia el missatge value: {c+1}
+                    s.getBasicRemote().sendText("{\"value\" : \"" + (c + 1) + "\"}");
+                }
+                //S'esperen 100 milisegons
+                Thread.sleep(100);
+                //Se torna a enviar fins a c = 100;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }   
+    
+    @OnClose
+    public void close(Session session) {
+        //Quan es reb per tancar, se lleva la sessió i prou
+        System.out.println("Session closed ==>");
+        sessions.remove(session);
+    }   
+    
+    @OnError
+    public void onError(Throwable e) {
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+    }    
+    
+    
+    //DOGET I DOPOST
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -17,7 +17,7 @@ public class Carto {
         for (j = 0; j < 3; j++) {
             this.linea[j] = 0;
             for (i = 0; i < 9; i++) {
-                this.linies[j][i] = 0;
+                this.linies[j][i] = -1;
             }
         }
         //Podem canviar el màxim del valor del bingo aquí
@@ -75,8 +75,7 @@ public class Carto {
         int i;
         int j;
         int[][] vectors = new int[9][3];
-        //int[] posicionsX = {1, 1, 1, 2, 2, 2, 2, 2, 2};
-
+        
         //1.Generar els 9 vectors
         for (i = 0; i < 9; i++) {
             vectors[i] = crearVector(3, 10, i);
@@ -88,10 +87,8 @@ public class Carto {
             //Cercam els 5 que han d'estar descubert
             //Per això collim 9 números, els mesclam i collim els 5 primers
             int[] mascaraFila = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-            System.out.println("X: " + i);
             mascaraFila = mesclarPoscionsX(mascaraFila);
             for (j = 0; j < 5; j++) {
-                System.out.println("Y: " + mascaraFila[j]);
                 this.linies[i][mascaraFila[j]] = vectors[mascaraFila[j]][i];
             }
         }
@@ -111,14 +108,20 @@ public class Carto {
 
         //Posam el valor a l'atzar comprovant que no està repetit
         for (i = 0; i < longitud; i++) {
-            valor = (int) Math.floor(Math.random() * valorMaxim) + (columna * 10);
-            //No pot sortir el 0
+            if(columna == 8){
+                //Si estam en la darrera columna, hem d'arribar fins a 10 en comptes de fins a 9 
+                //Per contemplar el cas del 90
+                valor = (int) Math.floor(Math.random() * (valorMaxim + 1)) + (columna * 10);
+            }
+            else{
+                 valor = (int) Math.floor(Math.random() * (valorMaxim)) + (columna * 10);
+            }
             repeteix = true;
             while (repeteix) {
                 repeteix = false;
                 for (j = 0; j < i; j++) {
                     //Miram tots els valors d'aquesta linea
-                    if ((vector[j] == valor || (valor == 0))) {
+                    if ((vector[j] == valor) || (valor == 0)) {
                         repeteix = true;
                         valor = (int) Math.floor(Math.random() * valorMaxim) + (columna * 10);
                     }
