@@ -18,7 +18,7 @@
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
 
-        <form action="${pageContext.request.contextPath}/MenuControler" method="post">
+        <form action="${pageContext.request.contextPath}/CartonsControler" method="post">
             <div class ="container">
                 <div id="login-overlay" class="modal-dialog">
                     <div class="modal-content">

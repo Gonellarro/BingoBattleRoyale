@@ -16,13 +16,13 @@
     <body>
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
-        <form action="${pageContext.request.contextPath}/MenuControler" method="post">
+        <form action="${pageContext.request.contextPath}/CartonsControler" method="post">
             <div class ="container">
                 <div id="login-overlay" class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button> -->
-                            <h4 class="modal-title" id="myModalLabel">Cartons del bingo</h4>
+                            <h4 class="modal-title" id="myModalLabel">Cartons del bingo -<c:out value="${nom}"/></h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -66,7 +66,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <c:if test="${linia}">
+                                    <c:if test="${linea}">
                                         <div class="alert alert-warning" role="alert">
                                             Has cantat linia!
                                         </div>
@@ -99,14 +99,13 @@
                             </div>
                         </div>
                     </div>
-                    <br>
+                </div>
+                <div class="text-left">
                     <label><strong>Missatges</strong></label>
-                    <div class="text-left">
-                        <textarea class="form-control" readonly="true" rows="3" id="log" placeholder="En construcció..."><c:out value="${missatges}"/></textarea>
-                    </div>
+                    <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${missatges}"/></textarea>
                 </div>
             </div>
-        </form>    
+        </form>   
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

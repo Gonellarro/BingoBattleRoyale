@@ -16,11 +16,15 @@
                 </li>
             </c:if>
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/MenuControler?accio=reiniciar">
+                <a class="nav-link" href="${pageContext.request.contextPath}/CartonsControler?accio=reiniciar">
                     Reiniciar</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/MenuControler?accio=sortir">Sortir</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/CartonsControler?accio=estadistiques">
+                    Estadístiques</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/CartonsControler?accio=sortir">Sortir</a>
             </li>    
         </ul>
     </div>  
