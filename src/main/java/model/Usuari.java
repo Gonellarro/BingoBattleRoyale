@@ -91,7 +91,6 @@ public class Usuari {
 
     public void insertaLinea() {
         this.partida.setLinea(true);
-        System.out.println("PartidaL: " + this.partida.isLinea());
     }
 
     public void insertaCartons(int cartons) {
@@ -102,10 +101,8 @@ public class Usuari {
         int suma = 0;
         
         for (Partida partida : this.partides) {
-            System.out.println("Entra calcular Linies");
             if (partida.isLinea()) {
                 suma++;
-                System.out.println("SumaL: " +  suma);
             }
         }
         

@@ -13,7 +13,7 @@
     <body>
         <div class="container text-center">
             <h3 class="mb-1 mt-5">Bingo NoEstamBollats!</h3>
-            <h6> v1.17.01 </h6>
+            <h6> v1.17.02 </h6>
             <!--<img src="${pageContext.request.contextPath}/resources/img/portada.jpg" class="img-fluid" alt="Bingo No estam bollats!">-->
             <br>
             <a class="btn btn-primary" href="${pageContext.request.contextPath}/menu.jsp">Iniciar</a>

@@ -12,6 +12,13 @@
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
         <title>BingoWeb NoEstamBollats</title>
     </head>
+    
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>    
+
     <body>
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>   
@@ -28,12 +35,17 @@
                                 <table class="table table-striped table-sm">
                                     <tr>
                                         <th scope="col">#</th>
+                                        <th scope="col">Avatar</th>
                                         <th scope="col">Nom</th>
                                         <th scope="col">Linies</th>
                                         <th scope="col">Bingos</th>
                                     </tr>
-                                    <c:forEach var ="usuari" items="${usuaris}">   
+                                    <c:forEach var ="usuari" items="${usuaris}" varStatus="loopCounter">   
                                         <tr>
+                                            <td><c:out value="${loopCounter.count}"/></td>
+                                            <td>
+                                                <img src="${pageContext.request.contextPath}/resources/img/starwars/<c:out value="${usuari.avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                                            </td>
                                             <td>
                                                 <c:out value="${usuari.nom}"/>
                                             </td>
@@ -51,8 +63,8 @@
                     </div>
                     <div class="modal-footer">          
                         <div class="row">
-                            <div class="col-12">                    
-                                <button type="submit" class="btn btn-primary btn-block" >Torna enrera</button>
+                            <div class="col-12">    
+                                <button class="btn btn-primary btn-block" onclick="goBack()">Torna enrera</button>
                             </div>
                         </div>
                     </div>

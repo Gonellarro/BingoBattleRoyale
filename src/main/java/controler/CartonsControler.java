@@ -50,12 +50,6 @@ public class CartonsControler extends HttpServlet {
                     break;
                 /////////////////////ESTADISTIQUES                    
                 case "estadistiques":
-                    this.usuari = usuariGetID(session.getId());
-                    this.usuari.calculaBingos();
-                    this.usuari.calculaLinies();
-                    System.out.println("Linies: " + this.usuari.getLinies());
-                    System.out.println("Linies: " + this.usuari.getBingos());
-
                     request.setAttribute("nusuaris", this.usuaris.size());
                     request.setAttribute("usuaris", this.usuaris);
                     request.getRequestDispatcher("estadistiques.jsp").forward(request, response);
@@ -155,7 +149,7 @@ public class CartonsControler extends HttpServlet {
                     if (cartons.get(i).esLinea()) {
                         linia = true;
                         if (!this.lineaGlobal) {
-                            this.missatges = this.missatges + this.usuari.getNom() + " ha cantado linea\r\n";
+                            this.missatges = this.missatges + this.usuari.getNom() + " ha cantat línea\r\n";
                             this.lineaGlobal = true;
                             this.usuari.insertaLinea();
                         }
@@ -165,14 +159,16 @@ public class CartonsControler extends HttpServlet {
                         bingo = true;
                         linia = false;
                         this.usuari.insertaBingo();
-                        this.missatges = this.missatges + this.usuari.getNom() + " ha cantado bingo\r\n";
+                        this.missatges = this.missatges + this.usuari.getNom() + " ha cantat bingo\r\n";
                     }
+                    this.usuari.calculaBingos();
+                    this.usuari.calculaLinies();
                 }
 
                 System.out.println("USUARI EN AQUESTA SESSIO: " + this.usuari.getNom());
                 session.setAttribute("cartons", cartons);
                 session.setAttribute("linea", linia);
-                session.setAttribute("bing", bingo);
+                session.setAttribute("bingo", bingo);
                 request.setAttribute("nom", this.usuari.getNom());
                 request.setAttribute("avatar", this.usuari.getAvatar());
                 request.setAttribute("jugadors", this.usuaris.size());
