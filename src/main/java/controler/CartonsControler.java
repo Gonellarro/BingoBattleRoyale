@@ -33,7 +33,6 @@ public class CartonsControler extends HttpServlet {
             String accio = request.getParameter("accio");
             HttpSession session = request.getSession();
             switch (accio) {
-                /////////////////////REINICIAR
                 case "reiniciar":
                     List<Carto> cartons = new ArrayList();
                     cartons = iniciaCartons();
@@ -48,13 +47,11 @@ public class CartonsControler extends HttpServlet {
                     request.setAttribute("nom", this.usuari.getNom());
                     request.getRequestDispatcher("cartons.jsp").forward(request, response);
                     break;
-                /////////////////////ESTADISTIQUES                    
                 case "estadistiques":
                     request.setAttribute("nusuaris", this.usuaris.size());
                     request.setAttribute("usuaris", this.usuaris);
                     request.getRequestDispatcher("estadistiques.jsp").forward(request, response);
                     break;
-                /////////////////////SORTIR                    
                 case "sortir":
                     this.usuari = usuariGetID(session.getId());
                     this.usuaris.remove(this.usuari);
@@ -68,7 +65,7 @@ public class CartonsControler extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /////////////////////NOM -> LOGIN        
+        System.out.println("DOPOST");
         if (request.getParameterMap().containsKey("nom")) {
             HttpSession session = request.getSession();
             boolean permes = false;
@@ -131,18 +128,24 @@ public class CartonsControler extends HttpServlet {
             }
         }
 
-        /////////////////////NUMERO -> INTRUDUEIX EL NUMERO QUE HA SORTIT
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
-            int num = Integer.parseInt(numero);
+            System.out.println("NUMERO:" + ":");
+            int num;
+            if (numero.equals("")) {
+                System.out.println("NUMERO BUID");
+                num = 0;
+            } else {
+                num = Integer.parseInt(numero);
+            }
             boolean linia = false;
             boolean bingo = false;
             List<Carto> cartons = new ArrayList();
 
+            HttpSession session = request.getSession();
+            this.usuari = usuariGetID(session.getId());
+            cartons = (List<Carto>) session.getAttribute("cartons");
             if (num > 0) {
-                HttpSession session = request.getSession();
-                this.usuari = usuariGetID(session.getId());
-                cartons = (List<Carto>) session.getAttribute("cartons");
                 int i;
                 for (i = 0; i < this.numeroCartons; i++) {
                     cartons.get(i).tachaNumero(num);
@@ -164,17 +167,16 @@ public class CartonsControler extends HttpServlet {
                     this.usuari.calculaBingos();
                     this.usuari.calculaLinies();
                 }
-
-                System.out.println("USUARI EN AQUESTA SESSIO: " + this.usuari.getNom());
-                session.setAttribute("cartons", cartons);
-                session.setAttribute("linea", linia);
-                session.setAttribute("bingo", bingo);
-                request.setAttribute("nom", this.usuari.getNom());
-                request.setAttribute("avatar", this.usuari.getAvatar());
-                request.setAttribute("jugadors", this.usuaris.size());
-                request.setAttribute("missatges", this.missatges);
-                request.getRequestDispatcher("cartons.jsp").forward(request, response);
             }
+            session.setAttribute("cartons", cartons);
+            session.setAttribute("linea", linia);
+            session.setAttribute("bingo", bingo);
+            request.setAttribute("nom", this.usuari.getNom());
+            request.setAttribute("avatar", this.usuari.getAvatar());
+            request.setAttribute("jugadors", this.usuaris.size());
+            request.setAttribute("missatges", this.missatges);
+            request.getRequestDispatcher("cartons.jsp").forward(request, response);
+
         }
     }
 

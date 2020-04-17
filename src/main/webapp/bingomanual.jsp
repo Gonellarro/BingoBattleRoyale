@@ -15,13 +15,14 @@
     </head>
     <body>
         <!-- Capçalera -->
-        <jsp:include page="WEB-INF/comuns/capcalera_bombo.jsp"/>     
+        <jsp:include page="WEB-INF/comuns/capcalera_bombo.jsp"/>    
+        <form action="${pageContext.request.contextPath}/BingoControler" method="post">
         <div class ="container">
             <div id="login-overlay" class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button> -->
-                        <h4 class="modal-title" id="myModalLabel">Bombo del bingo</h4>
+                        <h4 class="modal-title" id="myModalLabel">Bombo manual del bingo</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -44,24 +45,23 @@
                             </div>  
                         </div>  
                         <div class="row">
-                            <div class="col-12 text-center">
+                            <div class="col-12">
                                 <label><strong>Número</strong></label>
-                                <h5>
-                                    <c:out value = "${bollaActual.valor + 1}"/>
-                                </h5>
+                                <input type="number" class="form-control" id="numero" name ="numero" placeholder="Introdueix número">
                             </div>
-                        </div>
+                        </div>   
                     </div>
                     <div class="modal-footer">          
                         <div class="row">
-                            <div class="col-12">   
-                                <a href="${pageContext.request.contextPath}/BingoControler?virtual=bolla" class="btn btn-secondary">Bolla</a>
+                            <div class="col-12">      
+                                <button type="submit" class="btn btn-primary btn-block" >Enviar</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </form>
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

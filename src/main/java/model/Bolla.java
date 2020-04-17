@@ -5,12 +5,12 @@ public class Bolla {
     private int valor;
     private boolean sortit;
     private String color;
-    private static String[] colors = {"negre", "blau", "vermnell", "verd", "groc", "blanc"};
+    private static String[] colors = {"primary", "danger", "secondary", "warning", "secondary"};
 
     public Bolla() {
         this.valor = 0;
         this.sortit = false;
-        this.color = "negre";
+        this.color = "primary";
     }
 
     public int getValor() {

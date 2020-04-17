@@ -15,7 +15,7 @@ public class Parrilla {
             Bolla bolla = new Bolla();
             bolla.setValor(i);
             bolla.setSortit(false);
-            bolla.setColor("blanc");
+            bolla.setColor("primary");
             this.bombo.add(bolla);
             this.comptador = 0;
         }
@@ -57,6 +57,11 @@ public class Parrilla {
         }
         this.comptador++;
         return bolla;
+    }
+    
+    public void insertarBolla(Bolla bolla){
+        this.bombo.get(bolla.getValor()).setSortit(true);
+        this.comptador++;
     }
 
 }

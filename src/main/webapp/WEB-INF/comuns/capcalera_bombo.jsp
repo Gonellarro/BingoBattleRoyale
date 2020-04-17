@@ -10,17 +10,17 @@
         <ul class="navbar-nav">
             <c:if test="${not empty nom}">
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/menu.jsp">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/cartonsmenu.jsp">
                         <img src="${pageContext.request.contextPath}/resources/img/starwars/<c:out value="${avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
                         Canviar d'usuari</a>
                 </li>
             </c:if>
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/BingoControler?accio=reiniciar">
+                <a class="nav-link" href="${pageContext.request.contextPath}/BingoControler?virtual=reiniciar">
                     Reiniciar</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/MenuControler?accio=sortir">Sortir</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/BingoControler?virtual=sortir">Sortir</a>
             </li>    
         </ul>
     </div>  

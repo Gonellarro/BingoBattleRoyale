@@ -12,6 +12,7 @@
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
 
         <title>BingoWeb NoEstamBollats</title>
+ 
     </head>
     <body>
         <!-- Capçalera -->
@@ -22,7 +23,19 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button> -->
-                            <h4 class="modal-title" id="myModalLabel">Cartons del bingo -<c:out value="${nom}"/></h4>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table style="width:100%"><tr>
+                                                <td>Darreres bolles&nbsp</td>
+                                                <c:forEach var ="bolla" items="${tresbolles}">
+                                                    <!--<img src="${pageContext.request.contextPath}/resources/img/bolles/blava.png" width="40" height="40" alt="">-->
+                                                    <td class="table-primary border border-secondary"><c:out value="${bolla.valor + 1}"/></td>
+                                                </c:forEach>
+                                            </tr></table>
+                                    </div>
+                                </div>
+                            </h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -81,7 +94,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label><strong>Número</strong></label>
-                                    <input type="number" class="form-control" id="numero" name ="numero" placeholder="Introdueix el número que ha sortit">
+                                    <input type="number" class="form-control" id="numero" name ="numero"  placeholder="Introdueix el número que ha sortit">
                                 </div>
                                 <div class="col-6">
                                     <label><strong>Participants</strong></label>
