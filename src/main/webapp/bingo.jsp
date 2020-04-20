@@ -15,53 +15,57 @@
     </head>
     <body>
         <!-- Capçalera -->
-        <jsp:include page="WEB-INF/comuns/capcalera_bombo.jsp"/>     
-        <div class ="container">
-            <div id="login-overlay" class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button> -->
-                        <h4 class="modal-title" id="myModalLabel">Bombo del bingo</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <table class="table table-bordered table-sm">
-                                    <tr>
-                                        <c:forEach var ="bolla" items="${parrilla.bombo}" varStatus="numero">
-                                            <c:if test="${bolla.sortit}">
-                                                <td class="table-primary rounded-circle">  
-                                                    <c:out value="${bolla.valor + 1}"/></td>
-                                                </c:if>
-                                                <c:if test="${!bolla.sortit}">
-                                                <td class="table-secondary">  
-                                                    <img src="${pageContext.request.contextPath}/resources/img/logo.png" width="15" height="15" alt="">
-                                                </c:if>
+        <jsp:include page="WEB-INF/comuns/capcalera_bombo.jsp"/>  
+        <form action="${pageContext.request.contextPath}/BingoControler" method="post">
+            <div class ="container">
+                <div id="login-overlay" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title"><strong>Partida: </strong><c:out value = "${partida.titol}"/> -
+                                <strong>Id:</strong> <c:out value = "${partida.idPartida}"/></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-bordered table-sm">
+                                        <tr>
+                                            <c:forEach var ="bolla" items="${parrilla.bombo}" varStatus="numero">
+                                                <c:if test="${bolla.sortit}">
+                                                    <td class="table-primary rounded-circle">  
+                                                        <c:out value="${bolla.valor + 1}"/></td>
+                                                    </c:if>
+                                                    <c:if test="${!bolla.sortit}">
+                                                    <td class="table-secondary">  
+                                                        <img src="${pageContext.request.contextPath}/resources/img/logo.png" width="15" height="15" alt="">
+                                                    </c:if>
 
-                                            <c:if test="${(bolla.valor + 1) mod 10 == 0}"> </tr></c:if>
-                                        </c:forEach>
-                                </table>
+                                                <c:if test="${(bolla.valor + 1) mod 10 == 0}"> </tr></c:if>
+                                            </c:forEach>
+                                    </table>
+                                </div>  
                             </div>  
-                        </div>  
-                        <div class="row">
-                            <div class="col-12 text-center">
-                                <label><strong>Número</strong></label>
-                                <h5>
-                                    <c:out value = "${bollaActual.valor + 1}"/>
-                                </h5>
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <label><strong>Número</strong></label>
+                                    <h5>
+                                        <c:out value = "${bollaActual.valor + 1}"/>
+                                    </h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">          
-                        <div class="row">
-                            <div class="col-12">   
-                                <a href="${pageContext.request.contextPath}/BingoControler?virtual=bolla" class="btn btn-secondary">Bolla</a>
+                        <div class="modal-footer">          
+                            <div class="row">
+                                <div class="col-12">   
+                                    <button type="submit" class="btn btn-primary">Bolla</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <input type="hidden" name="tipus" value ="virtual">
+            <input type="hidden" name="accio" value ="bolla">
+        </form>
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

@@ -9,128 +9,122 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.Bolla;
 import model.Parrilla;
+import model.Partida;
 
 @WebServlet("/BingoControler")
 public class BingoControler extends HttpServlet {
 
-    private String idPartida;
+    private List<Partida> partides = new ArrayList();
+    private Partida partida;
     private Parrilla parrilla;
-    private static List<Bolla> tresBolles = new ArrayList();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
 
         // Store the ServletConfig object and log the initialization
         super.init(config);
-        //Cream una variable global a l'app per a que tengui les darreres 3 bolles
-        getServletContext().setAttribute("tresbolles", this.tresBolles);
+        //Cream una variable global a l'app per a que tengui totes les dades de la partida compartides
+        getServletContext().setAttribute("partides", this.partides);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("DOGET BINGO");
+        //Bingo virtual
         if (request.getParameterMap().containsKey("virtual")) {
             String virtual = request.getParameter("virtual");
             Bolla bolla = new Bolla();
             int i;
             switch (virtual) {
                 case "iniciar":
-                    this.idPartida = "XXXX";
-                    this.parrilla = new Parrilla();
-                    bolla.setValor(-1);
-                    //Iniciam a 0 les 3 bolles
-
-                    this.tresBolles.clear();
-                    for (i = 0; i < 3; i++) {
-                        this.tresBolles.add(bolla);
-                    }
-                    //Guardam com a variable global dels servlets
-                    getServletContext().setAttribute("tresbolles", this.tresBolles);
-                    break;
-                case "bolla":
-                    if (this.parrilla.getComptador() < this.parrilla.getNUMBOLLES()) {
-                        bolla = this.parrilla.treureBolla();
-                        this.tresBolles.remove(0);
-                        this.tresBolles.add(bolla);
-                        //Guardam com a variable global dels servlets
-                        getServletContext().setAttribute("tresbolles", this.tresBolles);
-                    } else {
-                        //HEM DE DIR QUE HEM ACABAT
-                    }
+                    //Hem de demanar el nom de la partida i cartons, per crear-la després
+                    request.setAttribute("tipus", "virtual");
+                    request.getRequestDispatcher("bingo_menu.jsp").forward(request, response);
                     break;
                 case "reiniciar":
                     this.parrilla = new Parrilla();
                     bolla.setValor(-1);
-                    //Iniciam a 0 les 3 bolles
-                    this.tresBolles.clear();
-                    for (i = 0; i < 3; i++) {
-                        this.tresBolles.add(bolla);
-                    }
-                    //Guardam com a variable global dels servlets
-                    getServletContext().setAttribute("tresbolles", this.tresBolles);
+                    
+                    request.setAttribute("parrilla", this.parrilla);
+                    request.setAttribute("bollaActual", bolla);
+                    request.getRequestDispatcher("bingo.jsp").forward(request, response);
                     break;
                 case "sortir":
                     request.getRequestDispatcher("index.jsp").forward(request, response);
                 default:
                     break;
             }
-            request.setAttribute("parrilla", this.parrilla);
-            request.setAttribute("bollaActual", bolla);
-            request.setAttribute("idPartida", this.idPartida);
-            request.getRequestDispatcher("bingo.jsp").forward(request, response);
+
         }
 
         if (request.getParameterMap().containsKey("manual")) {
             System.out.println("MANUAL");
             String manual = request.getParameter("manual");
-            Bolla bolla = new Bolla();
-            int i;
-            switch (manual) {
-                case "iniciar":
-                    this.idPartida = "XXXX";
-                    this.parrilla = new Parrilla();
-                    bolla.setValor(-1);
-                    //Iniciam a 0 les 3 bolles
-
-                    this.tresBolles.clear();
-                    for (i = 0; i < 3; i++) {
-                        this.tresBolles.add(bolla);
-                    }
-                    //Guardam com a variable global dels servlets
-                    getServletContext().setAttribute("tresbolles", this.tresBolles);
-                    break;
-                default:
-                    break;
-            }
-
-            request.setAttribute("parrilla", this.parrilla);
-            request.setAttribute("bollaActual", bolla);
-            request.setAttribute("idPartida", this.idPartida);
-            request.getRequestDispatcher("bingomanual.jsp").forward(request, response);
+            //TODO
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameterMap().containsKey("numero")) {
-            int numero = Integer.parseInt(request.getParameter("numero"));
-            Bolla bolla = new Bolla();
-            bolla.setValor(numero-1);
-            this.parrilla.insertarBolla(bolla);
 
-            this.tresBolles.remove(0);
-            this.tresBolles.add(bolla);
+        if (request.getParameterMap().containsKey("tipus")) {
+            String tipus = request.getParameter("tipus");
+            //Si és un bingo virtual
+            if (tipus.equals("virtual")) {
+                HttpSession session = request.getSession();
+                 Bolla bolla = new Bolla();
+                //Inici. Hem de crear la partida. Per això demanam titol i cartons
+                if (request.getParameterMap().containsKey("titol")) {
+                    iniciar(request);
+                    bolla.setValor(-1);
+                }
+                //Hem de donar una nova bolla
+                if (request.getParameterMap().containsKey("accio")) {
+                    String accio = request.getParameter("accio");
+                    if (accio.equals("bolla")) {
+                        //Si encara se poden treure més bolles
+                        if (this.parrilla.getComptador() < this.parrilla.getNUMBOLLES()) {
+                            //treim una bolla i la posam a la parrilla;
+                            bolla = this.parrilla.treureBolla();
+                            //També l'afegim a la partida per dur un compte de les bolles que han sortit
+                            this.partida.afegeixBolla(bolla);
+                        } else {
+                            //TODO
+                            //HEM DE DIR QUE HEM ACABAT
+                        }
+                    }
+                }
+                //Guardam com a variable global dels servlets la partida en curs, ja que ha pogut ser modificada
+                getServletContext().setAttribute("partida", this.partida);
+                request.setAttribute("parrilla", this.parrilla);
+                request.setAttribute("bollaActual", bolla);
+                request.getRequestDispatcher("bingo.jsp").forward(request, response);
 
-            //Guardam com a variable global dels servlets
-            getServletContext().setAttribute("tresbolles", this.tresBolles);
-
-            request.setAttribute("parrilla", this.parrilla);
-            request.setAttribute("bollaActual", bolla);
-            request.setAttribute("idPartida", this.idPartida);
-            request.getRequestDispatcher("bingomanual.jsp").forward(request, response);
+            } else if (tipus.equals("manual")) {
+                //TODO
+            }
         }
+    }
 
+    public void iniciar(HttpServletRequest request) {
+        int cartons = Integer.parseInt(request.getParameter("cartons"));
+        String titol = request.getParameter("titol");
+        Bolla bolla = new Bolla();
+        int i;
+
+        int idPartida = (int) Math.floor(Math.random() * (99999));
+
+        //Cream la partida
+        this.partida = new Partida();
+        this.partida.setTitol(titol);
+        this.partida.setIdPartida(idPartida);
+        this.partida.setCartons(cartons);
+        //L'afegim al lliostat de partides que tenim en marxa
+        this.partides.add(partida);
+
+        //Cream una nova parrilla
+        this.parrilla = new Parrilla();
     }
 }

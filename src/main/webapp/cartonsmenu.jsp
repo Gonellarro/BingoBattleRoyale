@@ -57,6 +57,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-2">
+                                    <label>ID</label>
+                                </div>		
+                                <div class="col-10">
+                                    <input type="text" class="form-control" id="idPartida" name ="idPartida" placeholder="Introduïu Id partida" required>
+                                </div>
+                            </div>                            
+                            <div class="row">
+                                <div class="col-2">
                                     <label>Codi</label>
                                 </div>
                                 <div class="col-10">

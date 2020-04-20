@@ -1,30 +1,26 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Usuari {
 
-    private String idSession;
     private String nom;
     private String avatar;
-    private List<Partida> partides = new ArrayList();
+    private String idSession;
     private Partida partida;
     private int linies;
     private int bingos;
+    private boolean linea;
+    private boolean linea2;
+    private boolean bingo;
 
     public Usuari() {
         this.nom = "Innombrable";
         this.avatar = "default";
-        this.partida = new Partida();
-    }
-
-    public String getIdSession() {
-        return idSession;
-    }
-
-    public void setIdSession(String idSession) {
-        this.idSession = idSession;
+        this.linea = false;
+        this.linea2 = false;
+        this.bingo = false;
+        this.linies = 0;
+        this.bingos = 0;
+        
     }
 
     public String getNom() {
@@ -41,14 +37,6 @@ public class Usuari {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public List<Partida> getPartides() {
-        return partides;
-    }
-
-    public void setPartides(List<Partida> partides) {
-        this.partides = partides;
     }
 
     public Partida getPartida() {
@@ -73,60 +61,37 @@ public class Usuari {
 
     public void setBingos(int bingos) {
         this.bingos = bingos;
+    }  
+
+    public String getIdSession() {
+        return idSession;
     }
 
-    @Override
-    public String toString() {
-        return "Usuari{" + "nom=" + nom + ", avatar=" + avatar + ", partides=" + partides + '}';
+    public void setIdSession(String idSession) {
+        this.idSession = idSession;
     }
 
-    public void novaPartida() {
-        this.partides.add(partida);
-        this.partida = new Partida();
+    public boolean isLinea() {
+        return linea;
     }
 
-    public void insertaBingo() {
-        this.partida.setBingo(true);
+    public void setLinea(boolean linea) {
+        this.linea = linea;
     }
 
-    public void insertaLinea() {
-        this.partida.setLinea(true);
+    public boolean isBingo() {
+        return bingo;
     }
 
-    public void insertaCartons(int cartons) {
-        this.partida.setCartons(cartons);
+    public void setBingo(boolean bingo) {
+        this.bingo = bingo;
     }
 
-    public void calculaLinies() {
-        int suma = 0;
-        
-        for (Partida partida : this.partides) {
-            if (partida.isLinea()) {
-                suma++;
-            }
-        }
-        
-        if (this.partida.isLinea()){
-            suma++;
-        }
-        
-        this.linies = suma;
+    public boolean isLinea2() {
+        return linea2;
     }
 
-    public void calculaBingos() {
-        int suma = 0;
-        for (Partida partida : this.partides) {
-            if (partida.isBingo()) {
-                suma++;
-                System.out.println("SumaB: " +  suma);
-            }
-        }
-
-        if (this.partida.isBingo()){
-            suma++;
-        }        
-        
-        this.bingos = suma;
+    public void setLinea2(boolean linea2) {
+        this.linea2 = linea2;
     }
-
 }

@@ -19,17 +19,15 @@
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
         <form action="${pageContext.request.contextPath}/CartonsControler" method="post">
             <div class ="container">
-                <div id="login-overlay" class="modal-dialog">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button> -->
-                            <h4 class="modal-title" id="myModalLabel">
+                            <h4 class="modal-title">
                                 <div class="row">
                                     <div class="col-12">
                                         <table style="width:100%"><tr>
                                                 <td>Darreres bolles&nbsp</td>
-                                                <c:forEach var ="bolla" items="${tresbolles}">
-                                                    <!--<img src="${pageContext.request.contextPath}/resources/img/bolles/blava.png" width="40" height="40" alt="">-->
+                                                <c:forEach var ="bolla" items="${partida.tresBolles}">
                                                     <td class="table-primary border border-secondary"><c:out value="${bolla.valor + 1}"/></td>
                                                 </c:forEach>
                                             </tr></table>
@@ -79,14 +77,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <c:if test="${linea}">
+                                    <c:if test="${partida.linea && usuari.linea}">
                                         <div class="alert alert-warning" role="alert">
-                                            Has cantat linia!
+                                            <c:out value = "${missatgeglobal}"/>
                                         </div>
                                     </c:if>
-                                    <c:if test="${bingo}">
+                                    <c:if test="${partida.bingo && usuari.bingo}">
                                         <div class="alert alert-success" role="alert">
-                                            Bingo!
+                                            <c:out value = "${missatgeglobal}"/>
                                         </div>
                                     </c:if>     
                                 </div>
