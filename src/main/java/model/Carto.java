@@ -10,6 +10,7 @@ public class Carto {
     private int[] linea = new int[3];
     private boolean bingo;
     private int maxValor;
+    private int numeros;
 
     public Carto() {
         int i;
@@ -23,6 +24,7 @@ public class Carto {
         //Podem canviar el màxim del valor del bingo aquí
         this.maxValor = 90;
         this.bingo = false;
+        this.numeros = 0;
     }
 
     public int[][] getLinies() {
@@ -57,6 +59,14 @@ public class Carto {
         this.bingo = bingo;
     }
 
+    public int getNumeros() {
+        return numeros;
+    }
+
+    public void setNumeros(int numeros) {
+        this.numeros = numeros;
+    }
+
     @Override
     public String toString() {
         String sortida = "";
@@ -75,7 +85,6 @@ public class Carto {
         int i;
         int j;
         int[][] vectors = new int[9][3];
-        System.out.println("----------------------------------------------");
         //1.Generar els 9 vectors
         for (i = 0; i < 9; i++) {
             vectors[i] = crearVector(3, 10, i);
@@ -159,6 +168,7 @@ public class Carto {
             for (j = 0; j < 3; j++) {
                 if (this.linies[j][i] == numero) {
                     this.linies[j][i] = numero + 100;
+                    this.numeros++;
                 }
             }
         }
@@ -173,7 +183,6 @@ public class Carto {
             aux = 0;
             if (this.linea[i] == 0) {
                 for (j = 0; j < 9; j++) {
-                    //System.out.println(this.linies[i][j]);
                     if (this.linies[i][j] > 100) {
                         aux++;
                     }
@@ -197,7 +206,6 @@ public class Carto {
         }
         if (total == 3) {
             this.bingo = true;
-            System.out.println("BINGO!!!");
         }
         //Si hi ha una linea, tenim una linea
         if (linies > 0) {

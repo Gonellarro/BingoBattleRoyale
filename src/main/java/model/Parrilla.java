@@ -36,8 +36,8 @@ public class Parrilla {
     public void setComptador(int comptador) {
         this.comptador = comptador;
     }
-    
-    public int getNUMBOLLES(){
+
+    public int getNUMBOLLES() {
         return this.NUMBOLLES;
     }
 
@@ -58,10 +58,24 @@ public class Parrilla {
         this.comptador++;
         return bolla;
     }
-    
-    public void insertarBolla(Bolla bolla){
+
+    public void insertarBolla(Bolla bolla) {
         this.bombo.get(bolla.getValor()).setSortit(true);
         this.comptador++;
+    }
+
+    public void setBomboPartida(List<Bolla> bolles) {
+        int i;
+        Bolla bolla = new Bolla();
+        for (i = 0; i < this.NUMBOLLES; i++) {
+            bolla = this.bombo.get(i);
+            //Si la bolla coincideix amb alguna de la que le passam, la canviam
+            for (Bolla bollaTmp : bolles) {
+                if (bollaTmp.getValor() == i) {
+                    this.bombo.set(i, bollaTmp);
+                }
+            }
+        }
     }
 
 }

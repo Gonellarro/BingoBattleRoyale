@@ -31,7 +31,7 @@
                                         <tr>
                                             <c:forEach var ="bolla" items="${parrilla.bombo}" varStatus="numero">
                                                 <c:if test="${bolla.sortit}">
-                                                    <td class="table-primary rounded-circle">  
+                                                    <td class="table-primary">  
                                                         <c:out value="${bolla.valor + 1}"/></td>
                                                     </c:if>
                                                     <c:if test="${!bolla.sortit}">

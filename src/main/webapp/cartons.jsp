@@ -26,7 +26,12 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <table style="width:100%"><tr>
-                                                <td>Darreres bolles&nbsp</td>
+                                                <td 
+                                                    <c:if test="${estrella}">
+                                                        class="text-danger"
+                                                     </c:if>  
+                                                    >
+                                                    Darreres bolles&nbsp</td>
                                                 <c:forEach var ="bolla" items="${partida.tresBolles}">
                                                     <td class="table-primary border border-secondary"><c:out value="${bolla.valor + 1}"/></td>
                                                 </c:forEach>
