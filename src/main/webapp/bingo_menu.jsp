@@ -41,6 +41,14 @@
                                 </div>
                                 <div class="col-9">      
                                     <input type="number" class="form-control" id="cartons" name ="cartons" placeholder="Cartons per jugador">
+                                    <!--
+                                    <select id="cartons" name=""cartons">
+                                      <option value="1">1</option>
+                                      <option value="2">2</option>
+                                      <option value="3">3</option>
+                                      <option value="4">4</option>
+                                    </select>
+                                    -->
                                 </div>
                             </div>
                             <br>

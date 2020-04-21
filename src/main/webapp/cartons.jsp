@@ -28,7 +28,7 @@
                                         <table style="width:100%"><tr>
                                                 <td 
                                                     <c:if test="${estrella}">
-                                                        class="text-danger"
+                                                        class="bg-danger text-white"
                                                      </c:if>  
                                                     >
                                                     Darreres bolles&nbsp</td>

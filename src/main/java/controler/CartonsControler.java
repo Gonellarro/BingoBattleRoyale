@@ -60,6 +60,7 @@ public class CartonsControler extends HttpServlet {
                     cartons = iniciaCartons();
                     this.missatges = "";
                     this.missatgeGlobal = "";
+                    this.estrella = false;
                     
                     //Actualitzam la partida dins la llista de partides
                     this.partides.remove(this.partida);

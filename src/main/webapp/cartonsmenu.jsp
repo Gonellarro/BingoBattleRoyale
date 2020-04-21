@@ -53,6 +53,26 @@
                                     <label class="drinkcard-cc face5"for="face5"></label>                 
                                     <input id="face6" type="radio" name="avatar" value="face6" />
                                     <label class="drinkcard-cc face6"for="face6"></label>                 
+                                    <input id="face7" type="radio" name="avatar" value="face7" />
+                                    <label class="drinkcard-cc face7" for="face7"></label>
+                                    <input id="face8" type="radio" name="avatar" value="face8" />
+                                    <label class="drinkcard-cc face8"for="face8"></label>                 
+                                    <input id="face9" type="radio" name="avatar" value="face9" />
+                                    <label class="drinkcard-cc face9"for="face9"></label>                 
+                                    <input id="face10" type="radio" name="avatar" value="face10" />
+                                    <label class="drinkcard-cc face10" for="face10"></label>
+                                    <input id="face11" type="radio" name="avatar" value="face11" />
+                                    <label class="drinkcard-cc face11"for="face11"></label>                 
+                                    <input id="face12" type="radio" name="avatar" value="face12" />
+                                    <label class="drinkcard-cc face12"for="face12"></label>                 
+                                    <input id="face13" type="radio" name="avatar" value="face13" />
+                                    <label class="drinkcard-cc face13"for="face13"></label>                 
+                                    <input id="face14" type="radio" name="avatar" value="face14" />
+                                    <label class="drinkcard-cc face14" for="face14"></label>
+                                    <input id="face15" type="radio" name="avatar" value="face15" />
+                                    <label class="drinkcard-cc face15"for="face15"></label>                 
+                                    <input id="face16" type="radio" name="avatar" value="face16" />
+                                    <label class="drinkcard-cc face16"for="face16"></label>                 
                                 </div>
                             </div>
                             <div class="row">
@@ -63,7 +83,7 @@
                                     <input type="text" class="form-control" id="idPartida" name ="idPartida" placeholder="Introduïu Id partida" required>
                                 </div>
                             </div>                            
-                            <div class="row">
+                            <!--<div class="row">
                                 <div class="col-2">
                                     <label>Codi</label>
                                 </div>
@@ -71,7 +91,7 @@
                                     <input type="text" class="form-control" id="invitacio" name ="invitacio" placeholder="Introduïu codi d'invitació">
                                 </div>
                                 <br>
-                            </div>	
+                            </div>-->	
                             <br>
                         </div>
                         <div class="modal-footer">
