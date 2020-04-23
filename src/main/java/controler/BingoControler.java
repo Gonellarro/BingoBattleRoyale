@@ -45,13 +45,20 @@ public class BingoControler extends HttpServlet {
                     break;
                 case "reiniciar":
                     this.parrilla = new Parrilla();
-                    bolla.setValor(-1);
                     
+                    //Actualitzam la partida dins la llista de partides
+                    this.partides.remove(this.partida);
+                    this.partida.reiniciar();
+                    this.partides.add(this.partida);
+                    getServletContext().setAttribute("partides", this.partides);
+
+                    bolla.setValor(-1);
                     request.setAttribute("parrilla", this.parrilla);
                     request.setAttribute("bollaActual", bolla);
                     request.getRequestDispatcher("bingo.jsp").forward(request, response);
                     break;
                 case "sortir":
+                    this.partides.remove(this.partida);
                     request.getRequestDispatcher("index.jsp").forward(request, response);
                 default:
                     break;
@@ -74,7 +81,7 @@ public class BingoControler extends HttpServlet {
             //Si és un bingo virtual
             if (tipus.equals("virtual")) {
                 HttpSession session = request.getSession();
-                 Bolla bolla = new Bolla();
+                Bolla bolla = new Bolla();
                 //Inici. Hem de crear la partida. Per això demanam titol i cartons
                 if (request.getParameterMap().containsKey("titol")) {
                     iniciar(request);

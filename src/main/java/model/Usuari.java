@@ -14,7 +14,7 @@ public class Usuari {
 
     public Usuari() {
         this.nom = "Innombrable";
-        this.avatar = "default";
+        this.avatar = "face13";
         this.linea = false;
         this.linea2 = false;
         this.bingo = false;

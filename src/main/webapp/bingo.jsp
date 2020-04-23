@@ -47,9 +47,9 @@
                             <div class="row">
                                 <div class="col-12 text-center">
                                     <label><strong>Número</strong></label>
-                                    <h5>
+                                    <h1 class="display-5">
                                         <c:out value = "${bollaActual.valor + 1}"/>
-                                    </h5>
+                                    </h1>
                                 </div>
                             </div>
                         </div>

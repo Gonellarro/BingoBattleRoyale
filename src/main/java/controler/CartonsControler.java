@@ -61,12 +61,6 @@ public class CartonsControler extends HttpServlet {
                     this.missatges = "";
                     this.missatgeGlobal = "";
                     this.estrella = false;
-                    
-                    //Actualitzam la partida dins la llista de partides
-                    this.partides.remove(this.partida);
-                    this.partida.reiniciar();
-                    this.partides.add(this.partida);
-                    getServletContext().setAttribute("partides", this.partides);
 
                     session.setAttribute("cartons", cartons);
                     session.setAttribute("partida", this.partida);
@@ -79,8 +73,8 @@ public class CartonsControler extends HttpServlet {
                 case "graella":
                     Parrilla parrilla = new Parrilla();
                     parrilla.setBomboPartida(this.partida.getBolles());
-                    request.setAttribute("parrilla",parrilla);
-                    request.setAttribute("partida",this.partida);
+                    request.setAttribute("parrilla", parrilla);
+                    request.setAttribute("partida", this.partida);
                     request.getRequestDispatcher("bingoro.jsp").forward(request, response);
                     break;
                 case "estadistiques":
@@ -101,160 +95,43 @@ public class CartonsControler extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        //INICI - Insertam el nom i comprovam que no faci falta la invitació
         this.partides = (List<Partida>) getServletContext().getAttribute("partides");
+        HttpSession session = request.getSession();
+        List<Carto> cartons = new ArrayList();
+        
+        //Si trobam nom, és que hem de crear un usuari nou 
         if (request.getParameterMap().containsKey("nom")) {
-            HttpSession session = request.getSession();
-            boolean permes = false;
-            carregaInvitacions();
-            String invitacio = request.getParameter("invitacio");
-            if (invitacioNecessaria) {
-                //Cercam la invitació
-                if (invitacions.containsKey(invitacio)) {
-                    //Si la data no ha acabat
-                    LocalDate avui = LocalDate.now();
-                    LocalDate dataFi = LocalDate.parse(invitacions.get(invitacio));
-                    if (avui.isAfter(dataFi)) {
-                        //No se pot accedir al bingo
-                        permes = false;
-                    } else {
-                        //Se pot accedir per no tenir
-                        permes = true;
-                    }
-                }
+            //Hem de veure si hem de crear o no un nou usuari
+            if (permetre(request)) {
+                cartons = crearUsuari(request, session);
             } else {
-                //Si no és necessaria la invitacio
-                permes = true;
-            }
-
-            if (permes) {
-                //Collim les dades de l'usuari
-                String nom = request.getParameter("nom");
-                String avatar = request.getParameter("avatar");
-                int idPartida = Integer.parseInt(request.getParameter("idPartida"));
-                this.partida = consultaPartida(idPartida);
-                List<Carto> cartons = new ArrayList();
-
-                //Si l'usuari no existeix
-                if (!idUsuari(session.getId())) {
-                    //Cream l'usuari i l'inicialitzam
-                    this.usuari = new Usuari();
-                    this.usuari.setNom(nom);
-                    this.usuari.setAvatar(avatar);
-                    this.usuari.setIdSession(session.getId());
-                    this.usuari.setPartida(this.partida);
-                    //Afegim l'usuari a la partida
-                    this.partida.afegeixUsuari(usuari);
-                    //Collim quants de cartons hem de tenir segons la partida
-                    this.numeroCartons = this.partida.getCartons();
-                    //Li donam els cartons
-                    cartons = iniciaCartons();
-                    //Ho publicam als missatges
-                    this.missatges = this.missatges + "S'ha afegit el jugador " + nom + "\r\n";
-
-                    //Si l'usuari SÍ existeix
-                } else {
-                    //Només passam les dades dels cartons que té (p.e. si s'ha fet un refrescar de la pàgina
-                    this.usuari = consultaUsuari(session.getId());
-                    cartons = (List<Carto>) session.getAttribute("cartons");
-                }
-
-                //Actualitzam la partida dins la llista de partides
-                this.partides.remove(this.partida);
-                this.partides.add(this.partida);
-                getServletContext().setAttribute("partides", this.partides);
-                //Passam la resta de dades al jsp
-
-                session.setAttribute("cartons", cartons);
-                session.setAttribute("partida", this.partida);
-                session.setAttribute("usuari", this.usuari);
-                request.setAttribute("jugadors", this.partida.getUsuaris().size());
-                request.setAttribute("missatges", this.missatges);
-                session.setAttribute("missatgeglobal", this.missatgeGlobal);
-                request.getRequestDispatcher("cartons.jsp").forward(request, response);
-            } else {
-                //Enviar a jsp de no tenir codi o estar caducat
+                //jsp_error;
             }
         }
 
-        //Running del sistema. Recollim el número i el marcam per al cartó
-        //A part, també revisam si hi ha hagut linea o bingo
+        //Si el que arriba és el número, hem de tachar-ho
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
-            
-            int num;
-            if (numero.equals("")) {
-                num = 0;
-            } else {
-                num = Integer.parseInt(numero);
-            }
-            List<Carto> cartons = new ArrayList();
-            HttpSession session = request.getSession();
-            this.usuari = consultaUsuari(session.getId());
-            //Si és una altra partida, l'hem de posar com la nostra
-            int idPartida = this.usuari.getPartida().getIdPartida();
-            this.partida = consultaPartida(idPartida);
-
-            cartons = (List<Carto>) session.getAttribute("cartons");
-
-            if (this.usuari.isLinea()) {
-                this.usuari.setLinea2(true);
-                this.usuari.setLinea(false);
-            }
-
-            if (this.partida.isLinea() && !this.usuari.isLinea2()) {
-                this.usuari.setLinea(true);
-            }
-            if (this.partida.isBingo()) {
-                this.usuari.setBingo(true);
-            }
-
-            if (num > 0) {
-                int i;
-                for (i = 0; i < this.numeroCartons; i++) {
-                    cartons.get(i).tachaNumero(num);
-                    //Si cantam linea
-                    if (cartons.get(i).esLinea()) {
-                        if (!this.partida.isLinea()) {
-                            this.usuari.setLinea(true);
-                            this.missatges = this.missatges + this.usuari.getNom() + " ha cantat línea\r\n";
-                            this.partida.setLinea(true);
-                            this.missatgeGlobal = this.usuari.getNom() + " ha cantat linea!";
-                            this.usuari.setLinies(this.usuari.getLinies() + 1);
-                        }
-                    }
-                    //Si cantam bingo
-                    if (cartons.get(i).isBingo()) {
-                        cartons.get(i).bingo();
-                        this.usuari.setBingo(true);
-                        this.partida.setBingo(true);
-                        this.missatges = this.missatges + this.usuari.getNom() + " ha cantat bingo\r\n";
-                        this.missatgeGlobal = this.usuari.getNom() + " ha cantat bingo!";
-                        this.usuari.setBingos(this.usuari.getBingos() + 1);
-                    }
-                    //Si només ens queda un número
-                    if (cartons.get(i).getNumeros() == 14){
-                        this.estrella = true;
-                    }
-                }
-            }
-
-            //Actualitzam la partida dins la llista de partides
-            this.partides.remove(this.partida);
-            this.partides.add(this.partida);
-            getServletContext().setAttribute("partides", this.partides);
-
-            session.setAttribute("cartons", cartons);
-            session.setAttribute("partida", this.partida);
-            session.setAttribute("usuari", this.usuari);
-            request.setAttribute("estrella", this.estrella);
-            request.setAttribute("jugadors", this.partida.getUsuaris().size());
-            request.setAttribute("missatges", this.missatges);
-            session.setAttribute("missatgeglobal", this.missatgeGlobal);
-            request.getRequestDispatcher("cartons.jsp").forward(request, response);
+            cartons = marcaNumero(numero, request, session);
         }
+
+        //Actualitzam la partida dins la llista de partides
+        this.partides.remove(this.partida);
+        this.partides.add(this.partida);
+        getServletContext().setAttribute("partides", this.partides);
+        //Enviam les dades al jsp
+        session.setAttribute("cartons", cartons);
+        session.setAttribute("partida", this.partida);
+        session.setAttribute("usuari", this.usuari);
+        request.setAttribute("estrella", this.estrella);
+        request.setAttribute("jugadors", this.partida.getUsuaris().size());
+        request.setAttribute("missatges", this.missatges);
+        session.setAttribute("missatgeglobal", this.missatgeGlobal);
+        request.getRequestDispatcher("cartons.jsp").forward(request, response);
+
     }
 
+    //Mètodes per fer funcionar el controlador
     public List<Carto> iniciaCartons() {
         int i;
         List<Carto> cartonsX = new ArrayList();
@@ -264,6 +141,127 @@ public class CartonsControler extends HttpServlet {
             cartonsX.add(cartoX);
         }
         return cartonsX;
+    }
+
+    public boolean permetre(HttpServletRequest request) {
+        boolean permes = false;
+        carregaInvitacions();
+        String invitacio = request.getParameter("invitacio");
+        if (invitacioNecessaria) {
+            //Cercam la invitació
+            if (invitacions.containsKey(invitacio)) {
+                //Si la data no ha acabat
+                LocalDate avui = LocalDate.now();
+                LocalDate dataFi = LocalDate.parse(invitacions.get(invitacio));
+                if (avui.isAfter(dataFi)) {
+                    //No se pot accedir al bingo
+                    permes = false;
+                    //enviar al jsp amb error
+                } else {
+                    //Se pot accedir per no tenir
+                    permes = true;
+                }
+            }
+        } else {
+            //Si no és necessaria la invitacio
+            permes = true;
+        }
+        return permes;
+    }
+
+    public List<Carto> crearUsuari(HttpServletRequest request, HttpSession session) {
+        //Collim les dades de l'usuari
+        String nom = request.getParameter("nom");
+        String avatar = request.getParameter("avatar");
+        int idPartida = Integer.parseInt(request.getParameter("idPartida"));
+        this.partida = consultaPartida(idPartida);
+        List<Carto> cartons = new ArrayList();
+
+        //Si l'usuari no existeix
+        if (!idUsuari(session.getId())) {
+            //Cream l'usuari i l'inicialitzam
+            this.usuari = new Usuari();
+            this.usuari.setNom(nom);
+            this.usuari.setAvatar(avatar);
+            this.usuari.setIdSession(session.getId());
+            this.usuari.setPartida(this.partida);
+            //Afegim l'usuari a la partida
+            this.partida.afegeixUsuari(usuari);
+            //Collim quants de cartons hem de tenir segons la partida
+            this.numeroCartons = this.partida.getCartons();
+            //Li donam els cartons
+            cartons = iniciaCartons();
+            //Ho publicam als missatges
+            this.missatges = this.missatges + "S'ha afegit el jugador " + nom + "\r\n";
+
+            //Si l'usuari SÍ existeix
+        } else {
+            //Només passam les dades dels cartons que té (p.e. si s'ha fet un refrescar de la pàgina
+            this.usuari = consultaUsuari(session.getId());
+            cartons = (List<Carto>) session.getAttribute("cartons");
+        }
+        
+        return cartons;
+    }
+
+    public List<Carto> marcaNumero(String numero, HttpServletRequest request, HttpSession session) {
+        int num;
+        if (numero.equals("")) {
+            num = 0;
+        } else {
+            num = Integer.parseInt(numero);
+        }
+
+        List<Carto> cartons = new ArrayList();
+        this.usuari = consultaUsuari(session.getId());
+        //Si és una altra partida, l'hem de posar com la nostra
+        int idPartida = this.usuari.getPartida().getIdPartida();
+        this.partida = consultaPartida(idPartida);
+
+        cartons = (List<Carto>) session.getAttribute("cartons");
+
+        if (this.usuari.isLinea()) {
+            this.usuari.setLinea2(true);
+            this.usuari.setLinea(false);
+        }
+
+        if (this.partida.isLinea() && !this.usuari.isLinea2()) {
+            this.usuari.setLinea(true);
+        }
+        if (this.partida.isBingo()) {
+            this.usuari.setBingo(true);
+        }
+
+        if (num > 0) {
+            int i;
+            for (i = 0; i < this.numeroCartons; i++) {
+                cartons.get(i).tachaNumero(num);
+                //Si cantam linea
+                if (cartons.get(i).esLinea()) {
+                    if (!this.partida.isLinea()) {
+                        this.usuari.setLinea(true);
+                        this.missatges = this.missatges + this.usuari.getNom() + " ha cantat línea\r\n";
+                        this.partida.setLinea(true);
+                        this.missatgeGlobal = this.usuari.getNom() + " ha cantat linea!";
+                        this.usuari.setLinies(this.usuari.getLinies() + 1);
+                    }
+                }
+                //Si cantam bingo
+                if (cartons.get(i).isBingo()) {
+                    cartons.get(i).bingo();
+                    this.usuari.setBingo(true);
+                    this.partida.setBingo(true);
+                    this.missatges = this.missatges + this.usuari.getNom() + " ha cantat bingo\r\n";
+                    this.missatgeGlobal = this.usuari.getNom() + " ha cantat bingo!";
+                    this.usuari.setBingos(this.usuari.getBingos() + 1);
+                }
+                //Si només ens queda un número
+                if (cartons.get(i).getNumeros() == 14) {
+                    this.estrella = true;
+                }
+            }
+        }
+        return cartons;
     }
 
     public void carregaInvitacions() {

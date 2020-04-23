@@ -20,13 +20,14 @@ public class Partida {
         this.cartons = 0;
         this.titol = "Orfe";
         this.bolles.clear();
-        //Hem de posar les 3 primeres bolles a 0
+        //Hem de posar les 3 bolles a 0
         //per dur el comptador de les darreres bolles
         Bolla bolla = new Bolla();
         bolla.setValor(-1);
-        this.bolles.add(bolla);
-        this.bolles.add(bolla);
-        this.bolles.add(bolla);
+        this.tresBolles.clear();
+        this.tresBolles.add(bolla);
+        this.tresBolles.add(bolla);
+        this.tresBolles.add(bolla);
         //Inicialitzam els usuaris a 0
         this.usuaris.clear();
     }
@@ -80,7 +81,7 @@ public class Partida {
     }
 
     public List<Bolla> getTresBolles() {
-        return this.bolles.subList(this.bolles.size() - 3, this.bolles.size());
+        return this.tresBolles;
     }
 
     public List<Usuari> getUsuaris() {
@@ -98,6 +99,9 @@ public class Partida {
 
     public void afegeixBolla(Bolla bolla) {
         this.bolles.add(bolla);
+        this.tresBolles.remove(0);
+        this.tresBolles.add(bolla);
+        
     }
 
     public void afegeixUsuari(Usuari usuari) {
@@ -112,13 +116,14 @@ public class Partida {
         this.bingo = false;
         this.linea = false;
         this.bolles.clear();
-        //Hem de posar les 3 primeres bolles a 0
+        this.tresBolles.clear();
+        //Hem de posar les 3 bolles a 0
         //per dur el comptador de les darreres bolles
         Bolla bolla = new Bolla();
         bolla.setValor(-1);
-        this.bolles.add(bolla);
-        this.bolles.add(bolla);
-        this.bolles.add(bolla);
+        this.tresBolles.add(bolla);
+        this.tresBolles.add(bolla);
+        this.tresBolles.add(bolla);
     }
 
 }

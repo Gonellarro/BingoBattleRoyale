@@ -85,6 +85,8 @@ public class Carto {
         int i;
         int j;
         int[][] vectors = new int[9][3];
+
+        System.out.println("---------- Carto ---------");
         //1.Generar els 9 vectors
         for (i = 0; i < 9; i++) {
             vectors[i] = crearVector(3, 10, i);
@@ -115,15 +117,9 @@ public class Carto {
             vector[i] = 0;
         }
 
+        valor = randomValor(columna, valorMaxim);
         //Posam el valor a l'atzar comprovant que no està repetit
         for (i = 0; i < longitud; i++) {
-            if (columna == 8) {
-                //Si estam en la darrera columna, hem d'arribar fins a 10 en comptes de fins a 9 
-                //Per contemplar el cas del 90
-                valor = (int) Math.floor(Math.random() * (valorMaxim + 1)) + (columna * 10);
-            } else {
-                valor = (int) Math.floor(Math.random() * (valorMaxim)) + (columna * 10);
-            }
             repeteix = true;
             while (repeteix) {
                 repeteix = false;
@@ -132,19 +128,18 @@ public class Carto {
                     //Si es valor ja ha sortit
                     if (vector[j] == valor) {
                         repeteix = true;
-                        valor = (int) Math.floor(Math.random() * valorMaxim) + (columna * 10);
-
+                        valor = randomValor(columna, valorMaxim);
                     }
                 }
-            }
-            if (valor == 0) {
-                valor = (int) Math.floor(Math.random() * valorMaxim) + (columna * 10);
-                while (valor == 0) {
-                    valor = (int) Math.floor(Math.random() * valorMaxim) + (columna * 10);
+                //Si el primer número que ha sortit ha sigut un 0, el bucle j no l'ha tingut en compte, per tant, ho hem de tractar a part
+                if (valor == 0) {
+                    repeteix = true;
+                    valor = randomValor(columna, valorMaxim);
                 }
             }
             //Si no s'ha repetit, assignam el valor a la cel·la de la linea en curs
             vector[i] = valor;
+            System.out.println("V: " + valor);
         }
         return vector;
     }
@@ -226,6 +221,18 @@ public class Carto {
                 }
             }
         }
+    }
+
+    public int randomValor(int columna, int valorMaxim) {
+        int valor;
+        if (columna == 8) {
+            //Si estam en la darrera columna, hem d'arribar fins a 10 en comptes de fins a 9 
+            //Per contemplar el cas del 90
+            valor = (int) Math.floor(Math.random() * (valorMaxim + 1)) + (columna * 10);
+        } else {
+            valor = (int) Math.floor(Math.random() * (valorMaxim)) + (columna * 10);
+        }
+        return valor;
     }
 
 }

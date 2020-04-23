@@ -2,7 +2,10 @@
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
     <a class="navbar-brand" href="${pageContext.request.contextPath}"> 
         <img src="${pageContext.request.contextPath}/resources/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        NoEstamBollats! - <c:out value="${partida.titol}"/></a>
+        <c:if test="${partida.titol == ''}">
+            NoEstamBollats! -
+        </c:if>
+        <c:out value="${partida.titol}"/></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
