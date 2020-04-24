@@ -12,12 +12,12 @@
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
 
         <title>BingoWeb NoEstamBollats</title>
- 
+
     </head>
-    <body>
+    <body OnLoad="document.formulari.numero.focus();">
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
-        <form action="${pageContext.request.contextPath}/CartonsControler" method="post">
+        <form name="formulari" action="${pageContext.request.contextPath}/CartonsControler" method="post">
             <div class ="container">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -29,10 +29,10 @@
                                                 <td 
                                                     <c:if test="${estrella}">
                                                         class="bg-danger text-white border border-secondary"
-                                                     </c:if>  
+                                                    </c:if>  
                                                     >
                                                     Darreres bolles&nbsp</td>
-                                                <c:forEach var ="bolla" items="${partida.tresBolles}">
+                                                    <c:forEach var ="bolla" items="${partida.tresBolles}">
                                                     <td class="table-primary border border-secondary"><c:out value="${bolla.valor + 1}"/></td>
                                                 </c:forEach>
                                             </tr></table>
@@ -75,52 +75,53 @@
                                                 </tr><tr>
                                                 </c:forEach>
                                             </tr>
-
                                         </table>
                                     </c:forEach>
                                 </div> 
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <c:if test="${partida.linea && usuari.linea}">
-                                        <div class="alert alert-warning" role="alert">
-                                            <c:out value = "${missatgeglobal}"/>
-                                        </div>
-                                    </c:if>
-                                    <c:if test="${partida.bingo && usuari.bingo}">
-                                        <div class="alert alert-success" role="alert">
-                                            <c:out value = "${missatgeglobal}"/>
-                                        </div>
-                                    </c:if>     
+                                    <c:if test="${usuari.pintarEvent}">
+                                        <c:choose>
+                                            <c:when test="${partida.bingo}">
+                                                <div class="alert alert-success" role="alert">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="alert alert-warning" role="alert">
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <c:out value = "${partida.missatgesEvents}"/>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label><strong>Número</strong></label>
+                                        <input type="number" class="form-control" id="numero" name ="numero"  placeholder="Introdueix el número que ha sortit">
+                                    </div>
+                                    <div class="col-6">
+                                        <label><strong>Participants</strong></label>
+                                        <h1 class="display-5">
+                                            <c:out value = "${jugadors}"/>
+                                        </h1>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label><strong>Número</strong></label>
-                                    <input type="number" class="form-control" id="numero" name ="numero"  placeholder="Introdueix el número que ha sortit">
-                                </div>
-                                <div class="col-6">
-                                    <label><strong>Participants</strong></label>
-                                    <h1 class="display-5">
-                                        <c:out value = "${jugadors}"/>
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">          
-                            <div class="row">
-                                <div class="col-12">                    
-                                    <button type="submit" class="btn btn-primary btn-block" >Enviar</button>
+                            <div class="modal-footer">          
+                                <div class="row">
+                                    <div class="col-12">                    
+                                        <button type="submit" class="btn btn-primary btn-block" >Enviar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="text-left">
+                        <label><strong>Missatges</strong></label>
+                        <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${partida.missatgesLog}"/></textarea>
+                    </div>
                 </div>
-                <div class="text-left">
-                    <label><strong>Missatges</strong></label>
-                    <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${missatges}"/></textarea>
-                </div>
-            </div>
         </form>   
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

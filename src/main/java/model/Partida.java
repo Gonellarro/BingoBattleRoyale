@@ -13,6 +13,8 @@ public class Partida {
     private List<Bolla> bolles = new ArrayList();
     private List<Bolla> tresBolles = new ArrayList();
     private List<Usuari> usuaris = new ArrayList();
+    private String missatgesLog;
+    private String missatgesEvents;
 
     public Partida() {
         this.bingo = false;
@@ -30,6 +32,9 @@ public class Partida {
         this.tresBolles.add(bolla);
         //Inicialitzam els usuaris a 0
         this.usuaris.clear();
+        //Posam els missatges a ""
+        this.missatgesEvents = "";
+        this.missatgesLog = "";
     }
 
     public boolean isBingo() {
@@ -91,6 +96,22 @@ public class Partida {
     public void setUsuaris(List<Usuari> usuaris) {
         this.usuaris = usuaris;
     }
+    
+    public String getMissatgesLog() {
+        return missatgesLog;
+    }
+
+    public void setMissatgesLog(String missatgesLog) {
+        this.missatgesLog = missatgesLog;
+    }
+
+    public String getMissatgesEvents() {
+        return missatgesEvents;
+    }
+
+    public void setMissatgesEvents(String missatgesEvents) {
+        this.missatgesEvents = missatgesEvents;
+    }    
 
     @Override
     public String toString() {
@@ -101,7 +122,7 @@ public class Partida {
         this.bolles.add(bolla);
         this.tresBolles.remove(0);
         this.tresBolles.add(bolla);
-        
+
     }
 
     public void afegeixUsuari(Usuari usuari) {
@@ -124,6 +145,10 @@ public class Partida {
         this.tresBolles.add(bolla);
         this.tresBolles.add(bolla);
         this.tresBolles.add(bolla);
+        this.missatgesEvents = "";
+        this.missatgesLog = "";
     }
+
+
 
 }

@@ -9,18 +9,17 @@ public class Usuari {
     private int linies;
     private int bingos;
     private boolean linea;
-    private boolean linea2;
     private boolean bingo;
+    private boolean pintarEvent;
 
     public Usuari() {
         this.nom = "Innombrable";
         this.avatar = "face13";
         this.linea = false;
-        this.linea2 = false;
         this.bingo = false;
         this.linies = 0;
         this.bingos = 0;
-        
+        this.pintarEvent = false;
     }
 
     public String getNom() {
@@ -87,11 +86,11 @@ public class Usuari {
         this.bingo = bingo;
     }
 
-    public boolean isLinea2() {
-        return linea2;
+    public boolean isPintarEvent() {
+        return pintarEvent;
     }
 
-    public void setLinea2(boolean linea2) {
-        this.linea2 = linea2;
+    public void setPintarEvent(boolean pintarEvent) {
+        this.pintarEvent = pintarEvent;
     }
 }

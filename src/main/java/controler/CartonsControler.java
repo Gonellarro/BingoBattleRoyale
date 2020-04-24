@@ -24,16 +24,11 @@ public class CartonsControler extends HttpServlet {
     private Partida partida;
     private boolean invitacioNecessaria = false;
     private int numeroCartons;
+    private List<Carto> cartons = new ArrayList();
     private static HashMap<String, String> invitacions = new HashMap<>();
-    private static String missatges = "";
-    private static String missatgeGlobal = "";
     private static List<Partida> partides = new ArrayList();
     private static boolean estrella = false;
 
-    //Hem de menester 2 variables que controlin sa linea.
-    //Una global i que , que indicarà a tots els jugadors que hi ha hagut linea
-    //Una local que estarà apagada fins a que vegi que hi ha hagut linea i quan ho detecti, ho notificarà
-    //Però s'encedrà per no tornar-ho a dir
     @Override
     public void init(ServletConfig config) throws ServletException {
 
@@ -56,18 +51,13 @@ public class CartonsControler extends HttpServlet {
             this.partida = consultaPartida(idPartida);
             switch (accio) {
                 case "reiniciar":
-                    List<Carto> cartons = new ArrayList();
-                    cartons = iniciaCartons();
-                    this.missatges = "";
-                    this.missatgeGlobal = "";
+                    this.cartons = iniciaCartons();
                     this.estrella = false;
 
                     session.setAttribute("cartons", cartons);
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
                     request.setAttribute("jugadors", this.partida.getUsuaris().size());
-                    request.setAttribute("missatges", this.missatges);
-                    session.setAttribute("missatgeglobal", this.missatgeGlobal);
                     request.getRequestDispatcher("cartons.jsp").forward(request, response);
                     break;
                 case "graella":
@@ -97,13 +87,12 @@ public class CartonsControler extends HttpServlet {
 
         this.partides = (List<Partida>) getServletContext().getAttribute("partides");
         HttpSession session = request.getSession();
-        List<Carto> cartons = new ArrayList();
-        
+
         //Si trobam nom, és que hem de crear un usuari nou 
         if (request.getParameterMap().containsKey("nom")) {
             //Hem de veure si hem de crear o no un nou usuari
             if (permetre(request)) {
-                cartons = crearUsuari(request, session);
+                this.cartons = crearUsuari(request, session);
             } else {
                 //jsp_error;
             }
@@ -112,7 +101,11 @@ public class CartonsControler extends HttpServlet {
         //Si el que arriba és el número, hem de tachar-ho
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
-            cartons = marcaNumero(numero, request, session);
+            this.cartons = marcaNumero(numero, request, session);
+            comprovaLinea();
+            comprovaBingo();
+            comprovaDarrerNumero();
+            comprovaPintar();
         }
 
         //Actualitzam la partida dins la llista de partides
@@ -120,13 +113,11 @@ public class CartonsControler extends HttpServlet {
         this.partides.add(this.partida);
         getServletContext().setAttribute("partides", this.partides);
         //Enviam les dades al jsp
-        session.setAttribute("cartons", cartons);
+        session.setAttribute("cartons", this.cartons);
         session.setAttribute("partida", this.partida);
         session.setAttribute("usuari", this.usuari);
         request.setAttribute("estrella", this.estrella);
         request.setAttribute("jugadors", this.partida.getUsuaris().size());
-        request.setAttribute("missatges", this.missatges);
-        session.setAttribute("missatgeglobal", this.missatgeGlobal);
         request.getRequestDispatcher("cartons.jsp").forward(request, response);
 
     }
@@ -192,7 +183,7 @@ public class CartonsControler extends HttpServlet {
             //Li donam els cartons
             cartons = iniciaCartons();
             //Ho publicam als missatges
-            this.missatges = this.missatges + "S'ha afegit el jugador " + nom + "\r\n";
+            this.partida.setMissatgesLog(this.partida.getMissatgesLog() + "S'ha afegit el jugador " + nom + "\r\n");
 
             //Si l'usuari SÍ existeix
         } else {
@@ -200,7 +191,7 @@ public class CartonsControler extends HttpServlet {
             this.usuari = consultaUsuari(session.getId());
             cartons = (List<Carto>) session.getAttribute("cartons");
         }
-        
+
         return cartons;
     }
 
@@ -220,45 +211,10 @@ public class CartonsControler extends HttpServlet {
 
         cartons = (List<Carto>) session.getAttribute("cartons");
 
-        if (this.usuari.isLinea()) {
-            this.usuari.setLinea2(true);
-            this.usuari.setLinea(false);
-        }
-
-        if (this.partida.isLinea() && !this.usuari.isLinea2()) {
-            this.usuari.setLinea(true);
-        }
-        if (this.partida.isBingo()) {
-            this.usuari.setBingo(true);
-        }
-
         if (num > 0) {
             int i;
             for (i = 0; i < this.numeroCartons; i++) {
                 cartons.get(i).tachaNumero(num);
-                //Si cantam linea
-                if (cartons.get(i).esLinea()) {
-                    if (!this.partida.isLinea()) {
-                        this.usuari.setLinea(true);
-                        this.missatges = this.missatges + this.usuari.getNom() + " ha cantat línea\r\n";
-                        this.partida.setLinea(true);
-                        this.missatgeGlobal = this.usuari.getNom() + " ha cantat linea!";
-                        this.usuari.setLinies(this.usuari.getLinies() + 1);
-                    }
-                }
-                //Si cantam bingo
-                if (cartons.get(i).isBingo()) {
-                    cartons.get(i).bingo();
-                    this.usuari.setBingo(true);
-                    this.partida.setBingo(true);
-                    this.missatges = this.missatges + this.usuari.getNom() + " ha cantat bingo\r\n";
-                    this.missatgeGlobal = this.usuari.getNom() + " ha cantat bingo!";
-                    this.usuari.setBingos(this.usuari.getBingos() + 1);
-                }
-                //Si només ens queda un número
-                if (cartons.get(i).getNumeros() == 14) {
-                    this.estrella = true;
-                }
             }
         }
         return cartons;
@@ -309,6 +265,57 @@ public class CartonsControler extends HttpServlet {
             }
         }
         return usuari;
+    }
+
+    public void comprovaLinea() {
+        int i;
+        for (i = 0; i < this.numeroCartons; i++) {
+            if (this.cartons.get(i).esLinea()) {
+                if (!this.partida.isLinea()) {
+                    this.partida.setMissatgesLog(this.partida.getMissatgesLog() + this.usuari.getNom() + " ha cantat línea\r\n");
+                    this.partida.setLinea(true);
+                    this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat linea!");
+                    //Aumentam en 1 el número de linies cantades
+                    this.usuari.setLinies(this.usuari.getLinies() + 1);
+                }
+            }
+        }
+    }
+
+    public void comprovaBingo() {
+        int i;
+        for (i = 0; i < this.numeroCartons; i++) {
+            if (this.cartons.get(i).esBingo()) {
+                this.cartons.get(i).bingo();
+                this.partida.setBingo(true);
+                this.partida.setMissatgesLog(this.partida.getMissatgesLog() + this.usuari.getNom() + " ha cantat bingo\r\n");
+                this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat bingo!");
+                //Aumentam en 1 els números de bingos cantats
+                this.usuari.setBingos(this.usuari.getBingos() + 1);
+            }
+        }
+    }
+
+    public void comprovaDarrerNumero() {
+        int i;
+        for (i = 0; i < this.numeroCartons; i++) {
+            if (this.cartons.get(i).getNumeros() == 14) {
+                this.estrella = true;
+            }
+        }
+    }
+
+    public void comprovaPintar() {
+        this.usuari.setPintarEvent(false);
+        if ((this.partida.isLinea()) && (!this.usuari.isLinea())) {
+            System.out.println("Ha de pintar l'event");
+            this.usuari.setPintarEvent(true);
+            this.usuari.setLinea(true);
+        }
+        if ((this.partida.isBingo()) && (!this.usuari.isBingo())) {
+            this.usuari.setPintarEvent(true);
+            this.usuari.setBingo(true);
+        }
     }
 
 }

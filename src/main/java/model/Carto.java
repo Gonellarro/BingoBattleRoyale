@@ -86,7 +86,6 @@ public class Carto {
         int j;
         int[][] vectors = new int[9][3];
 
-        System.out.println("---------- Carto ---------");
         //1.Generar els 9 vectors
         for (i = 0; i < 9; i++) {
             vectors[i] = crearVector(3, 10, i);
@@ -139,7 +138,6 @@ public class Carto {
             }
             //Si no s'ha repetit, assignam el valor a la cel·la de la linea en curs
             vector[i] = valor;
-            System.out.println("V: " + valor);
         }
         return vector;
     }
@@ -173,9 +171,11 @@ public class Carto {
         int i;
         int j;
         int aux;
-        int linies = 0;
+        boolean linea = false;
+        //Revisam les 3 files
         for (i = 0; i < 3; i++) {
             aux = 0;
+            //Si aquesta fila no ha sigut cantada
             if (this.linea[i] == 0) {
                 for (j = 0; j < 9; j++) {
                     if (this.linies[i][j] > 100) {
@@ -190,30 +190,30 @@ public class Carto {
                         }
                     }
                     this.linea[i] = 1;
-                    linies++;
+                    linea = true;
                 }
             }
         }
+        return linea;
+    }
+    
+    public boolean esBingo(){
         //Comprovam si tenim 3 linies -> Bingo!
         int total = 0;
+        int i;
+        boolean bingo = false;
         for (i = 0; i < 3; i++) {
             total = total + this.linea[i];
         }
         if (total == 3) {
-            this.bingo = true;
+            bingo = true;
         }
-        //Si hi ha una linea, tenim una linea
-        if (linies > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return bingo;
     }
 
     public void bingo() {
         int i;
         int j;
-        System.out.println("ENTAM A FER LA SUMA DEL BINGO");
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 9; j++) {
                 if (this.linies[i][j] > 0) {
