@@ -53,6 +53,9 @@ public class CartonsControler extends HttpServlet {
                 case "reiniciar":
                     this.cartons = iniciaCartons();
                     this.estrella = false;
+                    this.usuari.setPintarEvent(false);
+                    this.usuari.setLinea(false);
+                    this.usuari.setBingo(false);
 
                     session.setAttribute("cartons", cartons);
                     session.setAttribute("partida", this.partida);
