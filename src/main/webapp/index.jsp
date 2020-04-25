@@ -8,12 +8,12 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="css/styles.css" rel="stylesheet">
-        <title>BingoWeb NoEstamBollats</title>
+        <title>BingoWeb Battle Royale</title>
     </head>
     <body>
         <div class="container text-center">
-            <h3 class="mb-1 mt-5">Bingo NoEstamBollats!</h3>
-            <h6> v2.24.01 </h6>
+            <h3 class="mb-1 mt-5">Bingo Battle Royale</h3>
+            <h6> v1.25.01 </h6>
             <!--<img src="${pageContext.request.contextPath}/resources/img/portada.jpg" class="img-fluid" alt="Bingo No estam bollats!">-->
             <br>
             <a class="btn btn-primary" href="${pageContext.request.contextPath}/menu.jsp">Iniciar</a>
