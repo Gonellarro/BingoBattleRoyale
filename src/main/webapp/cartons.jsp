@@ -11,7 +11,7 @@
         <!-- Check Image CSS -->
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
 
-        <title>BingoWeb NoEstamBollats</title>
+        <title>BingoWeb Battle Royale</title>
 
     </head>
     <body OnLoad="document.formulari.numero.focus();">
@@ -21,32 +21,43 @@
             <div class ="container">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <table style="width:100%"><tr>
-                                                <td 
-                                                    <c:if test="${estrella}">
-                                                        class="bg-danger text-white border border-secondary"
-                                                    </c:if>  
-                                                    >
-                                                    Darreres bolles&nbsp</td>
+                        <div class="modal-header
+                             <c:if test="${estrella}">
+                                 bg-danger text-white
+                             </c:if>  
+                             <c:if test="${!estrella}">
+                                 text-dark bg-light
+                             </c:if>  
+                             ">
+                            <div class="container" >
+                                <h4 class="modal-title">
+                                    <div class="row">
+                                        <div class="col-5">Darreres:</div>
+                                        <div class="col-5">
+                                            <table>
+                                                <th class="col-3"></th>
+                                                <th class="col-3"></th>
+                                                <th class="col-3"></th>
+                                                <tr>
                                                     <c:forEach var ="bolla" items="${partida.tresBolles}">
-                                                    <td class="table-primary border border-secondary"><c:out value="${bolla.valor + 1}"/></td>
-                                                </c:forEach>
-                                                <td>
-                                                    &nbsp<img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.perfil}"/>.png" width="40" height="40" alt="">
-                                                </td>
-                                            </tr></table>
+                                                        <td class="table-primary border border-secondary text-right"><c:out value="${bolla.valor + 1}"/></td>
+                                                    </c:forEach>
+                                                </tr></table>
+                                        </div>
+                                        <div class="col-2">
+                                            <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.perfil}"/>.png" width="30" height="30" alt="">
+                                        </div>
                                     </div>
-                                </div>
-                            </h4>
+                                </h4>
+                            </div>
                         </div>
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12">
                                     <c:forEach var ="carto" items="${usuari.cartons}">
+                                        <div class="text-right">
+                                            <strong>Números restants: </strong><c:out value = "${15-carto.numeros}"/>
+                                        </div>
                                         <table class="table table-bordered table-sm">
                                             <tr>
                                                 <c:forEach var="linia" items="${carto.linies}">
@@ -87,54 +98,72 @@
                                     <c:if test="${usuari.pintarEvent}">
                                         <div
                                             <c:choose>
-                                                <c:when test="${partida.atac}">
-                                                    class="alert alert-danger" role="alert"
-                                                </c:when>
                                                 <c:when test="${partida.bingo}">
                                                     class="alert alert-success" role="alert"
+                                                </c:when>
+                                                <c:when test="${partida.atac}">
+                                                    class="alert alert-danger" role="alert"
                                                 </c:when>
                                                 <c:when test="${partida.linea}">
                                                     class="alert alert-warning" role="alert"
                                                 </c:when>
                                             </c:choose>
-                                                    >
+                                            >
                                             <c:out value = "${partida.missatgesEvents}"/>
                                         </div>
                                     </c:if>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <label><strong>Número</strong></label>
-                                    <input type="number" class="form-control" id="numero" name ="numero"  placeholder="Introdueix el número que ha sortit">
+                                    <input type="number" class="form-control" id="numero" name ="numero"  placeholder="Bolla">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4 text-right">
                                     <label><strong>Participants</strong></label>
-                                    <h1 class="display-5">
+                                    <h1 class="display-5 text-right">
                                         <c:out value = "${jugadors}"/>
+                                    </h1>
+                                </div>
+                                <div class="col-4">
+                                    <label><strong>Falten</strong></label>
+                                    <h1 class="display-5">
+                                        <c:out value = "${90-partida.numero}"/>
                                     </h1>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">          
-                            <div class="row">
-                                <div class="col-6">   
-                                    <c:if test="${usuari.perfil=='atacant'}">
-                                        <c:if test="${estrella}">
-                                             <a href="${pageContext.request.contextPath}/CartonsControler?accio=bomba" class="btn btn-danger" role="button">Bomba!</a>
-                                        </c:if>  
-                                    </c:if> 
-                                </div>
-                                <div class="col-6">  
-                                    <button type="submit" class="btn btn-primary" >Enviar</button>
+                        <div class="modal-footer text-dark bg-light">   
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-6">   
+                                        <c:if test="${usuari.perfil=='atacant'}">
+                                            <c:if test="${estrella}">
+                                                <a href="${pageContext.request.contextPath}/CartonsControler?accio=bomba" class="btn btn-danger" role="button">Bomba!</a>
+                                            </c:if>  
+                                        </c:if> 
+                                    </div>
+                                    <div class="col-6">  
+                                        <button type="submit" class="btn btn-primary" >Enviar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="text-left">
-                    <label><strong>Missatges</strong></label>
-                    <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${partida.missatgesLog}"/></textarea>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">  
+                                    <div class="text-left">
+                                        <label><strong>Missatges</strong></label>
+                                        <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${partida.missatgesLog}"/></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>   

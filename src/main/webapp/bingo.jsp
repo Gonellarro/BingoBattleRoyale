@@ -20,9 +20,10 @@
             <div class ="container">
                 <div id="login-overlay" class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title"><strong>Partida: </strong><c:out value = "${partida.titol}"/> -
-                                <strong>Id:</strong> <c:out value = "${partida.idPartida}"/></h4>
+                        <div class="modal-header  text-dark bg-light">
+                            <h5 class="modal-title">
+                                <strong>Id:</strong> <c:out value = "${partida.idPartida}"/>
+                            </h5>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -46,17 +47,18 @@
                             </div>  
                             <div class="row">
                                 <div class="col-12 text-center">
-                                    <label><strong>Número</strong></label>
-                                    <h1 class="display-5">
+                                    <h1 class="display-5 border  text-light bg-dark">
                                         <c:out value = "${bollaActual.valor + 1}"/>
                                     </h1>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">          
-                            <div class="row">
-                                <div class="col-12">   
-                                    <button type="submit" class="btn btn-primary">Bolla</button>
+                        <div class="modal-footer  text-dark bg-light">  
+                            <div class="container text-center">
+                                <div class="row">
+                                    <div class="col-12">   
+                                        <button type="submit" class="btn btn-primary">Bolla</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

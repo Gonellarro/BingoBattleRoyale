@@ -43,10 +43,10 @@ public class Battle {
             ferit = true;
         }
         if (ferit) {
-            missatge = missatge + usuariVictima.getNom() + " rep la bomba de " + usuariAtacant.getNom();
+            missatge = missatge + usuariVictima.getNom() + " rep la bomba de " + usuariAtacant.getNom() + "!\n\r";
             usuariVictima = llevaBolla(usuariVictima, graella);
         } else {
-            missatge = usuariVictima.getNom() + " atura la bomba de " + usuariAtacant.getNom();
+            missatge = usuariVictima.getNom() + " atura la bomba de " + usuariAtacant.getNom() + "!\n\r";
         }
         
         //Actualitzam l'usuari victima a la partida

@@ -34,9 +34,9 @@ public class Usuari {
         this.bingos = 0;
         this.pintarEvent = false;
         this.perfil = "normal";
-        this.aProb = 90;
+        this.aProb = 40;
         this.dProb = 0;
-        this.dpProb = 0;
+        this.dpProb = 50;
         this.mProb = 0;
         this.nProb = 100 - (aProb + dProb + dpProb + mProb);
         this.atac = false;

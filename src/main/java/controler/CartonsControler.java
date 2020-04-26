@@ -57,6 +57,8 @@ public class CartonsControler extends HttpServlet {
                     this.usuari.setBingo(false);
                     this.usuari.setCartons(iniciaCartons());
                     this.usuari.setAtac(false);
+                    //Reiniciar perfil
+                    this.usuari.assignaPerfil();
 
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);

@@ -17,6 +17,7 @@ public class Partida {
     private String missatgesLog;
     private String missatgesEvents;
     private boolean estrella;
+    private int numero;
 
     public Partida() {
         this.bingo = false;
@@ -39,6 +40,7 @@ public class Partida {
         this.missatgesLog = "";
         this.atac = false;
         this.estrella = false;
+        this.numero = 0;
     }
 
     public boolean isBingo() {
@@ -124,6 +126,18 @@ public class Partida {
     public void setAtac(boolean atac) {
         this.atac = atac;
     }
+    
+    public boolean isEstrella() {
+        return estrella;
+    }
+
+    public void setEstrella(boolean estrella) {
+        this.estrella = estrella;
+    }
+
+    public int getNumero() {
+        return this.bolles.size();
+    }    
 
     @Override
     public String toString() {
@@ -160,14 +174,8 @@ public class Partida {
         this.missatgesEvents = "";
         this.missatgesLog = "";
         this.atac = false;
-    }
-
-    public boolean isEstrella() {
-        return estrella;
-    }
-
-    public void setEstrella(boolean estrella) {
-        this.estrella = estrella;
+        this.numero = 0;
+        this.estrella=false;
     }
 
 }
