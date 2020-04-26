@@ -80,7 +80,7 @@
                                     <label>ID</label>
                                 </div>		
                                 <div class="col-10">
-                                    <input type="text" class="form-control" id="idPartida" name ="idPartida" placeholder="Introduïu Id partida" required>
+                                    <input type="number" class="form-control" id="idPartida" name ="idPartida" placeholder="Introduïu Id partida" required>
                                 </div>
                             </div>                            
                             <!--<div class="row">

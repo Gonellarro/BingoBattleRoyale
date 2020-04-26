@@ -53,7 +53,7 @@
                     <div class="modal-footer">          
                         <div class="row">
                             <div class="col-12">   
-                                <button class="btn btn-primary btn-block" onclick="goBack()">Torna enrera</button>
+                                <button class="btn btn-primary" onclick="goBack()">Torna enrera</button>
                             </div>
                         </div>
                     </div>

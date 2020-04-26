@@ -235,4 +235,7 @@ public class Carto {
         return valor;
     }
 
+    public void assignaValor(int i, int j, int valor){
+        this.linies[i][j] = valor;
+    }
 }

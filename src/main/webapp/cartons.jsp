@@ -35,6 +35,9 @@
                                                     <c:forEach var ="bolla" items="${partida.tresBolles}">
                                                     <td class="table-primary border border-secondary"><c:out value="${bolla.valor + 1}"/></td>
                                                 </c:forEach>
+                                                <td>
+                                                    &nbsp<img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.perfil}"/>.png" width="40" height="40" alt="">
+                                                </td>
                                             </tr></table>
                                     </div>
                                 </div>
@@ -43,7 +46,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12">
-                                    <c:forEach var ="carto" items="${cartons}">
+                                    <c:forEach var ="carto" items="${usuari.cartons}">
                                         <table class="table table-bordered table-sm">
                                             <tr>
                                                 <c:forEach var="linia" items="${carto.linies}">
@@ -82,46 +85,58 @@
                             <div class="row">
                                 <div class="col-12">
                                     <c:if test="${usuari.pintarEvent}">
-                                        <c:choose>
-                                            <c:when test="${partida.bingo}">
-                                                <div class="alert alert-success" role="alert">
+                                        <div
+                                            <c:choose>
+                                                <c:when test="${partida.atac}">
+                                                    class="alert alert-danger" role="alert"
                                                 </c:when>
-                                                <c:otherwise>
-                                                    <div class="alert alert-warning" role="alert">
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <c:out value = "${partida.missatgesEvents}"/>
-                                            </div>
-                                        </c:if>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label><strong>Número</strong></label>
-                                        <input type="number" class="form-control" id="numero" name ="numero"  placeholder="Introdueix el número que ha sortit">
-                                    </div>
-                                    <div class="col-6">
-                                        <label><strong>Participants</strong></label>
-                                        <h1 class="display-5">
-                                            <c:out value = "${jugadors}"/>
-                                        </h1>
-                                    </div>
+                                                <c:when test="${partida.bingo}">
+                                                    class="alert alert-success" role="alert"
+                                                </c:when>
+                                                <c:when test="${partida.linea}">
+                                                    class="alert alert-warning" role="alert"
+                                                </c:when>
+                                            </c:choose>
+                                                    >
+                                            <c:out value = "${partida.missatgesEvents}"/>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
-                            <div class="modal-footer">          
-                                <div class="row">
-                                    <div class="col-12">                    
-                                        <button type="submit" class="btn btn-primary btn-block" >Enviar</button>
-                                    </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label><strong>Número</strong></label>
+                                    <input type="number" class="form-control" id="numero" name ="numero"  placeholder="Introdueix el número que ha sortit">
+                                </div>
+                                <div class="col-6">
+                                    <label><strong>Participants</strong></label>
+                                    <h1 class="display-5">
+                                        <c:out value = "${jugadors}"/>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">          
+                            <div class="row">
+                                <div class="col-6">   
+                                    <c:if test="${usuari.perfil=='atacant'}">
+                                        <c:if test="${estrella}">
+                                             <a href="${pageContext.request.contextPath}/CartonsControler?accio=bomba" class="btn btn-danger" role="button">Bomba!</a>
+                                        </c:if>  
+                                    </c:if> 
+                                </div>
+                                <div class="col-6">  
+                                    <button type="submit" class="btn btn-primary" >Enviar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="text-left">
-                        <label><strong>Missatges</strong></label>
-                        <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${partida.missatgesLog}"/></textarea>
-                    </div>
                 </div>
+                <div class="text-left">
+                    <label><strong>Missatges</strong></label>
+                    <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${partida.missatgesLog}"/></textarea>
+                </div>
+            </div>
         </form>   
 
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

@@ -7,6 +7,7 @@ public class Partida {
 
     private boolean bingo;
     private boolean linea;
+    private boolean atac;
     private int cartons;
     private int idPartida;
     private String titol;
@@ -15,6 +16,7 @@ public class Partida {
     private List<Usuari> usuaris = new ArrayList();
     private String missatgesLog;
     private String missatgesEvents;
+    private boolean estrella;
 
     public Partida() {
         this.bingo = false;
@@ -35,6 +37,8 @@ public class Partida {
         //Posam els missatges a ""
         this.missatgesEvents = "";
         this.missatgesLog = "";
+        this.atac = false;
+        this.estrella = false;
     }
 
     public boolean isBingo() {
@@ -96,7 +100,7 @@ public class Partida {
     public void setUsuaris(List<Usuari> usuaris) {
         this.usuaris = usuaris;
     }
-    
+
     public String getMissatgesLog() {
         return missatgesLog;
     }
@@ -111,7 +115,15 @@ public class Partida {
 
     public void setMissatgesEvents(String missatgesEvents) {
         this.missatgesEvents = missatgesEvents;
-    }    
+    }
+
+    public boolean isAtac() {
+        return atac;
+    }
+
+    public void setAtac(boolean atac) {
+        this.atac = atac;
+    }
 
     @Override
     public String toString() {
@@ -147,8 +159,15 @@ public class Partida {
         this.tresBolles.add(bolla);
         this.missatgesEvents = "";
         this.missatgesLog = "";
+        this.atac = false;
     }
 
+    public boolean isEstrella() {
+        return estrella;
+    }
 
+    public void setEstrella(boolean estrella) {
+        this.estrella = estrella;
+    }
 
 }
