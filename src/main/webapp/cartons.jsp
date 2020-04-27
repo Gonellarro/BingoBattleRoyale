@@ -14,7 +14,7 @@
         <title>BingoWeb Battle Royale</title>
 
     </head>
-    <body OnLoad="document.formulari.numero.focus();">
+    <body OnLoad="document.formulari.numero.focus();" background="${pageContext.request.contextPath}/resources/img/fons.png">
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
         <form name="formulari" action="${pageContext.request.contextPath}/CartonsControler" method="post">
@@ -32,17 +32,13 @@
                             <div class="container" >
                                 <h4 class="modal-title">
                                     <div class="row">
-                                        <div class="col-5">Darreres:</div>
-                                        <div class="col-5">
-                                            <table>
-                                                <th class="col-3"></th>
-                                                <th class="col-3"></th>
-                                                <th class="col-3"></th>
-                                                <tr>
+                                        <div class="col-2">
+                                            <img src="${pageContext.request.contextPath}/resources/img/starwars/<c:out value="${usuari.avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                                        </div>
+                                        <div class="col-8 text-center">
                                                     <c:forEach var ="bolla" items="${partida.tresBolles}">
-                                                        <td class="table-primary border border-secondary text-right"><c:out value="${bolla.valor + 1}"/></td>
+                                                        <c:out value="${bolla.valor + 1}"/>
                                                     </c:forEach>
-                                                </tr></table>
                                         </div>
                                         <div class="col-2">
                                             <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.perfil}"/>.png" width="30" height="30" alt="">
@@ -158,7 +154,7 @@
                                 <div class="col-12">  
                                     <div class="text-left">
                                         <label><strong>Missatges</strong></label>
-                                        <textarea class="form-control" readonly="true" rows="2" id="log" placeholder="En construcció..."><c:out value="${partida.missatgesLog}"/></textarea>
+                                        <textarea class="form-control" readonly="true" rows="5" id="log" placeholder="Missatges de la partida"><c:out value="${partida.missatgesLog}"/></textarea>
                                     </div>
                                 </div>
                             </div>

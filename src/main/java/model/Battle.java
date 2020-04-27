@@ -37,16 +37,16 @@ public class Battle {
         //int i = partida.getUsuaris().lastIndexOf(usuariVictima);
         String missatge = "";
         if (torna) {
-            missatge = usuariVictima.getNom() + " torna la bomba!\n\r";
+            missatge = usuariVictima.getNom() + " torna la bomba!\r";
             usuariVictima = usuariAtacant;
             //i = partida.getUsuaris().lastIndexOf(usuariVictima);
             ferit = true;
         }
         if (ferit) {
-            missatge = missatge + usuariVictima.getNom() + " rep la bomba de " + usuariAtacant.getNom() + "!\n\r";
+            missatge = missatge + usuariVictima.getNom() + " rep la bomba de " + usuariAtacant.getNom() + "!\r";
             usuariVictima = llevaBolla(usuariVictima, graella);
         } else {
-            missatge = usuariVictima.getNom() + " atura la bomba de " + usuariAtacant.getNom() + "!\n\r";
+            missatge = usuariVictima.getNom() + " atura la bomba de " + usuariAtacant.getNom() + "!\r";
         }
         
         //Actualitzam l'usuari victima a la partida

@@ -11,9 +11,9 @@
         <!-- Check Image CSS -->
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
 
-        <title>BingoWeb NoEstamBollats</title>
+        <title>BingoWeb Battle Royale</title>
     </head>
-    <body>
+    <body background="${pageContext.request.contextPath}/resources/img/fons.png">
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera_bombo.jsp"/>    
         <form action="${pageContext.request.contextPath}/BingoControler" method="post">

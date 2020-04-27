@@ -10,9 +10,9 @@
         <link href="css/styles.css" rel="stylesheet">
         <title>BingoWeb NoEstamBollats</title>
     </head>
-    <body>
+    <body background="${pageContext.request.contextPath}/resources/img/fons.png">
         <div class="container text-center">
-            <h3 class="mb-1 mt-5">Bingo NoEstamBollats!</h3>
+            <h3 class="mb-1 mt-5 text-light">Bingo Battle Royale!</h3>
             <!--<img src="${pageContext.request.contextPath}/resources/img/portada.jpg" class="img-fluid" alt="Bingo No estam bollats!">-->
             <br>
             <div class="modal-dialog">
