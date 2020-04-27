@@ -33,7 +33,7 @@
                                 <h4 class="modal-title">
                                     <div class="row">
                                         <div class="col-2">
-                                            <img src="${pageContext.request.contextPath}/resources/img/starwars/<c:out value="${usuari.avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                                            <img src="${pageContext.request.contextPath}/resources/img/mario/<c:out value="${usuari.avatar}"/>.png" width="42" class="d-inline-block align-top" alt="">
                                         </div>
                                         <div class="col-8 text-center">
                                                     <c:forEach var ="bolla" items="${partida.tresBolles}">
@@ -41,7 +41,7 @@
                                                     </c:forEach>
                                         </div>
                                         <div class="col-2">
-                                            <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.perfil}"/>.png" width="30" height="30" alt="">
+                                            <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.perfil}"/>.png" width="42">
                                         </div>
                                     </div>
                                 </h4>

@@ -44,7 +44,7 @@
                                         <tr>
                                             <td><c:out value="${loopCounter.count}"/></td>
                                             <td>
-                                                <img src="${pageContext.request.contextPath}/resources/img/starwars/<c:out value="${usuari.avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                                                <img src="${pageContext.request.contextPath}/resources/img/mario/<c:out value="${usuari.avatar}"/>.png" width="30" height="30" class="d-inline-block align-top" alt="">
                                             </td>
                                             <td>
                                                 <c:out value="${usuari.nom}"/>

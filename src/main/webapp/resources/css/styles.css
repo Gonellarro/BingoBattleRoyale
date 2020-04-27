@@ -4,22 +4,22 @@
        -moz-appearance:none;
             appearance:none;
 }
-.face1{background-image:url("../img/starwars/face1.png");}
-.face2{background-image:url("../img/starwars/face2.png");}
-.face3{background-image:url("../img/starwars/face3.png");}
-.face4{background-image:url("../img/starwars/face4.png");}
-.face5{background-image:url("../img/starwars/face5.png");}
-.face6{background-image:url("../img/starwars/face6.png");}
-.face7{background-image:url("../img/starwars/face7.png");}
-.face8{background-image:url("../img/starwars/face8.png");}
-.face9{background-image:url("../img/starwars/face9.png");}
-.face10{background-image:url("../img/starwars/face10.png");}
-.face11{background-image:url("../img/starwars/face11.png");}
-.face12{background-image:url("../img/starwars/face12.png");}
-.face13{background-image:url("../img/starwars/face13.png");}
-.face14{background-image:url("../img/starwars/face14.png");}
-.face15{background-image:url("../img/starwars/face15.png");}
-.face16{background-image:url("../img/starwars/face16.png");}
+.face1{background-image:url("../img/mario/face1.png");}
+.face2{background-image:url("../img/mario/face2.png");}
+.face3{background-image:url("../img/mario/face3.png");}
+.face4{background-image:url("../img/mario/face4.png");}
+.face5{background-image:url("../img/mario/face5.png");}
+.face6{background-image:url("../img/mario/face6.png");}
+.face7{background-image:url("../img/mario/face7.png");}
+.face8{background-image:url("../img/mario/face8.png");}
+.face9{background-image:url("../img/mario/face9.png");}
+.face10{background-image:url("../img/mario/face10.png");}
+.face11{background-image:url("../img/mario/face11.png");}
+.face12{background-image:url("../img/mario/face12.png");}
+.face13{background-image:url("../img/mario/face13.png");}
+.face14{background-image:url("../img/mario/face14.png");}
+.face15{background-image:url("../img/mario/face15.png");}
+.face16{background-image:url("../img/mario/face16.png");}
 
 
 .cc-selector input:active +.drinkcard-cc{opacity: .9;}

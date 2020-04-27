@@ -11,7 +11,7 @@
         <!-- Check Image CSS -->
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
 
-        <title>BingoWeb BAttle Royale</title>
+        <title>BingoWeb Battle Royale</title>
     </head>
     <body background="${pageContext.request.contextPath}/resources/img/fons.png">
         <!-- Capçalera -->

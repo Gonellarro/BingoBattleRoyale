@@ -64,15 +64,7 @@
                                     <input id="face11" type="radio" name="avatar" value="face11" />
                                     <label class="drinkcard-cc face11"for="face11"></label>                 
                                     <input id="face12" type="radio" name="avatar" value="face12" />
-                                    <label class="drinkcard-cc face12"for="face12"></label>                 
-                                    <input id="face13" type="radio" name="avatar" value="face13" />
-                                    <label class="drinkcard-cc face13"for="face13"></label>                 
-                                    <input id="face14" type="radio" name="avatar" value="face14" />
-                                    <label class="drinkcard-cc face14" for="face14"></label>
-                                    <input id="face15" type="radio" name="avatar" value="face15" />
-                                    <label class="drinkcard-cc face15"for="face15"></label>                 
-                                    <input id="face16" type="radio" name="avatar" value="face16" />
-                                    <label class="drinkcard-cc face16"for="face16"></label>                 
+                                    <label class="drinkcard-cc face12"for="face12"></label>                                  
                                 </div>
                             </div>
                             <div class="row">
