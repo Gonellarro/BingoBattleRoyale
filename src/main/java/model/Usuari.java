@@ -15,31 +15,29 @@ public class Usuari {
     private boolean linea;
     private boolean bingo;
     private boolean pintarEvent;
+    private boolean desactivarEvent;
+    private String missatgeEvent;
+    private int tipusEvent; //0: Res, 1: Linea, 2: Bingo, 3:Atac ok, 4: Rebot, 5: Rebot i atac ok
     private List<Carto> cartons;
-    private String perfil;
-    private List<String> perfils = asList("atacant", "defensor", "defensorp", "mag", "normal");
-    private int aProb;
-    private int dProb;
-    private int dpProb;
-    private int mProb;
-    private int nProb;
+    private int bomba;
+    private int escut;
+    private int escutRebot;
     private boolean atac;
 
     public Usuari() {
         this.nom = "Innombrable";
-        this.avatar = "face13";
+        this.avatar = "face1";
         this.linea = false;
         this.bingo = false;
         this.linies = 0;
         this.bingos = 0;
         this.pintarEvent = false;
-        this.perfil = "normal";
-        this.aProb = 40;
-        this.dProb = 0;
-        this.dpProb = 50;
-        this.mProb = 0;
-        this.nProb = 100 - (aProb + dProb + dpProb + mProb);
-        this.atac = false;
+        this.desactivarEvent = false;
+        this.bomba = 0;
+        this.escut = 0;
+        this.escutRebot = 0;
+        this.missatgeEvent = "";
+        this.tipusEvent = 0;
     }
 
     public String getNom() {
@@ -122,62 +120,6 @@ public class Usuari {
         this.cartons = cartons;
     }
 
-    public String getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
-    }
-
-    public List<String> getPerfils() {
-        return perfils;
-    }
-
-    public void setPerfils(List<String> perfils) {
-        this.perfils = perfils;
-    }
-
-    public int getaProb() {
-        return aProb;
-    }
-
-    public void setaProb(int aProb) {
-        this.aProb = aProb;
-    }
-
-    public int getdProb() {
-        return dProb;
-    }
-
-    public void setdProb(int dProb) {
-        this.dProb = dProb;
-    }
-
-    public int getDpProb() {
-        return dpProb;
-    }
-
-    public void setDpProb(int dpProb) {
-        this.dpProb = dpProb;
-    }
-
-    public int getmProb() {
-        return mProb;
-    }
-
-    public void setmProb(int mProb) {
-        this.mProb = mProb;
-    }
-
-    public int getnProb() {
-        return nProb;
-    }
-
-    public void setnProb(int nProb) {
-        this.nProb = nProb;
-    }
-
     public boolean isAtac() {
         return atac;
     }
@@ -186,41 +128,65 @@ public class Usuari {
         this.atac = atac;
     }
 
+    public int getBomba() {
+        return bomba;
+    }
+
+    public void setBomba(int bomba) {
+        this.bomba = bomba;
+    }
+
+    public int getEscut() {
+        return escut;
+    }
+
+    public void setEscut(int escut) {
+        this.escut = escut;
+    }
+
+    public int getEscutRebot() {
+        return escutRebot;
+    }
+
+    public void setEscutRebot(int escutRebot) {
+        this.escutRebot = escutRebot;
+    }
+
+    public String getMissatgeEvent() {
+        return missatgeEvent;
+    }
+
+    public void setMissatgeEvent(String missatgeEvent) {
+        this.missatgeEvent = missatgeEvent;
+    }
+    
+    public int getTipusEvent() {
+        return tipusEvent;
+    }
+
+    public void setTipusEvent(int tipusEvent) {
+        this.tipusEvent = tipusEvent;
+    }
+    
+    public boolean isDesactivarEvent() {
+        return desactivarEvent;
+    }
+
+    public void setDesactivarEvent(boolean desactivarEvent) {
+        this.desactivarEvent = desactivarEvent;
+    }
+
 //Mètodes    
-    public void assignaPerfil() {
-        //Per defecte tindrem el perfil normal
-        this.perfil = this.perfils.get(4);
-        int valor;
-        //Triam a l'atzar un numero de 0 a 99
-        valor = (int) Math.floor(Math.random() * 100);
-        //Ara assignam el valor en funcio de les probabilitats de cada perfil
-        //Atacant
-        if ((0 < valor) && (valor < aProb)) {
-            this.perfil = this.perfils.get(0);
+    public void assignaPowerUps(int bombaP, int escutP, int escutRebotP) {
+        int atzar = (int) Math.floor(Math.random() * 100);
+        if (atzar < bombaP) {
+            this.bomba = 1;
         }
-        //Defensor
-        if ((aProb < valor) && (valor < dProb + aProb)) {
-            this.perfil = this.perfils.get(1);
+        if ((bombaP < atzar) && (atzar < bombaP + escutP)) {
+            this.escut = 1;
         }
-        //DefensorPlus
-        if ((dProb + aProb < valor) && (valor < dpProb + dProb + aProb)) {
-            this.perfil = this.perfils.get(2);
-        }
-        //Mag
-        if ((dpProb + dProb + aProb < valor) && (valor < mProb + dpProb + dProb + aProb)) {
-            this.perfil = this.perfils.get(3);
-        }
-        //Atancant
-        if (this.nom.equals("atacant")) {
-            this.perfil = this.perfils.get(0);
-        }
-        //Defensor
-        if (this.nom.equals("defensor")) {
-            this.perfil = this.perfils.get(1);
-        }
-        //Defensor +
-        if (this.nom.equals("defensorp")) {
-            this.perfil = this.perfils.get(2);
+        if ((bombaP + escutP < atzar) && (atzar < bombaP + escutP + escutRebotP)) {
+            this.escutRebot = 1;
         }
     }
 

@@ -41,7 +41,7 @@ public class CartonsControler extends HttpServlet {
     //DOGET I DOPOST
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        System.out.println("-------------DOGET------------");
         if (request.getParameterMap().containsKey("accio")) {
             String accio = request.getParameter("accio");
             HttpSession session = request.getSession();
@@ -57,8 +57,13 @@ public class CartonsControler extends HttpServlet {
                     this.usuari.setBingo(false);
                     this.usuari.setCartons(iniciaCartons());
                     this.usuari.setAtac(false);
-                    //Reiniciar perfil
-                    this.usuari.assignaPerfil();
+                    //Hem de triar si té bomba o escut o res
+                    this.usuari.setBomba(0);
+                    this.usuari.setEscut(0);
+                    this.usuari.setEscutRebot(0);
+                    this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP());
+                    System.out.println("Escuts: " + this.usuari.getEscut());
+                    System.out.println("EscutsR: " + this.usuari.getEscutRebot());
 
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
@@ -84,8 +89,12 @@ public class CartonsControler extends HttpServlet {
                 case "bomba":
                     Parrilla graella = new Parrilla();
                     graella.setBomboPartida(this.partida.getBolles());
+                    System.out.println("Usuari atacant: " + this.usuari.getNom());
                     Battle batalla = new Battle();
                     this.partida = batalla.bomba(this.partida, session.getId(), graella);
+                    for (Usuari usuTmp : this.partida.getUsuaris()) {
+                        System.out.println("Usuari: " + usuTmp.getNom() + "PintarEvent: " + usuTmp.isPintarEvent());
+                    }
 
                     //Actualitzam la partida dins la llista de partides
                     this.partides.remove(this.partida);
@@ -105,7 +114,7 @@ public class CartonsControler extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        System.out.println("------------DOPOST-------------");
         this.partides = (List<Partida>) getServletContext().getAttribute("partides");
         HttpSession session = request.getSession();
 
@@ -122,7 +131,7 @@ public class CartonsControler extends HttpServlet {
         //Si el que arriba és el número, hem de tachar-ho
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
-
+            System.out.println("Numero");
             this.usuari = consultaUsuari(session.getId());
             int idPartida = this.usuari.getPartida().getIdPartida();
             this.partida = consultaPartida(idPartida);
@@ -132,7 +141,6 @@ public class CartonsControler extends HttpServlet {
             comprovaBingo();
             comprovaDarrerNumero();
             comprovaAtac();
-            comprovaPintar();
         }
 
         //Actualitzam la partida dins la llista de partides
@@ -207,8 +215,8 @@ public class CartonsControler extends HttpServlet {
             this.numeroCartons = this.partida.getCartons();
             //Li donam els cartons
             this.usuari.setCartons(iniciaCartons());
-            //Li assignam un perfil al atzar
-            this.usuari.assignaPerfil();
+            //Hem d'assignar-li bomba, escut o res
+            this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP());
             //Ho publicam als missatges
             this.partida.setMissatgesLog(this.partida.getMissatgesLog() + "S'ha afegit el jugador " + nom + "\r\n");
 
@@ -226,26 +234,25 @@ public class CartonsControler extends HttpServlet {
             num = 0;
         } else {
             num = Integer.parseInt(numero);
-        }
+            //List<Carto> cartons = new ArrayList();
+            this.usuari = consultaUsuari(session.getId());
+            //Si és una altra partida, l'hem de posar com la nostra
+            int idPartida = this.usuari.getPartida().getIdPartida();
+            this.partida = consultaPartida(idPartida);
 
-        //List<Carto> cartons = new ArrayList();
-        this.usuari = consultaUsuari(session.getId());
-        //Si és una altra partida, l'hem de posar com la nostra
-        int idPartida = this.usuari.getPartida().getIdPartida();
-        this.partida = consultaPartida(idPartida);
-
-        //cartons = (List<Carto>) session.getAttribute("cartons");
-        if (num > 0) {
-            int i;
-            for (i = 0; i < this.numeroCartons; i++) {
-                this.usuari.getCartons().get(i).tachaNumero(num);
+            //cartons = (List<Carto>) session.getAttribute("cartons");
+            if (num > 0) {
+                int i;
+                for (i = 0; i < this.numeroCartons; i++) {
+                    this.usuari.getCartons().get(i).tachaNumero(num);
+                }
             }
         }
     }
 
     public void carregaInvitacions() {
         invitacions.put("permanent", "2050-04-13");
-        invitacions.put("67890", "2020-04-11");
+        invitacions.put("12345", "2020-04-11");
     }
 
     public boolean idUsuari(String cadena) {
@@ -291,30 +298,70 @@ public class CartonsControler extends HttpServlet {
     }
 
     public void comprovaLinea() {
-        int i;
-        for (i = 0; i < this.numeroCartons; i++) {
-            if (this.usuari.getCartons().get(i).esLinea()) {
-                if (!this.partida.isLinea()) {
-                    this.partida.setMissatgesLog(this.partida.getMissatgesLog() + this.usuari.getNom() + " ha cantat línea\r\n");
+        //Si no s'ha cantat linea
+        if (!this.partida.isLinea()) {
+            //Miram tots els cartons de l'usuari
+            int i;
+            for (i = 0; i < this.numeroCartons; i++) {
+                //Revisam que es cartó tengui una linea
+                if (this.usuari.getCartons().get(i).esLinea()) {
+                    //Avisam al log general
+                    this.partida.setMissatgesLog(this.partida.getMissatgesLog() + this.usuari.getNom() + " ha cantat línea\r");
+                    //Posam a la partida que ja hi ha una linea
                     this.partida.setLinea(true);
+                    //Indicam a l'usuari que ho ha pintar i publicam el missatge al missatges Events de la partida
+                    this.usuari.setPintarEvent(true);
+                    this.usuari.setTipusEvent(1);
                     this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat linea!");
                     //Aumentam en 1 el número de linies cantades
                     this.usuari.setLinies(this.usuari.getLinies() + 1);
+                }
+            }
+        } else {
+            //Si s'ha cantat linea, hem de veure si ja ho sabem o no
+            if (!this.usuari.isLinea()) {
+                this.usuari.setLinea(true);
+                this.usuari.setPintarEvent(true);
+                this.usuari.setTipusEvent(1);
+            } else {
+                if (this.usuari.getTipusEvent() == 1) {
+                    this.usuari.setPintarEvent(false);
                 }
             }
         }
     }
 
     public void comprovaBingo() {
-        int i;
-        for (i = 0; i < this.numeroCartons; i++) {
-            if (this.usuari.getCartons().get(i).esBingo()) {
-                this.usuari.getCartons().get(i).bingo();
-                this.partida.setBingo(true);
-                this.partida.setMissatgesLog(this.partida.getMissatgesLog() + this.usuari.getNom() + " ha cantat bingo\r\n");
-                this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat bingo!");
-                //Aumentam en 1 els números de bingos cantats
-                this.usuari.setBingos(this.usuari.getBingos() + 1);
+        //Si no s'ha cantat Bingo
+        if (!this.partida.isBingo()) {
+            int i;
+            //Revisam tots els cartons
+            for (i = 0; i < this.numeroCartons; i++) {
+                //Si aquest cartó té bingo
+                if (this.usuari.getCartons().get(i).esBingo()) {
+                    //Ho marcam al cartó 
+                    this.usuari.getCartons().get(i).bingo();
+                    this.partida.setBingo(true);
+                    this.partida.setMissatgesLog(this.partida.getMissatgesLog() + this.usuari.getNom() + " ha cantat bingo\r");
+                    //Indicam a l'usuari que ho ha pintar i publicam el missatge al missatges Events de la partida
+                    this.usuari.setPintarEvent(true);
+                    this.usuari.setTipusEvent(2);
+                    //Publicam el missatge als missatges events de la partida                    
+                    this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat bingo!");
+                    //Aumentam en 1 els números de bingos cantats
+                    this.usuari.setBingos(this.usuari.getBingos() + 1);
+                }
+            }
+        } else {
+            //Si s'ha cantat bingo, hem de veure si ja ho sabem o no
+            if (!this.usuari.isBingo()) {
+                this.usuari.setBingo(true);
+                this.usuari.setPintarEvent(true);
+                this.usuari.setTipusEvent(2);
+            } else {
+                if (this.usuari.getTipusEvent() == 2) {
+                    this.usuari.setPintarEvent(false);
+                }
             }
         }
     }
@@ -329,22 +376,17 @@ public class CartonsControler extends HttpServlet {
     }
 
     public void comprovaAtac() {
-
-    }
-
-    public void comprovaPintar() {
-        this.usuari.setPintarEvent(false);
-        if ((this.partida.isLinea()) && (!this.usuari.isLinea())) {
-            this.usuari.setPintarEvent(true);
-            this.usuari.setLinea(true);
-        }
-        if ((this.partida.isBingo()) && (!this.usuari.isBingo())) {
-            this.usuari.setPintarEvent(true);
-            this.usuari.setBingo(true);
-        }
-        if (this.partida.isAtac() && (!this.usuari.isAtac())) {
-            this.usuari.setPintarEvent(true);
-            this.usuari.setAtac(true);
+        System.out.println("Usuari: " + this.usuari.getNom());
+        System.out.println("DesactivarEvent: " + this.usuari.isDesactivarEvent());
+        System.out.println("PintararEvent: " + this.usuari.isPintarEvent());
+        if (this.usuari.isDesactivarEvent()) {
+            this.usuari.setPintarEvent(false);
+            this.usuari.setDesactivarEvent(false);
+        } else {
+            if ((this.usuari.isPintarEvent()) && (this.usuari.getTipusEvent() > 2)) {
+                this.usuari.setDesactivarEvent(true);
+            }
         }
     }
+
 }

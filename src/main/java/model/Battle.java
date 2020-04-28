@@ -13,55 +13,69 @@ public class Battle {
         Usuari usuariAtacant = new Usuari();
         usuariAtacant = consultaUsuari(idSession, partida);
 
-        //Un cop ja el tenim hem de veure de quin tipus és
-        boolean ferit = false;
-        boolean torna = false;
-        switch (usuariVictima.getPerfil()) {
-            case "atacant":
-                ferit = true;
-                break;
-            case "defensorp":
-                torna = true;
-                break;
-            case "mag":
-                ferit = true;
-                break;
-            case "normal":
-                ferit = true;
-                break;
-            default:
-                break;
-        }
-        //Un cop sabem qui rep, ho controlam
-        //Collim l'index on és l'usuari victima
-        //int i = partida.getUsuaris().lastIndexOf(usuariVictima);
+        //Un cop ja el tenim hem de veure si la victima té escut i de quin tipus
         String missatge = "";
-        if (torna) {
-            missatge = usuariVictima.getNom() + " torna la bomba!\r";
-            usuariVictima = usuariAtacant;
-            //i = partida.getUsuaris().lastIndexOf(usuariVictima);
-            ferit = true;
+        boolean ferit = true;
+        boolean torna = false;
+        int tipusEvent = 3;//0: Res, 1: Linea, 2: Bingo, 3:Atac ok, 4: Rebot, 5: Rebot i atac ok
+        //Si la víctima tés escut, l'empara i perd 1 escut
+        if (usuariVictima.getEscut() > 0) {
+            usuariVictima.setEscut(usuariVictima.getEscut() - 1);
+            missatge = usuariVictima.getNom() + " s'escuda de " + usuariAtacant.getNom() + "\r";
+            ferit = false;
+            tipusEvent = 4;
         }
+        //Si la víctima té escut que rebota, l'empara i el torna, perdent un escut
+        //Si l'atacant també té un escut, empara i el perd
+        if (usuariVictima.getEscutRebot() > 0) {
+            usuariVictima.setEscut(usuariVictima.getEscutRebot() - 1);
+            torna = true;
+            tipusEvent = 5;
+            missatge = usuariVictima.getNom() + " s'escuda de " + usuariAtacant.getNom() + " i li torna\r";
+            if ((usuariAtacant.getEscut() > 0) || (usuariAtacant.getEscutRebot() > 0)) {
+                missatge = missatge + usuariAtacant.getNom() + " s'escuda també\r";
+                ferit = false;
+                tipusEvent = 4;
+                if (usuariAtacant.getEscut() > 0) {
+                    usuariAtacant.setEscut(usuariAtacant.getEscut() - 1);
+                } else {
+                    usuariAtacant.setEscutRebot(usuariAtacant.getEscutRebot() - 1);
+                }
+            }
+        }
+
+        //Ara hem de llevar la bolla a qui pertoqui, si s'ha de llevar
         if (ferit) {
-            missatge = missatge + usuariVictima.getNom() + " rep la bomba de " + usuariAtacant.getNom() + "!\r";
-            usuariVictima = llevaBolla(usuariVictima, graella);
-        } else {
-            missatge = usuariVictima.getNom() + " atura la bomba de " + usuariAtacant.getNom() + "!\r";
+            if (torna) {
+                usuariAtacant = llevaBolla(usuariAtacant, graella);
+                missatge = missatge + usuariAtacant.getNom() + " perd una bolla\r";
+            } else {
+                usuariVictima = llevaBolla(usuariVictima, graella);
+                missatge = missatge + usuariVictima.getNom() + " perd una bolla\r";
+            }
+        }
+
+
+        //Hem d'avisar a tots que hi ha hagut aquest atac
+        //Per això emprarem pintarEvent i missatgeEvent de cada ususari
+        partida.setMissatgesEvents(missatge);
+        //Això pareix que no funciona
+        for (Usuari usuTmp : partida.getUsuaris()) {
+            usuTmp.setPintarEvent(true);
+            usuTmp.setDesactivarEvent(false);
+            usuTmp.setTipusEvent(tipusEvent);
         }
         
-        //Actualitzam l'usuari victima a la partida
-        int k = partida.getUsuaris().lastIndexOf(usuariVictima);
-        partida.getUsuaris().set(k, usuariVictima);
-        //Hem d'avisar a l'atacant que ha atacat
-        int j = partida.getUsuaris().lastIndexOf(usuariAtacant);
-        partida.getUsuaris().get(j).setAtac(true);
-        //Hem de posar els valors a la partida
-        partida.setAtac(true);
+        //Llevam una bomba a l'atacant
+        usuariAtacant.setBomba(usuariAtacant.getBomba() - 1);
+        //Hem de marcar desadctivar, sinó queda 2 torns
+        usuariAtacant.setDesactivarEvent(true);
+        
         //Revisam si just hi ha un usuari amb tots els numeros menys un tapats
+        //Per mantenir o no l'avís de possibilitat d'atac
         if (nomesUn(partida)) {
             partida.setEstrella(false);
         }
-        partida.setMissatgesEvents(missatge);
         partida.setMissatgesLog(partida.getMissatgesLog() + missatge);
         return partida;
     }
@@ -131,23 +145,40 @@ public class Battle {
         //Podem començar de l'index i que vulguem fent un random amb el size de bolles
         //i index de les bolles que queden per sortir (el collim aleatori), que NO el valor de la bolla
         int i = (int) Math.floor(Math.random() * bolles.size());
-        
+
         int j;
         int valor = 0;
         int valorTmp = 0;
         int columna = 0;
-        Bolla bollaTmp = new Bolla();
+        int columnaInici = 0;
+        int cont = 0;
         //Mentre no la trobem, la cercam
-        
         //HEM DE CONTROLAR QUE NO TENGUI CAP MARCAT
         while (!trobada) {
-            bollaTmp = bolles.get(i);
+            //Collim el valor de la bolla del bombo
+            valor = bolles.get(i).getValor() + 1;
+            System.out.println("Valor bolla[" + i + "]: " + valor);
             //Hem de veure a quina columna cau
-            valor = bollaTmp.getValor() + 1;
             columna = (int) valor / 10;
+            if(cont == 0){
+                columnaInici = columna;
+            }
+            //Si hem collit tantes bolles com les que hi ha al bombo, és que no podem llevar-a
+            if (cont > bolles.size()){
+                trobada = true;
+                System.out.println("No se pot llevar");
+                //No hi ha cap bolla per posar
+                //Hem de veure que feim en aquest cas
+            }
+            System.out.println("Cont: " + cont);
+            cont++;
             //Hem de recorre aquesta columna per veure si hi ha alguna bolla que cumpleixi que se pot canviar
             for (j = 0; j < 3; j++) {
+                System.out.println("Ncarto: " + ncarto);
+                System.out.println("J: " + j);
+                System.out.println("Columna: " + columna);
                 valorTmp = carto.getLinies()[j][columna];
+                System.out.println("ValorCarto[" + ncarto + "][" + j + "][" + columna +"]: " + valorTmp);
                 if (valorTmp > 100) {
                     //Hem trobat una bolla que podem eliminar
                     trobada = true;
@@ -157,9 +188,11 @@ public class Battle {
                     break;
                 }
             }
+            //Passam a la següent bolla del bombo
             i++;
             //Si hem arribat al final del números del bombo, hem de tornar pel principi
-            if (i>bolles.size()){
+            if (i > bolles.size()) {
+                System.out.println("Reiniciam el comptador del bombo");
                 i = 0;
             }
         }
