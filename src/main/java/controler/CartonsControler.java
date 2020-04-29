@@ -25,7 +25,7 @@ public class CartonsControler extends HttpServlet {
     private Partida partida;
     private boolean invitacioNecessaria = false;
     private int numeroCartons;
-    private List<Carto> cartons = new ArrayList();
+    //private List<Carto> cartons = new ArrayList();
     private static HashMap<String, String> invitacions = new HashMap<>();
     private static List<Partida> partides = new ArrayList();
 
@@ -51,7 +51,7 @@ public class CartonsControler extends HttpServlet {
             this.partida = consultaPartida(idPartida);
             switch (accio) {
                 case "reiniciar":
-                    this.cartons = iniciaCartons();
+                    //this.cartons = iniciaCartons();
                     this.usuari.setPintarEvent(false);
                     this.usuari.setLinea(false);
                     this.usuari.setBingo(false);
@@ -61,9 +61,12 @@ public class CartonsControler extends HttpServlet {
                     this.usuari.setBomba(0);
                     this.usuari.setEscut(0);
                     this.usuari.setEscutRebot(0);
-                    this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP());
-                    System.out.println("Escuts: " + this.usuari.getEscut());
-                    System.out.println("EscutsR: " + this.usuari.getEscutRebot());
+                    this.usuari.setCanvi(0);
+                    this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
+//                    System.out.println("Bomba: " + this.usuari.getBomba());
+//                    System.out.println("Escut: " + this.usuari.getEscut());
+//                    System.out.println("EscutsR: " + this.usuari.getEscutRebot());
+//                    System.out.println("Canvi: " + this.usuari.getCanvi());
 
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
@@ -89,13 +92,36 @@ public class CartonsControler extends HttpServlet {
                 case "bomba":
                     Parrilla graella = new Parrilla();
                     graella.setBomboPartida(this.partida.getBolles());
-                    System.out.println("Usuari atacant: " + this.usuari.getNom());
                     Battle batalla = new Battle();
                     this.partida = batalla.bomba(this.partida, session.getId(), graella);
-                    for (Usuari usuTmp : this.partida.getUsuaris()) {
-                        System.out.println("Usuari: " + usuTmp.getNom() + "PintarEvent: " + usuTmp.isPintarEvent());
-                    }
 
+                    //Actualitzam la partida dins la llista de partides
+                    this.partides.remove(this.partida);
+                    this.partides.add(this.partida);
+                    getServletContext().setAttribute("partides", this.partides);
+
+                    session.setAttribute("partida", this.partida);
+                    session.setAttribute("usuari", this.usuari);
+                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
+                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                    break;
+                case "canvi":
+                    //Hem de veure qui té els millors cartons
+                    List<Carto> cartonsBons = new ArrayList();
+                    Usuari usuariBo = new Usuari();
+                    usuariBo = cercaCartons(this.partida.getUsuaris());
+                    //Quan els tenim, els canviam 
+                    cartonsBons = usuariBo.getCartons();
+                    usuariBo.setCartons(this.usuari.getCartons());
+                    this.usuari.setCartons(cartonsBons);
+                    //Avisam als usuaris
+                    for (Usuari usuTmp : this.partida.getUsuaris()) {
+                        this.partida.setMissatgesEvents(this.usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom());
+                        usuTmp.setPintarEvent(true);
+                        usuTmp.setTipusEvent(6);
+                        this.partida.setMissatgesLog(this.usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom() + "\r");
+                    }
+                    this.usuari.setCanvi(0);
                     //Actualitzam la partida dins la llista de partides
                     this.partides.remove(this.partida);
                     this.partides.add(this.partida);
@@ -143,6 +169,10 @@ public class CartonsControler extends HttpServlet {
             comprovaAtac();
         }
 
+//        System.out.println("Bomba: " + this.usuari.getBomba());
+//        System.out.println("Escut: " + this.usuari.getEscut());
+//        System.out.println("EscutsR: " + this.usuari.getEscutRebot());
+//        System.out.println("Canvi: " + this.usuari.getCanvi());
         //Actualitzam la partida dins la llista de partides
         this.partides.remove(this.partida);
         this.partides.add(this.partida);
@@ -216,7 +246,7 @@ public class CartonsControler extends HttpServlet {
             //Li donam els cartons
             this.usuari.setCartons(iniciaCartons());
             //Hem d'assignar-li bomba, escut o res
-            this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP());
+            this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
             //Ho publicam als missatges
             this.partida.setMissatgesLog(this.partida.getMissatgesLog() + "S'ha afegit el jugador " + nom + "\r\n");
 
@@ -315,6 +345,8 @@ public class CartonsControler extends HttpServlet {
                     this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat linea!");
                     //Aumentam en 1 el número de linies cantades
                     this.usuari.setLinies(this.usuari.getLinies() + 1);
+                    //Posam que ja sabem que hi ha linea
+                    this.usuari.setLinea(true);
                 }
             }
         } else {
@@ -328,11 +360,18 @@ public class CartonsControler extends HttpServlet {
                     this.usuari.setPintarEvent(false);
                 }
             }
+            //Hem de revisar si tenim linea
+            int i;
+            for (i = 0; i < this.numeroCartons; i++) {
+                //Revisam que es cartó tengui una linea
+                this.usuari.getCartons().get(i).esLinea();
+                this.usuari.setLinies(this.usuari.getLinies() + 1);
+            }
         }
     }
 
     public void comprovaBingo() {
-        //Si no s'ha cantat Bingo
+        //Si no s'ha cantat Bingo, miram si el tenim noltros
         if (!this.partida.isBingo()) {
             int i;
             //Revisam tots els cartons
@@ -376,9 +415,6 @@ public class CartonsControler extends HttpServlet {
     }
 
     public void comprovaAtac() {
-        System.out.println("Usuari: " + this.usuari.getNom());
-        System.out.println("DesactivarEvent: " + this.usuari.isDesactivarEvent());
-        System.out.println("PintararEvent: " + this.usuari.isPintarEvent());
         if (this.usuari.isDesactivarEvent()) {
             this.usuari.setPintarEvent(false);
             this.usuari.setDesactivarEvent(false);
@@ -387,6 +423,23 @@ public class CartonsControler extends HttpServlet {
                 this.usuari.setDesactivarEvent(true);
             }
         }
+    }
+
+    public Usuari cercaCartons(List<Usuari> usuaris) {
+        Usuari usuariBo = new Usuari();
+        int minim = 99;
+        for (Usuari usuTmp : usuaris) {
+            //Si no és ell mateix
+            if (!usuTmp.getIdSession().equals(this.usuari.getIdSession())) {
+                for (Carto cartoTmp : usuari.getCartons()) {
+                    if (cartoTmp.getNumeros() < minim) {
+                        usuariBo = usuTmp;
+                        minim = cartoTmp.getNumeros();
+                    }
+                }
+            }
+        }
+        return usuariBo;
     }
 
 }

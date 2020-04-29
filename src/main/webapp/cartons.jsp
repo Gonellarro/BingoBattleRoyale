@@ -51,6 +51,9 @@
                                             <c:if test="${usuari.escutRebot>0}">
                                                 <img src="${pageContext.request.contextPath}/resources/img/perfils/escutRebot.png" width="42">
                                             </c:if>
+                                            <c:if test="${usuari.canvi>0}">
+                                                <img src="${pageContext.request.contextPath}/resources/img/perfils/canvi.png" width="42">
+                                            </c:if>
                                         </div>
                                     </div>
                                 </h4>
@@ -118,6 +121,9 @@
                                                 <c:when test="${usuari.tipusEvent == 5}">
                                                     class="alert alert-primary" role="alert"
                                                 </c:when>
+                                                <c:when test="${usuari.tipusEvent == 6}">
+                                                    class="alert alert-info" role="alert"
+                                                </c:when>
                                             </c:choose>
                                             >
                                             <c:out value = "${partida.missatgesEvents}"/>
@@ -153,6 +159,11 @@
                                             <a href="${pageContext.request.contextPath}/CartonsControler?accio=bomba" class="btn btn-danger" role="button">Bomba!</a>
                                         </c:if>  
                                     </c:if> 
+                                    <c:if test="${usuari.canvi > 0}">
+                                        <c:if test="${partida.canvi}">
+                                            <a href="${pageContext.request.contextPath}/CartonsControler?accio=canvi" class="btn btn-info" role="button">Canvi!</a>
+                                        </c:if>  
+                                    </c:if>                                             
                                 </div>
                                 <div class="col-6">  
                                     <button type="submit" class="btn btn-primary" >Enviar</button>

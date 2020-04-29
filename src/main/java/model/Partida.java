@@ -17,9 +17,11 @@ public class Partida {
     private String missatgesLog;
     private String missatgesEvents;
     private boolean estrella;
+    private boolean canvi;
     private int bombaP;
     private int escutP;
     private int escutRebotP;
+    private int canviP;
     private int numero;
 
     public Partida() {
@@ -43,13 +45,14 @@ public class Partida {
         this.missatgesLog = "";
         this.atac = false;
         this.estrella = false;
+        this.canvi = false;
         this.numero = 0;
         //Fixam les probabilitats de tenir bommba, escut o escut de rebot. La resta, és no tenir res
         //El número va de 0 fins 99, essent la probabilitat sobre 100
-        this.bombaP = 40;
-        this.escutP = 20;
-        this.escutRebotP = 20;
-        //Un 20% se queda sense PowerUp
+        this.bombaP = 33;
+        this.escutP = 16;
+        this.escutRebotP = 17;
+        this.canviP = 33;
     }
 
     public boolean isBingo() {
@@ -171,8 +174,23 @@ public class Partida {
     public void setEscutRebotP(int escutRebotP) {
         this.escutRebotP = escutRebotP;
     }
+    
+    public int getCanviP() {
+        return canviP;
+    }
 
+    public void setCanviP(int canviP) {
+        this.canviP = canviP;
+    }   
+    
+    public boolean isCanvi() {
+        return canvi;
+    }
 
+    public void setCanvi(boolean canvi) {
+        this.canvi = canvi;
+    }    
+    
     @Override
     public String toString() {
         return "Partida{" + "bingo=" + bingo + ", linea=" + linea + ", cartons=" + cartons + '}';
@@ -209,5 +227,10 @@ public class Partida {
         this.atac = false;
         this.numero = 0;
         this.estrella=false;
+        this.canvi = false;
     }
+
+
+
+
 }

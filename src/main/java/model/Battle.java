@@ -48,10 +48,10 @@ public class Battle {
         if (ferit) {
             if (torna) {
                 usuariAtacant = llevaBolla(usuariAtacant, graella);
-                missatge = missatge + usuariAtacant.getNom() + " perd una bolla\r";
+                missatge = missatge + usuariAtacant.getNom() + " rep la seva bomba\r";
             } else {
                 usuariVictima = llevaBolla(usuariVictima, graella);
-                missatge = missatge + usuariVictima.getNom() + " perd una bolla\r";
+                missatge = missatge + usuariVictima.getNom() + " rep una bomba de " + usuariAtacant.getNom() + "\r";
             }
         }
 

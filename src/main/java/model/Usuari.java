@@ -22,6 +22,7 @@ public class Usuari {
     private int bomba;
     private int escut;
     private int escutRebot;
+    private int canvi;
     private boolean atac;
 
     public Usuari() {
@@ -36,6 +37,7 @@ public class Usuari {
         this.bomba = 0;
         this.escut = 0;
         this.escutRebot = 0;
+        this.canvi = 0;
         this.missatgeEvent = "";
         this.tipusEvent = 0;
     }
@@ -175,9 +177,17 @@ public class Usuari {
     public void setDesactivarEvent(boolean desactivarEvent) {
         this.desactivarEvent = desactivarEvent;
     }
+    
+    public int getCanvi() {
+        return canvi;
+    }
+
+    public void setCanvi(int canvi) {
+        this.canvi = canvi;
+    }    
 
 //Mètodes    
-    public void assignaPowerUps(int bombaP, int escutP, int escutRebotP) {
+    public void assignaPowerUps(int bombaP, int escutP, int escutRebotP, int canviP) {
         int atzar = (int) Math.floor(Math.random() * 100);
         if (atzar < bombaP) {
             this.bomba = 1;
@@ -188,6 +198,10 @@ public class Usuari {
         if ((bombaP + escutP < atzar) && (atzar < bombaP + escutP + escutRebotP)) {
             this.escutRebot = 1;
         }
+        if ((bombaP + escutP + escutRebotP < atzar) && (atzar < bombaP + escutP + escutRebotP + canviP)) {
+            this.canvi = 1;
+        }
     }
+
 
 }
