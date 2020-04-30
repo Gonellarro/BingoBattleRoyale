@@ -259,14 +259,16 @@ public class Battle {
 
     public Usuari cercaCartons(List<Usuari> usuaris, Usuari usuari) {
         Usuari usuariBo = new Usuari();
-        int minim = 99;
+        int maxim = -1;
         for (Usuari usuTmp : usuaris) {
             //Si no és ell mateix
             if (!usuTmp.getIdSession().equals(usuari.getIdSession())) {
-                for (Carto cartoTmp : usuari.getCartons()) {
-                    if (cartoTmp.getNumeros() < minim) {
+                for (Carto cartoTmp : usuTmp.getCartons()) {
+                    int numero = cartoTmp.getNumeros();
+                    if (cartoTmp.getNumeros() > maxim) {
                         usuariBo = usuTmp;
-                        minim = cartoTmp.getNumeros();
+                        maxim = cartoTmp.getNumeros();
+                        System.out.println("Maximes bolles tapades: " + cartoTmp.getNumeros() + " i el té en " + usuTmp.getNom());
                     }
                 }
             }

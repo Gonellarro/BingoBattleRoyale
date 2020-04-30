@@ -202,12 +202,9 @@ public class Carto {
         int total = 0;
         int i;
         boolean bingo = false;
-        for (i = 0; i < 3; i++) {
-            total = total + this.linea[i];
-        }
-        if (total == 3) {
+        if (this.numeros == 15) {
             bingo = true;
-        }
+        } 
         return bingo;
     }
 
