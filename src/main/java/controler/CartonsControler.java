@@ -62,11 +62,8 @@ public class CartonsControler extends HttpServlet {
                     this.usuari.setEscut(0);
                     this.usuari.setEscutRebot(0);
                     this.usuari.setCanvi(0);
+                    this.usuari.setPlatan(0);
                     this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
-//                    System.out.println("Bomba: " + this.usuari.getBomba());
-//                    System.out.println("Escut: " + this.usuari.getEscut());
-//                    System.out.println("EscutsR: " + this.usuari.getEscutRebot());
-//                    System.out.println("Canvi: " + this.usuari.getCanvi());
 
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
@@ -106,25 +103,35 @@ public class CartonsControler extends HttpServlet {
                     request.getRequestDispatcher("cartons.jsp").forward(request, response);
                     break;
                 case "canvi":
-                    //Hem de veure qui té els millors cartons
-                    List<Carto> cartonsBons = new ArrayList();
-                    Usuari usuariBo = new Usuari();
-                    usuariBo = cercaCartons(this.partida.getUsuaris());
-                    //Quan els tenim, els canviam 
-                    cartonsBons = usuariBo.getCartons();
-                    usuariBo.setCartons(this.usuari.getCartons());
-                    this.usuari.setCartons(cartonsBons);
-                    //Avisam als usuaris
-                    for (Usuari usuTmp : this.partida.getUsuaris()) {
-                        this.partida.setMissatgesEvents(this.usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom());
-                        usuTmp.setPintarEvent(true);
-                        usuTmp.setTipusEvent(6);
-                        this.partida.setMissatgesLog(this.usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom() + "\r");
-                    }
+                    Battle batalla2 = new Battle();
+                    this.partida = batalla2.canvi(this.partida, this.usuari);
                     this.usuari.setCanvi(0);
                     //Actualitzam la partida dins la llista de partides
                     this.partides.remove(this.partida);
                     this.partides.add(this.partida);
+                    getServletContext().setAttribute("partides", this.partides);
+
+                    session.setAttribute("partida", this.partida);
+                    session.setAttribute("usuari", this.usuari);
+                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
+                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                    break;
+                case "platan":
+                    Battle batalla3 = new Battle();
+                    this.partida = batalla3.platan(this.partida, this.usuari);
+                    for (Usuari usuTmp : this.partida.getUsuaris()) {
+                        System.out.println("-" + usuTmp.getNom() + " attac platan: " + usuTmp.isAtacPlatan());
+                    }
+                    this.usuari.setPlatan(0);
+                    //Actualitzam la partida dins la llista de partides
+                    this.partides.remove(this.partida);
+                    this.partides.add(this.partida);
+                    for (Partida parTmp : this.partides) {
+                        for (Usuari usuTmp : parTmp.getUsuaris()) {
+                            System.out.println("*" + usuTmp.getNom() + " attac platan: " + usuTmp.isAtacPlatan());
+                        }
+                    }
+
                     getServletContext().setAttribute("partides", this.partides);
 
                     session.setAttribute("partida", this.partida);
@@ -142,7 +149,13 @@ public class CartonsControler extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("------------DOPOST-------------");
         this.partides = (List<Partida>) getServletContext().getAttribute("partides");
+        for (Partida parTmp : this.partides) {
+            for (Usuari usuTmp : parTmp.getUsuaris()) {
+                System.out.println("*" + usuTmp.getNom() + " attac platan: " + usuTmp.isAtacPlatan());
+            }
+        }
         HttpSession session = request.getSession();
+        
 
         //Si trobam nom, és que hem de crear un usuari nou 
         if (request.getParameterMap().containsKey("nom")) {
@@ -159,6 +172,8 @@ public class CartonsControler extends HttpServlet {
             String numero = request.getParameter("numero");
             System.out.println("Numero");
             this.usuari = consultaUsuari(session.getId());
+            boolean atacPlatan = this.usuari.isAtacPlatan();
+            
             int idPartida = this.usuari.getPartida().getIdPartida();
             this.partida = consultaPartida(idPartida);
 
@@ -166,13 +181,14 @@ public class CartonsControler extends HttpServlet {
             comprovaLinea();
             comprovaBingo();
             comprovaDarrerNumero();
+            this.usuari.setAtacPlatan(atacPlatan);
+            System.out.println("Xapussa atac de platan: " + atacPlatan);
             comprovaAtac();
+            System.out.println("Xapussa2 atac de platan: " + atacPlatan);
+            
         }
 
-//        System.out.println("Bomba: " + this.usuari.getBomba());
-//        System.out.println("Escut: " + this.usuari.getEscut());
-//        System.out.println("EscutsR: " + this.usuari.getEscutRebot());
-//        System.out.println("Canvi: " + this.usuari.getCanvi());
+        System.out.println(this.usuari.getNom() + " - atac de platan = " + this.usuari.isAtacPlatan());
         //Actualitzam la partida dins la llista de partides
         this.partides.remove(this.partida);
         this.partides.add(this.partida);
@@ -418,28 +434,12 @@ public class CartonsControler extends HttpServlet {
         if (this.usuari.isDesactivarEvent()) {
             this.usuari.setPintarEvent(false);
             this.usuari.setDesactivarEvent(false);
+            this.usuari.setAtacPlatan(false);
         } else {
             if ((this.usuari.isPintarEvent()) && (this.usuari.getTipusEvent() > 2)) {
                 this.usuari.setDesactivarEvent(true);
             }
         }
-    }
-
-    public Usuari cercaCartons(List<Usuari> usuaris) {
-        Usuari usuariBo = new Usuari();
-        int minim = 99;
-        for (Usuari usuTmp : usuaris) {
-            //Si no és ell mateix
-            if (!usuTmp.getIdSession().equals(this.usuari.getIdSession())) {
-                for (Carto cartoTmp : usuari.getCartons()) {
-                    if (cartoTmp.getNumeros() < minim) {
-                        usuariBo = usuTmp;
-                        minim = cartoTmp.getNumeros();
-                    }
-                }
-            }
-        }
-        return usuariBo;
     }
 
 }

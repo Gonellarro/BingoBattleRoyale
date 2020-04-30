@@ -98,8 +98,8 @@ public class BingoControler extends HttpServlet {
                             //També l'afegim a la partida per dur un compte de les bolles que han sortit
                             this.partida.afegeixBolla(bolla);
                             
-                            //Si queden 20 bolles per sortir, es pot fer el canvi de cartons
-                            if(this.parrilla.getComptador()>2){
+                            //Si queden 40 bolles per sortir, es pot fer el canvi de cartons
+                            if(this.parrilla.getComptador()>29){
                                 this.partida.setCanvi(true);
                             }
                         } else {

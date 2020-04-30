@@ -47,14 +47,13 @@ public class Battle {
         //Ara hem de llevar la bolla a qui pertoqui, si s'ha de llevar
         if (ferit) {
             if (torna) {
-                usuariAtacant = llevaBolla(usuariAtacant, graella);
+                usuariAtacant = llevaBolla(usuariAtacant, graella, idSession);
                 missatge = missatge + usuariAtacant.getNom() + " rep la seva bomba\r";
             } else {
-                usuariVictima = llevaBolla(usuariVictima, graella);
+                usuariVictima = llevaBolla(usuariVictima, graella, idSession);
                 missatge = missatge + usuariVictima.getNom() + " rep una bomba de " + usuariAtacant.getNom() + "\r";
             }
         }
-
 
         //Hem d'avisar a tots que hi ha hagut aquest atac
         //Per això emprarem pintarEvent i missatgeEvent de cada ususari
@@ -65,12 +64,12 @@ public class Battle {
             usuTmp.setDesactivarEvent(false);
             usuTmp.setTipusEvent(tipusEvent);
         }
-        
+
         //Llevam una bomba a l'atacant
         usuariAtacant.setBomba(usuariAtacant.getBomba() - 1);
         //Hem de marcar desadctivar, sinó queda 2 torns
         usuariAtacant.setDesactivarEvent(true);
-        
+
         //Revisam si just hi ha un usuari amb tots els numeros menys un tapats
         //Per mantenir o no l'avís de possibilitat d'atac
         if (nomesUn(partida)) {
@@ -117,7 +116,7 @@ public class Battle {
         return usuari;
     }
 
-    public Usuari llevaBolla(Usuari usuari, Parrilla graella) {
+    public Usuari llevaBolla(Usuari usuari, Parrilla graella, String idSession) {
         List<Bolla> bolles = new ArrayList();
         //Aquestes són les bolles que hi ha al bombo amb el seu estat i triam les que no han sortit
         for (Bolla bolla : graella.getBombo()) {
@@ -133,9 +132,15 @@ public class Battle {
         //Per tant, haurem de canviar només aquella que el seu valor sigui >100 i tinguem alguna bolla
         //De la seva columna al bombo
         Carto carto = new Carto();
-        //Hem de fer que se trii el carto que li queden nomes una bolla per sortir!!!!
-        int ncarto = cercaCarto(usuari.getCartons());
-        //int ncarto = 0;
+        //Hem de fer que se trii el carto que li queden nomes una bolla per sortir en el cas d'atacar!!!!
+        //En el cas d'un rebot, hem de triar un al atzar
+        int ncarto = 0;
+        if(usuari.getIdSession().equals(idSession)){
+            //ncarto = atzar();
+        }
+        else{
+            ncarto = cercaCarto(usuari.getCartons());
+        }
         carto = usuari.getCartons().get(ncarto);
 
         //El que pareix més convenient és treure bolles del bombo que no hagin sortit
@@ -160,11 +165,15 @@ public class Battle {
             System.out.println("Valor bolla[" + i + "]: " + valor);
             //Hem de veure a quina columna cau
             columna = (int) valor / 10;
-            if(cont == 0){
+            //El cas que el valor sigui 90
+            if (columna == 9){
+                columna = 8;
+            }
+            if (cont == 0) {
                 columnaInici = columna;
             }
             //Si hem collit tantes bolles com les que hi ha al bombo, és que no podem llevar-a
-            if (cont > bolles.size()){
+            if (cont > bolles.size()) {
                 trobada = true;
                 System.out.println("No se pot llevar");
                 //No hi ha cap bolla per posar
@@ -178,7 +187,7 @@ public class Battle {
                 System.out.println("J: " + j);
                 System.out.println("Columna: " + columna);
                 valorTmp = carto.getLinies()[j][columna];
-                System.out.println("ValorCarto[" + ncarto + "][" + j + "][" + columna +"]: " + valorTmp);
+                System.out.println("ValorCarto[" + ncarto + "][" + j + "][" + columna + "]: " + valorTmp);
                 if (valorTmp > 100) {
                     //Hem trobat una bolla que podem eliminar
                     trobada = true;
@@ -191,7 +200,8 @@ public class Battle {
             //Passam a la següent bolla del bombo
             i++;
             //Si hem arribat al final del números del bombo, hem de tornar pel principi
-            if (i > bolles.size()) {
+            System.out.println("i: " + i + "nbolles: " + bolles.size() );
+            if (i == bolles.size()) {
                 System.out.println("Reiniciam el comptador del bombo");
                 i = 0;
             }
@@ -226,5 +236,72 @@ public class Battle {
             resultat = true;
         }
         return resultat;
+    }
+
+    public Partida canvi(Partida partida, Usuari usuari) {
+        //Hem de veure qui té els millors cartons
+        List<Carto> cartonsBons = new ArrayList();
+        Usuari usuariBo = new Usuari();
+        usuariBo = cercaCartons(partida.getUsuaris(), usuari);
+        //Quan els tenim, els canviam 
+        cartonsBons = usuariBo.getCartons();
+        usuariBo.setCartons(usuari.getCartons());
+        usuari.setCartons(cartonsBons);
+        //Avisam als usuaris
+        for (Usuari usuTmp : partida.getUsuaris()) {
+            partida.setMissatgesEvents(usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom());
+            usuTmp.setPintarEvent(true);
+            usuTmp.setTipusEvent(6);
+        }
+        partida.setMissatgesLog(partida.getMissatgesLog() + usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom() + "\r");
+        return partida;
+    }
+
+    public Usuari cercaCartons(List<Usuari> usuaris, Usuari usuari) {
+        Usuari usuariBo = new Usuari();
+        int minim = 99;
+        for (Usuari usuTmp : usuaris) {
+            //Si no és ell mateix
+            if (!usuTmp.getIdSession().equals(usuari.getIdSession())) {
+                for (Carto cartoTmp : usuari.getCartons()) {
+                    if (cartoTmp.getNumeros() < minim) {
+                        usuariBo = usuTmp;
+                        minim = cartoTmp.getNumeros();
+                    }
+                }
+            }
+        }
+        return usuariBo;
+    }
+
+    public Partida platan(Partida partida, Usuari usuari) {
+        //Hem de seleccionar l'usuari a qui tirar-li el platan de forma atzarosa
+        Usuari usuariVictima = cercaUsuariAtzar(partida, usuari.getIdSession());
+        partida.getUsuaris().remove(usuariVictima);
+        //Ara li hem d'activar que té l'egfecte del platan
+        usuariVictima.setAtacPlatan(true);
+        //L'actualitzam a la partida
+        partida.getUsuaris().add(usuariVictima);
+        //Avisam als usuaris
+        for (Usuari usuTmp : partida.getUsuaris()) {
+            partida.setMissatgesEvents(usuari.getNom() + " ha llancat un platan a " + usuariVictima.getNom());
+            usuTmp.setPintarEvent(true);
+            usuTmp.setTipusEvent(6);
+        }
+         partida.setMissatgesLog(partida.getMissatgesLog() +  usuari.getNom() + "  ha llancat un platan a " + usuariVictima.getNom() + "\r");
+        return partida;
+    }
+
+    public Usuari cercaUsuariAtzar(Partida partida, String idSession) {
+        Usuari usuari = new Usuari();
+        List<Usuari> usuaris = new ArrayList();
+        usuaris = partida.getUsuaris();
+        Collections.shuffle(usuaris);
+        usuari = usuaris.get(0);
+        //no ens podem tirar el platan damunt
+        if (usuari.getIdSession().equals(idSession)){
+            usuari = usuaris.get(1);
+        }
+        return usuari;
     }
 }

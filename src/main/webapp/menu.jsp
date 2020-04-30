@@ -8,13 +8,12 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="css/styles.css" rel="stylesheet">
-        <title>BingoWeb NoEstamBollats</title>
+        <title>BingoWeb BattleRoyale</title>
     </head>
     <body background="${pageContext.request.contextPath}/resources/img/fons.png">
         <div class="container text-center">
-            <h3 class="mb-1 mt-5 text-light">Bingo Battle Royale!</h3>
-            <!--<img src="${pageContext.request.contextPath}/resources/img/portada.jpg" class="img-fluid" alt="Bingo No estam bollats!">-->
-            <br>
+            <h3 class="mb-1 mt-5 text-light">Menú del Bingo Battle Royale!</h3>
+                        <br>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">

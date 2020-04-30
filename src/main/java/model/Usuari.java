@@ -17,13 +17,15 @@ public class Usuari {
     private boolean pintarEvent;
     private boolean desactivarEvent;
     private String missatgeEvent;
-    private int tipusEvent; //0: Res, 1: Linea, 2: Bingo, 3:Atac ok, 4: Rebot, 5: Rebot i atac ok
+    private int tipusEvent; //0: Res, 1: Linea, 2: Bingo, 3:Atac ok, 4: Rebot, 5: Rebot i atac ok; 6: Canvi de cartons; 7: Timer 10segons
     private List<Carto> cartons;
     private int bomba;
     private int escut;
     private int escutRebot;
     private int canvi;
+    private int platan;
     private boolean atac;
+    private boolean atacPlatan;
 
     public Usuari() {
         this.nom = "Innombrable";
@@ -38,8 +40,10 @@ public class Usuari {
         this.escut = 0;
         this.escutRebot = 0;
         this.canvi = 0;
+        this.platan = 0;
         this.missatgeEvent = "";
         this.tipusEvent = 0;
+        this.atacPlatan = false;
     }
 
     public String getNom() {
@@ -186,22 +190,53 @@ public class Usuari {
         this.canvi = canvi;
     }    
 
+    public boolean isAtacPlatan() {
+        return atacPlatan;
+    }
+
+    public void setAtacPlatan(boolean atacPlatan) {
+        this.atacPlatan = atacPlatan;
+    }    
+
+    public int getPlatan() {
+        return platan;
+    }
+
+    public void setPlatan(int platan) {
+        this.platan = platan;
+    }    
+
 //Mètodes    
     public void assignaPowerUps(int bombaP, int escutP, int escutRebotP, int canviP) {
         int atzar = (int) Math.floor(Math.random() * 100);
+        System.out.println("Usuari: " + this.nom);
+        System.out.println("Atzar: " + atzar);
         if (atzar < bombaP) {
             this.bomba = 1;
+            System.out.println("Bomba");
         }
-        if ((bombaP < atzar) && (atzar < bombaP + escutP)) {
+        if ((bombaP <= atzar) && (atzar < bombaP + escutP)) {
             this.escut = 1;
+            System.out.println("Escut");
         }
-        if ((bombaP + escutP < atzar) && (atzar < bombaP + escutP + escutRebotP)) {
+        if ((bombaP + escutP <= atzar) && (atzar < bombaP + escutP + escutRebotP)) {
             this.escutRebot = 1;
+            System.out.println("EscutRebot");
         }
-        if ((bombaP + escutP + escutRebotP < atzar) && (atzar < bombaP + escutP + escutRebotP + canviP)) {
+        if ((bombaP + escutP + escutRebotP <= atzar) && (atzar < bombaP + escutP + escutRebotP + canviP)) {
             this.canvi = 1;
+            System.out.println("Canvi");
         }
+        
+        if ((bombaP + escutP + escutRebotP + canviP <= atzar)) {
+            this.platan = 1;
+            System.out.println("Platan");
+        }
+        
+        
     }
+
+
 
 
 }
