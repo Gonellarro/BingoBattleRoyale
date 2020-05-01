@@ -51,8 +51,8 @@ public class Partida {
         //Fixam les probabilitats de tenir bommba, escut o escut de rebot. La resta, és no tenir res
         //El número va de 0 fins 99, essent la probabilitat sobre 100
         this.bombaP = 25;
-        this.escutP = 10;
-        this.escutRebotP = 15;
+        this.escutP = 0;
+        this.escutRebotP = 25;
         this.canviP = 25;
         this.platanP = 25;
     }
