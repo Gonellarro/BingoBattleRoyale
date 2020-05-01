@@ -52,19 +52,8 @@ public class CartonsControler extends HttpServlet {
             switch (accio) {
                 case "reiniciar":
                     //this.cartons = iniciaCartons();
-                    this.usuari.setPintarEvent(false);
-                    this.usuari.setLinea(false);
-                    this.usuari.setBingo(false);
-                    this.usuari.setCartons(iniciaCartons());
-                    this.usuari.setAtac(false);
-                    //Hem de triar si té bomba o escut o res
-                    this.usuari.setBomba(0);
-                    this.usuari.setEscut(0);
-                    this.usuari.setEscutRebot(0);
-                    this.usuari.setCanvi(0);
-                    this.usuari.setPlatan(0);
+                    this.usuari.reinicia(this.numeroCartons);
                     this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
-
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
                     request.setAttribute("jugadors", this.partida.getUsuaris().size());
@@ -109,8 +98,8 @@ public class CartonsControler extends HttpServlet {
                     //Actualitzam la partida dins la llista de partides
                     this.partides.remove(this.partida);
                     this.partides.add(this.partida);
+                    
                     getServletContext().setAttribute("partides", this.partides);
-
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
                     request.setAttribute("jugadors", this.partida.getUsuaris().size());
@@ -119,21 +108,12 @@ public class CartonsControler extends HttpServlet {
                 case "platan":
                     Battle batalla3 = new Battle();
                     this.partida = batalla3.platan(this.partida, this.usuari);
-                    for (Usuari usuTmp : this.partida.getUsuaris()) {
-                        System.out.println("-" + usuTmp.getNom() + " attac platan: " + usuTmp.isAtacPlatan());
-                    }
                     this.usuari.setPlatan(0);
                     //Actualitzam la partida dins la llista de partides
                     this.partides.remove(this.partida);
                     this.partides.add(this.partida);
-                    for (Partida parTmp : this.partides) {
-                        for (Usuari usuTmp : parTmp.getUsuaris()) {
-                            System.out.println("*" + usuTmp.getNom() + " attac platan: " + usuTmp.isAtacPlatan());
-                        }
-                    }
 
                     getServletContext().setAttribute("partides", this.partides);
-
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
                     request.setAttribute("jugadors", this.partida.getUsuaris().size());

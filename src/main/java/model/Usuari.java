@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.Collections;
 import java.util.List;
@@ -232,8 +233,36 @@ public class Usuari {
             this.platan = 1;
             System.out.println("Platan");
         }
-        
-        
+    }
+    
+    public void reinicia(int ncartons){
+        this.linea = false;
+        this.bingo = false;
+        this.linies = 0;
+        this.bingos = 0;
+        this.pintarEvent = false;
+        this.desactivarEvent = false;
+        this.bomba = 0;
+        this.escut = 0;
+        this.escutRebot = 0;
+        this.canvi = 0;
+        this.platan = 0;
+        this.missatgeEvent = "";
+        this.tipusEvent = 0;
+        this.atacPlatan = false;       
+        this.cartons = iniciaCartons(ncartons);
+    }
+    
+        //Mètodes per fer funcionar el controlador
+    public List<Carto> iniciaCartons(int ncartons) {
+        int i;
+        List<Carto> cartonsX = new ArrayList();
+        for (i = 0; i < ncartons; i++) {
+            Carto cartoX = new Carto();
+            cartoX.generaCarto();
+            cartonsX.add(cartoX);
+        }
+        return cartonsX;
     }
 
 
