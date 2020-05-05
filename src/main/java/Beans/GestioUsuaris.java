@@ -4,6 +4,7 @@ import model.Bingo;
 import model.Partida;
 import model.Sala;
 import model.Usuari;
+import model.PowerUp;
 
 public class GestioUsuaris {
 
@@ -24,6 +25,9 @@ public class GestioUsuaris {
         usuari.setNom(nom);
         usuari.setAvatar(avatar);
         usuari.setIdSession(idSessio);
+        PowerUp pwup = new PowerUp();
+        pwup.donaPowerUp();
+        usuari.setPwup(pwup);
 
         /**
          * Verificam que l'usuari no existeixi ja dins la darrera partida

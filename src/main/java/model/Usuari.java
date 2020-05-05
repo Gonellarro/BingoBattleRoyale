@@ -21,6 +21,7 @@ public class Usuari {
     private int tipusEvent; //0: Res, 1: Linea, 2: Bingo, 3:Atac ok, 4: Rebot, 5: Rebot i atac ok; 6: Canvi de cartons; 7: Timer 10segons
     private List<Carto> cartons;
     private int darrerMissatgeVist;
+    private PowerUp pwup;
     private int bomba;
     private int escut;
     private int escutRebot;
@@ -208,43 +209,24 @@ public class Usuari {
     public void setPlatan(int platan) {
         this.platan = platan;
     }
-    
+
     public int getDarrerMissatgeVist() {
         return darrerMissatgeVist;
     }
 
     public void setDarrerMissatgeVist(int darrerMissatgeVist) {
         this.darrerMissatgeVist = darrerMissatgeVist;
-    }    
-
-//Mètodes    
-    public void assignaPowerUps(int bombaP, int escutP, int escutRebotP, int canviP) {
-        int atzar = (int) Math.floor(Math.random() * 100);
-        System.out.println("Usuari: " + this.nom);
-        System.out.println("Atzar: " + atzar);
-        if (atzar < bombaP) {
-            this.bomba = 1;
-            System.out.println("Bomba");
-        }
-        if ((bombaP <= atzar) && (atzar < bombaP + escutP)) {
-            this.escut = 1;
-            System.out.println("Escut");
-        }
-        if ((bombaP + escutP <= atzar) && (atzar < bombaP + escutP + escutRebotP)) {
-            this.escutRebot = 1;
-            System.out.println("EscutRebot");
-        }
-        if ((bombaP + escutP + escutRebotP <= atzar) && (atzar < bombaP + escutP + escutRebotP + canviP)) {
-            this.canvi = 1;
-            System.out.println("Canvi");
-        }
-
-        if ((bombaP + escutP + escutRebotP + canviP <= atzar)) {
-            this.platan = 1;
-            System.out.println("Platan");
-        }
     }
 
+    public PowerUp getPwup() {
+        return pwup;
+    }
+
+    public void setPwup(PowerUp pwup) {
+        this.pwup = pwup;
+    }
+
+//Mètodes    
     public void reinicia(int ncartons) {
         this.linea = false;
         this.bingo = false;
@@ -261,6 +243,9 @@ public class Usuari {
         this.tipusEvent = 0;
         this.atacPlatan = false;
         this.cartons = iniciaCartons(ncartons);
+        this.darrerMissatgeVist = 0;
+        this.pwup = new PowerUp();
+        this.pwup.donaPowerUp();
     }
 
     public List<Carto> iniciaCartons(int ncartons) {
@@ -331,7 +316,5 @@ public class Usuari {
         }
         return result;
     }
-
-
 
 }

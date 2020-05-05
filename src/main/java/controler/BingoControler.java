@@ -39,7 +39,7 @@ public class BingoControler extends HttpServlet {
             this.bingo = (Bingo) getServletContext().getAttribute("bingo");
         }
         //Si volem debugar el programa ho hem de posar a true
-        this.debug = true;
+        this.debug = false;
     }
 
     @Override

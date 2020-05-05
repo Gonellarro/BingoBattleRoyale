@@ -2,6 +2,7 @@ package Beans;
 
 import java.util.List;
 import model.Bingo;
+import model.Carto;
 import model.Partida;
 import model.Sala;
 import model.Usuari;
@@ -103,5 +104,47 @@ public class Utils {
             }
         }
         return usuari;
+    }
+    
+    public Carto revisaCarto(Carto carto, Partida partida){
+        /**Hem de recorrer el carto i veure si el número ha sortit
+         * 
+         */
+        int i;
+        int j;
+        int valorBolla = 0;
+        int comptador = 0;
+        boolean trobat = false;
+        for(i = 0; i < 3; i++){
+            for(j = 0; j < 9; j++){
+                //Fins aquí recorrem el cartó. Ara hem de recorrer els números que han sortit a la partida
+                comptador = 0;
+                trobat = false;
+                while(!trobat){
+                    //Si el valor ha sortit i l'estat és no taxat, l'hem de taxar
+                    valorBolla = partida.getBolles().get(comptador).getValor();
+                    valorBolla = valorBolla + 1;
+                    if ((valorBolla == carto.getLinies()[i][j][0]) && 
+                           (carto.getLinies()[i][j][1] == 0)){
+                        carto.assignaValor(i, j, carto.getLinies()[i][j][0], 1);
+                        carto.setNumeros(carto.getNumeros()+1);
+                        trobat = true;
+                    }
+                    comptador++;
+                    //Si arribam al final
+                    if(comptador == partida.getNumeroBolles()){
+                        trobat = true;
+                    }
+                }
+            }
+        }
+        return carto;
+    }
+    
+    public List<Carto> revisaCartons(List<Carto> cartons, Partida partida){
+        for(Carto carto:cartons){
+            revisaCarto(carto, partida);
+        }
+        return cartons;
     }
 }

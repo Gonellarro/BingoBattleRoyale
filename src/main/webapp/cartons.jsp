@@ -33,30 +33,23 @@
                             <div class="container" >
                                 <h4 class="modal-title">
                                     <div class="row">
-                                        <div class="col-2">
-                                            <img src="${pageContext.request.contextPath}/resources/img/mario/<c:out value="${usuari.avatar}"/>.png" width="42" class="d-inline-block align-top" alt="">
+                                        <div class="col-3">
+                                            <div class="bg-light">
+                                                <img src="${pageContext.request.contextPath}/resources/img/mario/<c:out value="${usuari.avatar}"/>.png" width="42" alt="">
+                                            </div>
+
                                         </div>
-                                        <div class="col-8 text-center">
+                                        <div class="col-6 text-center text-light bg-secondary">
                                             ·
                                             <c:forEach var ="bolla" items="${partida.tresBolles}">
                                                 <c:out value="${bolla.valor + 1}"/>·
                                             </c:forEach>
                                         </div>
-                                        <div class="col-2">
-                                            <c:if test="${usuari.bomba>0}">
-                                                <img src="${pageContext.request.contextPath}/resources/img/perfils/bomba.png" width="42">
-                                            </c:if>
-                                            <c:if test="${usuari.escut>0}">
-                                                <img src="${pageContext.request.contextPath}/resources/img/perfils/escut.png" width="42">
-                                            </c:if>
-                                            <c:if test="${usuari.escutRebot>0}">
-                                                <img src="${pageContext.request.contextPath}/resources/img/perfils/escutRebot.png" width="42">
-                                            </c:if>
-                                            <c:if test="${usuari.canvi>0}">
-                                                <img src="${pageContext.request.contextPath}/resources/img/perfils/canvi.png" width="42">
-                                            </c:if>
-                                            <c:if test="${usuari.platan>0}">
-                                                <img src="${pageContext.request.contextPath}/resources/img/perfils/platan.png" width="42">
+                                        <div class="col-3">
+                                            <c:if test="${usuari.pwup.nom ne 'FLASH'}"> 
+                                                <div class="bg-light text-right">
+                                                    <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.pwup.nom}"/>.png" width="42">
+                                                </div>
                                             </c:if>
                                         </div>
                                     </div>
@@ -162,21 +155,17 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-6">   
-                                        <c:if test="${usuari.bomba > 0}">
-                                            <c:if test="${estrella}">
-                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=bomba" class="btn btn-danger" role="button">Bomba!</a>
-                                            </c:if>  
+                                        <c:if test="${usuari.pwup.nom eq 'bomba'}">
+                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=bomba&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Bomba!</a>
                                         </c:if> 
-                                        <c:if test="${usuari.platan > 0}">
-                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=platan" class="btn btn-danger" role="button">Platan!</a>
+                                        <c:if test="${usuari.pwup.nom eq 'platan'}">
+                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=platan&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Platan!</a>
                                         </c:if> 
-                                        <c:if test="${usuari.canvi > 0}">
-                                            <c:if test="${partida.canvi}">
-                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=canvi" class="btn btn-info" role="button">Canvi!</a>
-                                            </c:if>  
+                                        <c:if test="${usuari.pwup.nom eq 'canvi'}">
+                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=canvi&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Canvi!</a>
                                         </c:if>                                             
                                     </div>
-                                    <div class="col-6"> 
+                                    <div class="col-6 text-right"> 
                                         <button type="submit" id="enviar" class="btn btn-primary" >Enviar</button>
                                     </div>
                                 </div>

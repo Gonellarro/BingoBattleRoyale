@@ -4,6 +4,7 @@ public class PowerUp {
 
     private String nom;
     private int probabilitat;
+    private static final int NUM_PWUPS = 4;
 
     public PowerUp() {
         this.nom = "FLASH";
@@ -27,25 +28,24 @@ public class PowerUp {
     }
 
 //Metdodes
-    public PowerUp bomba() {
-        this.nom = "bomba";
-        this.probabilitat = 25;
-        return this;
+public void donaPowerUp(){
+    /** Numero de powerups: 1.Bomba, 2.Escut, 3.Platan, 4.Canvi*/
+    int powerupNumero = (int) Math.floor(Math.random()*NUM_PWUPS);
+    switch(powerupNumero+1){
+        case 1:
+            this.nom="bomba";
+            break;
+        case 2:
+            this.nom="escut";
+            break;
+        case 3:
+            this.nom="platan";
+            break;
+        case 4:
+            this.nom="canvi";
+            break;
+        default:
+            break;
     }
-    public PowerUp escut() {
-        this.nom = "escut";
-        this.probabilitat = 25;
-        return this;
-    }
-    public PowerUp platan() {
-        this.nom = "platan";
-        this.probabilitat = 25;
-        return this;
-    }
-    public PowerUp planta() {
-        this.nom = "plamnta";
-        this.probabilitat = 25;
-        return this;
-    }
-
+}
 }

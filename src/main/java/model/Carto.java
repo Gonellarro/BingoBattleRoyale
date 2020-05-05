@@ -246,7 +246,8 @@ public class Carto {
         return valor;
     }
 
-    public void assignaValor(int i, int j, int valor) {
+    public void assignaValor(int i, int j, int valor, int estat) {
         this.linies[i][j][0] = valor;
+        this.linies[i][j][1] = estat;
     }
 }
