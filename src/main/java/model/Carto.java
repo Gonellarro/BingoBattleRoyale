@@ -5,11 +5,16 @@ import java.util.Random;
 
 public class Carto {
 
-    //Tenim 3 linies que són un array multidimensional de sencers
-    private int[][] linies = new int[3][9];
+    //Tenim 3 linies que són un array multidimensional de sencers i un valor més que indica l'estat del núemro:
+    //-1: buid, 0: sense taxar, 1: taxat, 2: linea, 3: bingo
+    private int[][][] linies = new int[3][9][2];
+    //Indica si aquesta linea ha sigut cantada o no
     private int[] linea = new int[3];
+    //Indica si hi ha hagut bingo al carto
     private boolean bingo;
+    //Indica el maxim valor de??? REVISAR
     private int maxValor;
+    //Serveix per saber quants de números hem taxat/ens falten per taxar
     private int numeros;
 
     public Carto() {
@@ -18,7 +23,10 @@ public class Carto {
         for (j = 0; j < 3; j++) {
             this.linea[j] = 0;
             for (i = 0; i < 9; i++) {
-                this.linies[j][i] = -1;
+                //Posam el valor del cartó a -1
+                this.linies[j][i][0] = -1;
+                //Posam el valor de l'estat a buid
+                this.linies[j][i][1] = -1;
             }
         }
         //Podem canviar el màxim del valor del bingo aquí
@@ -27,11 +35,11 @@ public class Carto {
         this.numeros = 0;
     }
 
-    public int[][] getLinies() {
+    public int[][][] getLinies() {
         return linies;
     }
 
-    public void setLinies(int[][] linies) {
+    public void setLinies(int[][][] linies) {
         this.linies = linies;
     }
 
@@ -74,7 +82,7 @@ public class Carto {
         int j;
         for (j = 0; j < 3; j++) {
             for (i = 0; i < 9; i++) {
-                sortida = sortida + this.linies[j][i] + "-";
+                sortida = sortida + this.linies[j][i][0] + "/" + this.linies[j][i][1] + "-";
             }
             sortida = sortida + "***";
         }
@@ -99,7 +107,10 @@ public class Carto {
             int[] mascaraFila = {0, 1, 2, 3, 4, 5, 6, 7, 8};
             mascaraFila = mesclarPoscionsX(mascaraFila);
             for (j = 0; j < 5; j++) {
-                this.linies[i][mascaraFila[j]] = vectors[mascaraFila[j]][i];
+                this.linies[i][mascaraFila[j]][0] = vectors[mascaraFila[j]][i];
+                //Posam que la linea se pot veure
+                this.linies[i][mascaraFila[j]][1] = 0;
+                
             }
         }
     }
@@ -154,13 +165,14 @@ public class Carto {
         return posicions;
     }
 
-    public void tachaNumero(int numero) {
+    public void taxaNumero(int numero) {
         int i;
         int j;
         for (i = 0; i < 9; i++) {
             for (j = 0; j < 3; j++) {
-                if (this.linies[j][i] == numero) {
-                    this.linies[j][i] = numero + 100;
+                if (this.linies[j][i][0] == numero) {
+                    //Per taxar el número, ho indicam a la columna[1] amb un 1
+                    this.linies[j][i][1] = 1;
                     this.numeros++;
                 }
             }
@@ -178,15 +190,16 @@ public class Carto {
             //Si aquesta fila no ha sigut cantada
             if (this.linea[i] == 0) {
                 for (j = 0; j < 9; j++) {
-                    if (this.linies[i][j] > 100) {
+                    if (this.linies[i][j][1] == 1) {
                         aux++;
                     }
                 }
                 if (aux == 5) {
-                    //Linea. Sumam 100 mes
+                    //Linea. Indicam al valor [1] = 2
                     for (j = 0; j < 9; j++) {
-                        if (this.linies[i][j] > 0) {
-                            this.linies[i][j] = this.linies[i][j] + 100;
+                        //Hem de fer aquest if, per no posar a 2 tots els valors (pensem que hi ha caselles sense numero
+                        if (this.linies[i][j][1] == 1) {
+                            this.linies[i][j][1] = 2;
                         }
                     }
                     this.linea[i] = 1;
@@ -196,25 +209,26 @@ public class Carto {
         }
         return linea;
     }
-    
-    public boolean esBingo(){
-        //Comprovam si tenim 3 linies -> Bingo!
-        int total = 0;
-        int i;
+
+    public boolean esBingo() {
+        //Comprovam si tenim 15 numeros tapats
         boolean bingo = false;
         if (this.numeros == 15) {
             bingo = true;
-        } 
+            marcaBingo();
+        }
+        
         return bingo;
     }
 
-    public void bingo() {
+    public void marcaBingo() {
         int i;
         int j;
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 9; j++) {
-                if (this.linies[i][j] > 0) {
-                    this.linies[i][j] = this.linies[i][j] + 100;
+                //Hem de tenir en compte que hi ha números que no surten
+                if (this.linies[i][j][1] != -1) {
+                    this.linies[i][j][1] = 3;
                 }
             }
         }
@@ -232,7 +246,7 @@ public class Carto {
         return valor;
     }
 
-    public void assignaValor(int i, int j, int valor){
-        this.linies[i][j] = valor;
+    public void assignaValor(int i, int j, int valor) {
+        this.linies[i][j][0] = valor;
     }
 }

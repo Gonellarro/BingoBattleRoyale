@@ -5,32 +5,41 @@ import java.util.List;
 
 public class Partida {
 
+    //Definim si hi ha hagut bingo i linea
     private boolean bingo;
     private boolean linea;
-    private boolean atac;
+    //Definim quants cartons hi ha a la partida
     private int cartons;
-    private int idPartida;
-    private String titol;
+    //Definim totes les bolles que han sortit
     private List<Bolla> bolles = new ArrayList();
+    //Definim un petit buffer de les 3 darreres bolles que han sortit
     private List<Bolla> tresBolles = new ArrayList();
+    //Definim els usuaris de la partida
     private List<Usuari> usuaris = new ArrayList();
+    //Definim els missatges que surten tant al log com als events momentanis
     private String missatgesLog;
-    private String missatgesEvents;
-    private boolean estrella;
-    private boolean canvi;
-    private int bombaP;
-    private int escutP;
-    private int escutRebotP;
-    private int canviP;
-    private int platanP;
-    private int numero;
+    /**
+     * Tipus d'events: 1. Linea, 2. Bingo, 3. Atac bomba/platan, 4. Info
+     */
+    private String[][] missatgesEvent = new String[50][2];
+    private int numeroEvents;
+    //Cada partida ha de tenir una parrilla associada
+    private Parrilla parrilla;
+    //Usuari que ha cantat el bingo (a nivell estadístiques)
+    private Usuari usuariBingo;
+    //Usuari que ha cantat linea (a nivell estadístiques)
+    private Usuari usuariLinea;
+    //Numero de bolles que han sortit
+    private int numeroBolles;
 
     public Partida() {
         this.bingo = false;
         this.linea = false;
         this.cartons = 0;
-        this.titol = "Orfe";
+        //Inicialitzam les bolles
         this.bolles.clear();
+        //Inicialitzam els usuaris
+        this.usuaris.clear();
         //Hem de posar les 3 bolles a 0
         //per dur el comptador de les darreres bolles
         Bolla bolla = new Bolla();
@@ -42,19 +51,16 @@ public class Partida {
         //Inicialitzam els usuaris a 0
         this.usuaris.clear();
         //Posam els missatges a ""
-        this.missatgesEvents = "";
         this.missatgesLog = "";
-        this.atac = false;
-        this.estrella = false;
-        this.canvi = false;
-        this.numero = 0;
-        //Fixam les probabilitats de tenir bommba, escut o escut de rebot. La resta, és no tenir res
-        //El número va de 0 fins 99, essent la probabilitat sobre 100
-        this.bombaP = 25;
-        this.escutP = 0;
-        this.escutRebotP = 25;
-        this.canviP = 25;
-        this.platanP = 25;
+        //Inicialitzam la parrilla
+        this.parrilla = new Parrilla();
+        //Inicialitzam els usuaris que han cantat bingo i linea
+        this.usuariBingo = null;
+        this.usuariLinea = null;
+        //Inicialitzam el número dels events
+        this.numeroEvents = 0;
+        //Inicialitzam el número de bolles que han sortit
+        this.numeroBolles = 0;
     }
 
     public boolean isBingo() {
@@ -79,22 +85,6 @@ public class Partida {
 
     public void setCartons(int cartons) {
         this.cartons = cartons;
-    }
-
-    public int getIdPartida() {
-        return idPartida;
-    }
-
-    public void setIdPartida(int idPartida) {
-        this.idPartida = idPartida;
-    }
-
-    public String getTitol() {
-        return titol;
-    }
-
-    public void setTitol(String titiol) {
-        this.titol = titiol;
     }
 
     public List<Bolla> getBolles() {
@@ -125,77 +115,33 @@ public class Partida {
         this.missatgesLog = missatgesLog;
     }
 
-    public String getMissatgesEvents() {
-        return missatgesEvents;
+    public String[][] getMissatgesEvent() {
+        return missatgesEvent;
     }
 
-    public void setMissatgesEvents(String missatgesEvents) {
-        this.missatgesEvents = missatgesEvents;
+    public void setMissatgesEvents(String[][] missatgesEvent) {
+        this.missatgesEvent = missatgesEvent;
     }
 
-    public boolean isAtac() {
-        return atac;
+    public Parrilla getParrilla() {
+        return parrilla;
     }
 
-    public void setAtac(boolean atac) {
-        this.atac = atac;
+    public void setParrilla(Parrilla parrilla) {
+        this.parrilla = parrilla;
     }
     
-    public boolean isEstrella() {
-        return estrella;
-    }
-
-    public void setEstrella(boolean estrella) {
-        this.estrella = estrella;
-    }
-
-    public int getNumero() {
+    public int getNumeroBolles() {
         return this.bolles.size();
+    }
+
+    public void setNumeroBolles(int numeroBolles) {
+        this.numeroBolles = numeroBolles;
     }    
-    
-        public int getBombaP() {
-        return bombaP;
-    }
 
-    public void setBombaP(int bombaP) {
-        this.bombaP = bombaP;
-    }
-
-    public int getEscutP() {
-        return escutP;
-    }
-
-    public void setEscutP(int escutP) {
-        this.escutP = escutP;
-    }
-
-    public int getEscutRebotP() {
-        return escutRebotP;
-    }
-
-    public void setEscutRebotP(int escutRebotP) {
-        this.escutRebotP = escutRebotP;
-    }
-    
-    public int getCanviP() {
-        return canviP;
-    }
-
-    public void setCanviP(int canviP) {
-        this.canviP = canviP;
-    }   
-    
-    public boolean isCanvi() {
-        return canvi;
-    }
-
-    public void setCanvi(boolean canvi) {
-        this.canvi = canvi;
-    }    
-    
-    @Override
-    public String toString() {
-        return "Partida{" + "bingo=" + bingo + ", linea=" + linea + ", cartons=" + cartons + '}';
+//Metodes  
+    public int donaBollesSortit() {
+        return this.bolles.size();
     }
 
     public void afegeixBolla(Bolla bolla) {
@@ -212,27 +158,51 @@ public class Partida {
         this.usuaris.remove(usuari);
     }
 
-    public void reiniciar() {
-        this.bingo = false;
-        this.linea = false;
-        this.bolles.clear();
-        this.tresBolles.clear();
-        //Hem de posar les 3 bolles a 0
-        //per dur el comptador de les darreres bolles
-        Bolla bolla = new Bolla();
-        bolla.setValor(-1);
-        this.tresBolles.add(bolla);
-        this.tresBolles.add(bolla);
-        this.tresBolles.add(bolla);
-        this.missatgesEvents = "";
-        this.missatgesLog = "";
-        this.atac = false;
-        this.numero = 0;
-        this.estrella=false;
-        this.canvi = false;
+    public Usuari getUsuariBingo() {
+        return usuariBingo;
     }
 
+    public void setUsuariBingo(Usuari usuariBingo) {
+        this.usuariBingo = usuariBingo;
+    }
 
+    public Usuari getUsuariLinea() {
+        return usuariLinea;
+    }
 
+    public void setUsuariLinea(Usuari usuariLinea) {
+        this.usuariLinea = usuariLinea;
+    }
 
+    public int getNumeroEvents() {
+        return numeroEvents;
+    }
+
+    public void setNumeroEvents(int numeroEvents) {
+        this.numeroEvents = numeroEvents;
+    }
+
+    @Override
+    public String toString() {
+        return "Partida{" + "bingo=" + bingo + ", linea=" + linea + ", cartons=" + cartons + ", tresBolles=" + tresBolles + ", usuaris=" + usuaris + ", missatgesLog=" + missatgesLog + ", parrilla=" + parrilla + '}';
+    }
+
+//Mètodes
+    public void afegirMissatgesEvent(String missatge, String tipus) {
+        if (this.numeroEvents < 50) {
+            this.missatgesEvent[this.numeroEvents][0] = missatge;
+            this.missatgesEvent[this.numeroEvents][1] = tipus;
+            this.numeroEvents++;
+        }
+    }
+    
+    public boolean comprovaDarrerNumero(List<Usuari> usuaris){
+        boolean resultat = false;
+        for(Usuari usuariTmp:usuaris){
+            if(usuariTmp.comprovaDarrerNumero()){
+                resultat = true;
+            }
+        }
+        return resultat;
+    }
 }

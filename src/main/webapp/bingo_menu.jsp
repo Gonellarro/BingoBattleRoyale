@@ -23,7 +23,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="myModalLabel">Creau la partida</h4>
+                            <h4 class="modal-title" id="myModalLabel">Creau la sala</h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -31,7 +31,7 @@
                                     <label><strong>Títol</strong></label>
                                 </div>		
                                 <div class="col-9">
-                                    <input type="text" class="form-control" id="titol" name ="titol" placeholder="Títol partida" required>
+                                    <input type="text" class="form-control" id="titol" name ="titol" placeholder="Títol de la sala" required>
                                 </div>
                             </div>	 
                             <br>
@@ -41,26 +41,16 @@
                                 </div>
                                 <div class="col-9">      
                                     <input type="number" class="form-control" id="cartons" name ="cartons" placeholder="Cartons per jugador">
-                                    <!--
-                                    <select id="cartons" name=""cartons">
-                                      <option value="1">1</option>
-                                      <option value="2">2</option>
-                                      <option value="3">3</option>
-                                      <option value="4">4</option>
-                                    </select>
-                                    -->
                                 </div>
                             </div>
                             <br>
                         </div>
                         <div class="modal-footer">
-                            <a href="${pageContext.request.contextPath}" class="btn btn-secondary">Sortir</a>
                             <button type="submit" class="btn btn-primary">Enviar</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <input type="hidden" name="tipus" value ="<c:out value="${tipus}"/>">
         </form>
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

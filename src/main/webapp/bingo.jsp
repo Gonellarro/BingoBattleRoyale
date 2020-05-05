@@ -22,7 +22,7 @@
                     <div class="modal-content">
                         <div class="modal-header  text-dark bg-light">
                             <h5 class="modal-title">
-                                <strong>Id:</strong> <c:out value = "${partida.idPartida}"/>
+                                <strong>Id:</strong> <c:out value = "${sala.id}"/>
                             </h5>
                         </div>
                         <div class="modal-body">
@@ -65,7 +65,6 @@
                     </div>
                 </div>
             </div>
-            <input type="hidden" name="tipus" value ="virtual">
             <input type="hidden" name="accio" value ="bolla">
         </form>
 

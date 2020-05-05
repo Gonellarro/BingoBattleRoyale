@@ -2,141 +2,187 @@ package controler;
 
 import javax.servlet.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Bingo;
 import model.Bolla;
 import model.Parrilla;
 import model.Partida;
+import model.Sala;
+import Beans.Utils;
 
 @WebServlet("/BingoControler")
 public class BingoControler extends HttpServlet {
 
-    private List<Partida> partides = new ArrayList();
-    private Partida partida;
-    private Parrilla parrilla;
+    private Bingo bingo;
+    private boolean debug;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
 
         // Store the ServletConfig object and log the initialization
         super.init(config);
-        //Cream una variable global a l'app per a que tengui totes les dades de la partida compartides
-        getServletContext().setAttribute("partides", this.partides);
+        //Hem de crear el Bingo el primer pic que entram
+        this.bingo = new Bingo();
+        //Si no existeix com a variable d'aplicació, el cream
+        if (getServletContext().getAttribute("bingo") == null) {
+            //Cream el bingo
+            this.bingo.setNom("SalvadorDali25");
+            //Cream una variable global a l'app per a que tengui totes les dades de la partida compartides
+            getServletContext().setAttribute("bingo", this.bingo);
+        } //Sino, la carregam
+        else {
+            this.bingo = (Bingo) getServletContext().getAttribute("bingo");
+        }
+        //Si volem debugar el programa ho hem de posar a true
+        this.debug = true;
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //Bingo virtual
-        if (request.getParameterMap().containsKey("virtual")) {
-            String virtual = request.getParameter("virtual");
-            Bolla bolla = new Bolla();
+        if (this.debug) {
+            System.out.println("BINGO CONTROLER - DOGET");
+        }
+        HttpSession session = request.getSession();
+        Bolla bolla = new Bolla();
+        //Cream una sala local
+        Sala sala = new Sala();
+        //Cream una partida local
+        Partida partida = new Partida();
+        //Cream una parrilla local
+        Parrilla parrilla = new Parrilla();
+        //Cream una utileria
+        Utils util = new Utils();
+
+        if (request.getParameterMap().containsKey("accio")) {
+            String accio = request.getParameter("accio");
             int i;
-            switch (virtual) {
+            switch (accio) {
                 case "iniciar":
-                    //Hem de demanar el nom de la partida i cartons, per crear-la després
-                    request.setAttribute("tipus", "virtual");
+                    //Hem de demanar el nom de la sala i els cartons que hi haurà a cada partida, per crear-la després
                     request.getRequestDispatcher("bingo_menu.jsp").forward(request, response);
                     break;
                 case "reiniciar":
-                    this.parrilla = new Parrilla();
-                    
-                    //Actualitzam la partida dins la llista de partides
-                    this.partides.remove(this.partida);
-                    this.partida.reiniciar();
-                    this.partides.add(this.partida);
-                    getServletContext().setAttribute("partides", this.partides);
-
+                    //Reiniciar vol dir que volem crear una nova partida dins la sala
+                    sala = util.donaSala(session.getId(), this.bingo.getSales());
+                    //Hem de crear una nova partida a aquesta sala
+                    sala.afegiexPartida(partida);
+                    //Carregam la graella de la partida acabada de crear
+                    parrilla = partida.getParrilla();
+                    //Posam la bolla a 0
                     bolla.setValor(-1);
-                    request.setAttribute("parrilla", this.parrilla);
+
+                    //Actualitzam la variable global del bingo. El servlet la coneix, però l'ha de coneixer també el servlet del jugadors
+                    getServletContext().setAttribute("bingo", bingo);
+
+                    request.setAttribute("sala", sala);
+                    request.setAttribute("parrilla", parrilla);
                     request.setAttribute("bollaActual", bolla);
                     request.getRequestDispatcher("bingo.jsp").forward(request, response);
                     break;
                 case "sortir":
-                    this.partides.remove(this.partida);
+                    //Vol dir que hem de llevar la sala on estam del bingo i anar a l'index
+                    sala = util.donaSala(session.getId(), this.bingo.getSales());
+                    //Hem d'eliminar aquesta sala
+                    this.bingo.llevaSala(sala);
                     request.getRequestDispatcher("index.jsp").forward(request, response);
                 default:
                     break;
             }
 
         }
-
-        if (request.getParameterMap().containsKey("manual")) {
-            System.out.println("MANUAL");
-            String manual = request.getParameter("manual");
-            //TODO
-        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (this.debug) {
+            System.out.println("BINGO CONTROLER - DOPOST");
+        }
 
-        if (request.getParameterMap().containsKey("tipus")) {
-            String tipus = request.getParameter("tipus");
-            //Si és un bingo virtual
-            if (tipus.equals("virtual")) {
-                HttpSession session = request.getSession();
-                Bolla bolla = new Bolla();
-                //Inici. Hem de crear la partida. Per això demanam titol i cartons
-                if (request.getParameterMap().containsKey("titol")) {
-                    iniciar(request);
-                    bolla.setValor(-1);
-                }
-                //Hem de donar una nova bolla
-                if (request.getParameterMap().containsKey("accio")) {
-                    String accio = request.getParameter("accio");
-                    if (accio.equals("bolla")) {
-                        //Si encara se poden treure més bolles
-                        if (this.parrilla.getComptador() < this.parrilla.getNUMBOLLES()) {
-                            //treim una bolla i la posam a la parrilla;
-                            bolla = this.parrilla.treureBolla();
-                            //També l'afegim a la partida per dur un compte de les bolles que han sortit
-                            this.partida.afegeixBolla(bolla);
-                            
-                            //Si queden 90 bolles per sortir, es pot fer el canvi de cartons
-                            if(this.parrilla.getComptador()>0){
-                                this.partida.setCanvi(true);
-                            }
-                        } else {
-                            //TODO
-                            //HEM DE DIR QUE HEM ACABAT
-                        }
-                    }
-                }
-                //Guardam com a variable global dels servlets la partida en curs, ja que ha pogut ser modificada
-                getServletContext().setAttribute("partida", this.partida);
-                request.setAttribute("parrilla", this.parrilla);
-                request.setAttribute("bollaActual", bolla);
-                request.getRequestDispatcher("bingo.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        Bolla bolla = new Bolla();
+        //Cream una sala local
+        Sala sala = new Sala();
+        //Cream una partida local
+        Partida partida = new Partida();
+        //Cream una parrilla local
+        Parrilla parrilla = new Parrilla();
 
-            } else if (tipus.equals("manual")) {
-                //TODO
+        //Si rebem el titol vol dir que hem d'iniciar una nova sala. 
+        //Hem de crear la partida. Per això demanam titol i cartons.
+        if (request.getParameterMap().containsKey("titol")) {
+            //Hem de posar en marxa de la sala, nova sala i nova partida
+            String titol = request.getParameter("titol");
+            int cartons = Integer.parseInt(request.getParameter("cartons"));
+            //Generam un ID per compartir amb els jugadors
+            sala.generaID();
+            //Guardam la sessio per identificar la sala cada pic
+            sala.setIdSession(session.getId());
+            //Li posam el nom i els cartons a la sala
+            sala.setNom(titol);
+            sala.setNcartons(cartons);
+            //Indicam a la partida el numero de cartosn
+            partida.setCartons(cartons);
+            //Afegim la partida a la sala
+            sala.afegiexPartida(partida);
+            //Afegim la sala al bingo
+            this.bingo.afegeixSala(sala);
+            //Inicialitzam la primera bolla que surt a 0
+            bolla.setValor(-1);
+            //Debug
+            if (this.debug) {
+                System.out.println("Entra a crear la sala i partida");
+                System.out.println("Sala: " + sala);
+                System.out.println("Partida: " + partida);
             }
         }
-    }
+        //Si rebem accio=bolla, vol dir que hem de treure una nova bolla del bombo
+        //Hem de donar una nova bolla
+        if (request.getParameterMap().containsKey("accio")) {
+            String accio = request.getParameter("accio");
+            if (accio.equals("bolla")) {
+                //Si encara se poden treure més bolles, collim la sala i parrilla
+                Utils util = new Utils();
+                sala = util.donaSala(session.getId(), this.bingo.getSales());
+                partida = util.donaDarreraPartida(sala);
+                parrilla = partida.getParrilla();
+                //Si queden bolles per treure
+                if (parrilla.getComptador() < parrilla.getNUMBOLLES()) {
+                    //treim una bolla i la posam a la parrilla;
+                    bolla = parrilla.treureBolla();
+                    //També l'afegim a la partida per dur un compte de les bolles que han sortit
+                    partida.afegeixBolla(bolla);
 
-    public void iniciar(HttpServletRequest request) {
-        int cartons = Integer.parseInt(request.getParameter("cartons"));
-        String titol = request.getParameter("titol");
-        Bolla bolla = new Bolla();
-        int i;
+                    if (this.debug) {
+                        System.out.println("Hem de donar una bolla");
+                        System.out.println("Sala: " + sala);
+                        System.out.println("Partida: " + partida);
+                        System.out.println("Parrilla: " + parrilla);
+                        System.out.println("Bolla: " + bolla);
+                    }
 
-        int idPartida = (int) Math.floor(Math.random() * (99999));
-
-        //Cream la partida
-        this.partida = new Partida();
-        this.partida.setTitol(titol);
-        this.partida.setIdPartida(idPartida);
-        this.partida.setCartons(cartons);
-        //L'afegim al lliostat de partides que tenim en marxa
-        this.partides.add(partida);
-
-        //Cream una nova parrilla
-        this.parrilla = new Parrilla();
+                } else {
+                    //TODO
+                    //HEM DE DIR QUE HEM ACABAT
+                    //PER ARA NOMÉS TREIM UNA BOLLA A 0
+                    bolla.setValor(-1);
+                    if (this.debug) {
+                        System.out.println("HEM ARRIBAT AL FINAL DE LES BOLLES DEL BOMBO");
+                    }
+                }
+            }
+        }
+        //Actualitzam la variable global del bingo. El servlet la coneix, però l'ha de coneixer també el servlet del jugadors
+        getServletContext().setAttribute("bingo", bingo);
+        //Publicam tot pel jsp
+        //request.setAttribute("partida", partida);
+        request.setAttribute("sala", sala);
+        request.setAttribute("parrilla", parrilla);
+        request.setAttribute("bollaActual", bolla);
+        request.getRequestDispatcher("bingo.jsp").forward(request, response);
     }
 }

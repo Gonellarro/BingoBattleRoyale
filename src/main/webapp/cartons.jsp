@@ -18,7 +18,7 @@
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>  
         <div id='platan' style="display: none;" class="text-white bg-dark" >${usuari.atacPlatan}</div>
-        <form name="formulari" action="${pageContext.request.contextPath}/CartonsControler" method="post">
+        <form name="formulari" action="${pageContext.request.contextPath}/PartidesControler" method="post">
             <div class ="container">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -74,25 +74,22 @@
                                             <tr>
                                                 <c:forEach var="linia" items="${carto.linies}">
                                                     <c:forEach var="valor" items="${linia}">
-                                                        <c:if test="${valor > 0}">  
-                                                            <c:if test="${valor < 100}">
+                                                        <c:if test="${valor[1] ge 0}">  
+                                                            <c:if test="${valor[1] eq 0}">
                                                                 <td class="table-primary">  
                                                                 </c:if>
-                                                                <c:if test="${(valor > 100) && (valor < 200)}">
-                                                                <td class="table-danger">  
-                                                                    <c:set var="valor" value="${valor - 100}" />
+                                                                <c:if test="${valor[1] eq 1}">
+                                                                <td class="table-danger">
                                                                 </c:if>
-                                                                <c:if test="${(valor > 200) && (valor < 300)}">
+                                                                <c:if test="${valor[1] eq 2}">
                                                                 <td class="table-warning">  
-                                                                    <c:set var="valor" value="${valor - 200}" />
                                                                 </c:if>
-                                                                <c:if test="${valor > 300}">
-                                                                <td class="table-success">  
-                                                                    <c:set var="valor" value="${valor - 300}" />
+                                                                <c:if test="${valor[1] eq 3}">
+                                                                <td class="table-success"> 
                                                                 </c:if>
-                                                                <c:out value="${valor}"/>
+                                                                <c:out value="${valor[0]}"/>
                                                             </c:if>
-                                                            <c:if test="${valor < 0}">
+                                                            <c:if test="${valor[1] lt 0}">
                                                             <td class="table-secondary">
                                                                 <img src="${pageContext.request.contextPath}/resources/img/logo.png" width="20" height="20" alt="">
                                                             </c:if>
@@ -108,33 +105,37 @@
                             <div class="row">
                                 <div class="col-12">
                                     <c:if test="${usuari.pintarEvent}">
-                                        <div
-                                            <c:choose>
-                                                <c:when test="${usuari.tipusEvent == 1}">
-                                                    class="alert alert-warning" role="alert"
-                                                </c:when>
-                                                <c:when test="${usuari.tipusEvent == 2}">
-                                                    class="alert alert-success" role="alert"
-                                                </c:when>
-                                                <c:when test="${usuari.tipusEvent == 3}">
-                                                    class="alert alert-danger" role="alert"
-                                                </c:when>
-                                                <c:when test="${usuari.tipusEvent == 4}">
-                                                    class="alert alert-success" role="alert"
-                                                </c:when>
-                                                <c:when test="${usuari.tipusEvent == 5}">
-                                                    class="alert alert-primary" role="alert"
-                                                </c:when>
-                                                <c:when test="${usuari.tipusEvent == 6}">
-                                                    class="alert alert-info" role="alert"
-                                                </c:when>
-                                                <c:when test="${usuari.tipusEvent == 7}">
-                                                    class="alert alert-warning" role="alert"
-                                                </c:when>
-                                            </c:choose>
-                                            >
-                                            <c:out value = "${partida.missatgesEvents}"/>
-                                        </div>
+                                        <c:forEach var="missatge" items="${partida.missatgesEvent}" varStatus="comptador">
+                                            <c:if test="${(comptador.count gt missatgesEventInici) && (comptador.count le missatgesEventFinal)}">  
+                                                <div
+                                                    <c:choose>
+                                                        <c:when test="${missatge[1] eq 1}">
+                                                            class="alert alert-warning" role="alert"
+                                                        </c:when>
+                                                        <c:when test="${missatge[1]  eq 2}">
+                                                            class="alert alert-success" role="alert"
+                                                        </c:when>
+                                                        <c:when test="${missatge[1] eq 3}">
+                                                            class="alert alert-danger" role="alert"
+                                                        </c:when>
+                                                        <c:when test="${missatge[1] eq 4}">
+                                                            class="alert alert-success" role="alert"
+                                                        </c:when>
+                                                        <c:when test="${missatge[1] eq 5}">
+                                                            class="alert alert-primary" role="alert"
+                                                        </c:when>
+                                                        <c:when test="${missatge[1] eq 6}">
+                                                            class="alert alert-info" role="alert"
+                                                        </c:when>
+                                                        <c:when test="${missatge[1] eq 7}">
+                                                            class="alert alert-warning" role="alert"
+                                                        </c:when>
+                                                    </c:choose>
+                                                    >
+                                                    <c:out value = "${missatge[0]}"/>
+                                                </div>
+                                            </c:if>
+                                        </c:forEach>
                                     </c:if>
                                 </div>
                             </div>
@@ -152,7 +153,7 @@
                                 <div class="col-4">
                                     <label><strong>Falten</strong></label>
                                     <h1 class="display-5">
-                                        <c:out value = "${90-partida.numero}"/>
+                                        <c:out value = "${90-partida.numeroBolles}"/>
                                     </h1>
                                 </div>
                             </div>
@@ -163,15 +164,15 @@
                                     <div class="col-6">   
                                         <c:if test="${usuari.bomba > 0}">
                                             <c:if test="${estrella}">
-                                                <a href="${pageContext.request.contextPath}/CartonsControler?accio=bomba" class="btn btn-danger" role="button">Bomba!</a>
+                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=bomba" class="btn btn-danger" role="button">Bomba!</a>
                                             </c:if>  
                                         </c:if> 
                                         <c:if test="${usuari.platan > 0}">
-                                            <a href="${pageContext.request.contextPath}/CartonsControler?accio=platan" class="btn btn-danger" role="button">Platan!</a>
+                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=platan" class="btn btn-danger" role="button">Platan!</a>
                                         </c:if> 
                                         <c:if test="${usuari.canvi > 0}">
                                             <c:if test="${partida.canvi}">
-                                                <a href="${pageContext.request.contextPath}/CartonsControler?accio=canvi" class="btn btn-info" role="button">Canvi!</a>
+                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=canvi" class="btn btn-info" role="button">Canvi!</a>
                                             </c:if>  
                                         </c:if>                                             
                                     </div>
@@ -197,6 +198,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div>
+                <input type="hidden" id="idSala" name="idSala" value="<c:out value = "${sala.id}"/>">
             </div>
         </form>   
 

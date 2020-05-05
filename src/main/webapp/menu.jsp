@@ -19,8 +19,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
-                                <a class="btn btn-primary" href="${pageContext.request.contextPath}//BingoControler?virtual=iniciar">Bombo virtual</a><br><br>
-                                <!--<a class="btn btn-primary" href="${pageContext.request.contextPath}//BingoControler?manual=iniciar">Bombo manual</a><br><br>-->
+                                <a class="btn btn-primary" href="${pageContext.request.contextPath}//BingoControler?accio=iniciar">Bombo virtual</a><br><br>
                                 <a class="btn btn-primary" href="${pageContext.request.contextPath}/cartonsmenu.jsp">Cartons</a>
                             </div>
                         </div>

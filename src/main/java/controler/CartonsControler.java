@@ -47,13 +47,13 @@ public class CartonsControler extends HttpServlet {
             HttpSession session = request.getSession();
             this.partides = (List<Partida>) getServletContext().getAttribute("partides");
             this.usuari = consultaUsuari(session.getId());
-            int idPartida = this.usuari.getPartida().getIdPartida();
-            this.partida = consultaPartida(idPartida);
+//            int idPartida = this.usuari.getPartida().getIdPartida();
+//            this.partida = consultaPartida(idPartida);
             switch (accio) {
                 case "reiniciar":
                     //this.cartons = iniciaCartons();
                     this.usuari.reinicia(this.numeroCartons);
-                    this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
+//                    this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
                     request.setAttribute("jugadors", this.partida.getUsuaris().size());
@@ -82,8 +82,8 @@ public class CartonsControler extends HttpServlet {
                     this.partida = batalla.bomba(this.partida, session.getId(), graella);
 
                     //Actualitzam la partida dins la llista de partides
-                    this.partides.remove(this.partida);
-                    this.partides.add(this.partida);
+                    //this.partides.remove(this.partida);
+                    //this.partides.add(this.partida);
                     getServletContext().setAttribute("partides", this.partides);
 
                     session.setAttribute("partida", this.partida);
@@ -96,8 +96,8 @@ public class CartonsControler extends HttpServlet {
                     this.partida = batalla2.canvi(this.partida, this.usuari);
                     this.usuari.setCanvi(0);
                     //Actualitzam la partida dins la llista de partides
-                    this.partides.remove(this.partida);
-                    this.partides.add(this.partida);
+                    //this.partides.remove(this.partida);
+                    //this.partides.add(this.partida);
                     
                     getServletContext().setAttribute("partides", this.partides);
                     session.setAttribute("partida", this.partida);
@@ -109,10 +109,10 @@ public class CartonsControler extends HttpServlet {
                     Battle batalla3 = new Battle();
                     this.partida = batalla3.platan(this.partida, this.usuari);
                     this.usuari.setPlatan(0);
+                    
                     //Actualitzam la partida dins la llista de partides
-                    this.partides.remove(this.partida);
-                    this.partides.add(this.partida);
-
+                    //this.partides.remove(this.partida);
+                    //this.partides.add(this.partida);
                     getServletContext().setAttribute("partides", this.partides);
                     session.setAttribute("partida", this.partida);
                     session.setAttribute("usuari", this.usuari);
@@ -154,8 +154,8 @@ public class CartonsControler extends HttpServlet {
             this.usuari = consultaUsuari(session.getId());
             boolean atacPlatan = this.usuari.isAtacPlatan();
             
-            int idPartida = this.usuari.getPartida().getIdPartida();
-            this.partida = consultaPartida(idPartida);
+//            int idPartida = this.usuari.getPartida().getIdPartida();
+//            this.partida = consultaPartida(idPartida);
 
             marcaNumero(numero, request, session);
             comprovaLinea();
@@ -176,7 +176,7 @@ public class CartonsControler extends HttpServlet {
         //Enviam les dades al jsp
         session.setAttribute("partida", this.partida);
         session.setAttribute("usuari", this.usuari);
-        request.setAttribute("estrella", this.partida.isEstrella());
+//        request.setAttribute("estrella", this.partida.isEstrella());
         request.setAttribute("jugadors", this.partida.getUsuaris().size());
         request.getRequestDispatcher("cartons.jsp").forward(request, response);
 
@@ -242,7 +242,7 @@ public class CartonsControler extends HttpServlet {
             //Li donam els cartons
             this.usuari.setCartons(iniciaCartons());
             //Hem d'assignar-li bomba, escut o res
-            this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
+//            this.usuari.assignaPowerUps(this.partida.getBombaP(), this.partida.getEscutP(), this.partida.getEscutRebotP(), this.partida.getCanviP());
             //Ho publicam als missatges
             this.partida.setMissatgesLog(this.partida.getMissatgesLog() + "S'ha afegit el jugador " + nom + "\r\n");
 
@@ -263,14 +263,14 @@ public class CartonsControler extends HttpServlet {
             //List<Carto> cartons = new ArrayList();
             this.usuari = consultaUsuari(session.getId());
             //Si és una altra partida, l'hem de posar com la nostra
-            int idPartida = this.usuari.getPartida().getIdPartida();
-            this.partida = consultaPartida(idPartida);
+//            int idPartida = this.usuari.getPartida().getIdPartida();
+//            this.partida = consultaPartida(idPartida);
 
             //cartons = (List<Carto>) session.getAttribute("cartons");
             if (num > 0) {
                 int i;
                 for (i = 0; i < this.numeroCartons; i++) {
-                    this.usuari.getCartons().get(i).tachaNumero(num);
+//                    this.usuari.getCartons().get(i).tachaNumero(num);
                 }
             }
         }
@@ -304,9 +304,9 @@ public class CartonsControler extends HttpServlet {
     public Partida consultaPartida(int id) {
         Partida partida = new Partida();
         for (Partida partidaTmp : this.partides) {
-            if (partidaTmp.getIdPartida() == id) {
-                partida = partidaTmp;
-            }
+//            if (partidaTmp.getIdPartida() == id) {
+//                partida = partidaTmp;
+//            }
         }
         return partida;
     }
@@ -338,7 +338,7 @@ public class CartonsControler extends HttpServlet {
                     //Indicam a l'usuari que ho ha pintar i publicam el missatge al missatges Events de la partida
                     this.usuari.setPintarEvent(true);
                     this.usuari.setTipusEvent(1);
-                    this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat linea!");
+//                    this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat linea!");
                     //Aumentam en 1 el número de linies cantades
                     this.usuari.setLinies(this.usuari.getLinies() + 1);
                     //Posam que ja sabem que hi ha linea
@@ -375,14 +375,14 @@ public class CartonsControler extends HttpServlet {
                 //Si aquest cartó té bingo
                 if (this.usuari.getCartons().get(i).esBingo()) {
                     //Ho marcam al cartó 
-                    this.usuari.getCartons().get(i).bingo();
+//                    this.usuari.getCartons().get(i).bingo();
                     this.partida.setBingo(true);
                     this.partida.setMissatgesLog(this.partida.getMissatgesLog() + this.usuari.getNom() + " ha cantat bingo\r");
                     //Indicam a l'usuari que ho ha pintar i publicam el missatge al missatges Events de la partida
                     this.usuari.setPintarEvent(true);
                     this.usuari.setTipusEvent(2);
                     //Publicam el missatge als missatges events de la partida                    
-                    this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat bingo!");
+//                    this.partida.setMissatgesEvents(this.usuari.getNom() + " ha cantat bingo!");
                     //Aumentam en 1 els números de bingos cantats
                     this.usuari.setBingos(this.usuari.getBingos() + 1);
                 }
@@ -405,7 +405,7 @@ public class CartonsControler extends HttpServlet {
         int i;
         for (i = 0; i < this.partida.getCartons(); i++) {
             if (this.usuari.getCartons().get(i).getNumeros() == 14) {
-                this.partida.setEstrella(true);
+//                this.partida.setEstrella(true);
             }
         }
     }

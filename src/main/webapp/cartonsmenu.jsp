@@ -18,7 +18,7 @@
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>     
 
-        <form action="${pageContext.request.contextPath}/CartonsControler" method="post">
+        <form action="${pageContext.request.contextPath}/PartidesControler" method="post">
             <div class ="container">
                 <div id="login-overlay" class="modal-dialog">
                     <div class="modal-content">
@@ -72,18 +72,9 @@
                                     <label>ID</label>
                                 </div>		
                                 <div class="col-10">
-                                    <input type="number" class="form-control" id="idPartida" name ="idPartida" placeholder="Introduïu Id partida" required>
+                                    <input type="number" class="form-control" id="idSala" name ="idSala" placeholder="Introduïu Id partida" required>
                                 </div>
                             </div>                            
-                            <!--<div class="row">
-                                <div class="col-2">
-                                    <label>Codi</label>
-                                </div>
-                                <div class="col-10">
-                                    <input type="text" class="form-control" id="invitacio" name ="invitacio" placeholder="Introduïu codi d'invitació">
-                                </div>
-                                <br>
-                            </div>-->	
                             <br>
                         </div>
                         <div class="modal-footer">

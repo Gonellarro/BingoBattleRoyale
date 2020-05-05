@@ -57,7 +57,7 @@ public class Battle {
 
         //Hem d'avisar a tots que hi ha hagut aquest atac
         //Per això emprarem pintarEvent i missatgeEvent de cada ususari
-        partida.setMissatgesEvents(missatge);
+//        partida.setMissatgesEvents(missatge);
         //Això pareix que no funciona
         for (Usuari usuTmp : partida.getUsuaris()) {
             usuTmp.setPintarEvent(true);
@@ -72,9 +72,9 @@ public class Battle {
 
         //Revisam si just hi ha un usuari amb tots els numeros menys un tapats
         //Per mantenir o no l'avís de possibilitat d'atac
-        if (nomesUn(partida)) {
-            partida.setEstrella(false);
-        }
+//        if (nomesUn(partida)) {
+//            partida.setEstrella(false);
+//        }
         partida.setMissatgesLog(partida.getMissatgesLog() + missatge);
         return partida;
     }
@@ -186,7 +186,7 @@ public class Battle {
                 System.out.println("Ncarto: " + ncarto);
                 System.out.println("J: " + j);
                 System.out.println("Columna: " + columna);
-                valorTmp = carto.getLinies()[j][columna];
+//                valorTmp = carto.getLinies()[j][columna];
                 System.out.println("ValorCarto[" + ncarto + "][" + j + "][" + columna + "]: " + valorTmp);
                 if (valorTmp > 100) {
                     //Hem trobat una bolla que podem eliminar
@@ -249,7 +249,7 @@ public class Battle {
         usuari.setCartons(cartonsBons);
         //Avisam als usuaris
         for (Usuari usuTmp : partida.getUsuaris()) {
-            partida.setMissatgesEvents(usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom());
+//            partida.setMissatgesEvents(usuari.getNom() + " ha canviat els cartons amb " + usuariBo.getNom());
             usuTmp.setPintarEvent(true);
             usuTmp.setTipusEvent(6);
         }
@@ -286,7 +286,7 @@ public class Battle {
         partida.getUsuaris().add(usuariVictima);
         //Avisam als usuaris
         for (Usuari usuTmp : partida.getUsuaris()) {
-            partida.setMissatgesEvents(usuari.getNom() + " ha llancat un platan a " + usuariVictima.getNom());
+//            partida.setMissatgesEvents(usuari.getNom() + " ha llancat un platan a " + usuariVictima.getNom());
             usuTmp.setPintarEvent(true);
             usuTmp.setTipusEvent(6);
         }

@@ -20,6 +20,7 @@ public class Usuari {
     private String missatgeEvent;
     private int tipusEvent; //0: Res, 1: Linea, 2: Bingo, 3:Atac ok, 4: Rebot, 5: Rebot i atac ok; 6: Canvi de cartons; 7: Timer 10segons
     private List<Carto> cartons;
+    private int darrerMissatgeVist;
     private int bomba;
     private int escut;
     private int escutRebot;
@@ -35,6 +36,7 @@ public class Usuari {
         this.bingo = false;
         this.linies = 0;
         this.bingos = 0;
+        this.darrerMissatgeVist = 0;
         this.pintarEvent = false;
         this.desactivarEvent = false;
         this.bomba = 0;
@@ -166,7 +168,7 @@ public class Usuari {
     public void setMissatgeEvent(String missatgeEvent) {
         this.missatgeEvent = missatgeEvent;
     }
-    
+
     public int getTipusEvent() {
         return tipusEvent;
     }
@@ -174,7 +176,7 @@ public class Usuari {
     public void setTipusEvent(int tipusEvent) {
         this.tipusEvent = tipusEvent;
     }
-    
+
     public boolean isDesactivarEvent() {
         return desactivarEvent;
     }
@@ -182,14 +184,14 @@ public class Usuari {
     public void setDesactivarEvent(boolean desactivarEvent) {
         this.desactivarEvent = desactivarEvent;
     }
-    
+
     public int getCanvi() {
         return canvi;
     }
 
     public void setCanvi(int canvi) {
         this.canvi = canvi;
-    }    
+    }
 
     public boolean isAtacPlatan() {
         return atacPlatan;
@@ -197,7 +199,7 @@ public class Usuari {
 
     public void setAtacPlatan(boolean atacPlatan) {
         this.atacPlatan = atacPlatan;
-    }    
+    }
 
     public int getPlatan() {
         return platan;
@@ -205,6 +207,14 @@ public class Usuari {
 
     public void setPlatan(int platan) {
         this.platan = platan;
+    }
+    
+    public int getDarrerMissatgeVist() {
+        return darrerMissatgeVist;
+    }
+
+    public void setDarrerMissatgeVist(int darrerMissatgeVist) {
+        this.darrerMissatgeVist = darrerMissatgeVist;
     }    
 
 //Mètodes    
@@ -228,14 +238,14 @@ public class Usuari {
             this.canvi = 1;
             System.out.println("Canvi");
         }
-        
+
         if ((bombaP + escutP + escutRebotP + canviP <= atzar)) {
             this.platan = 1;
             System.out.println("Platan");
         }
     }
-    
-    public void reinicia(int ncartons){
+
+    public void reinicia(int ncartons) {
         this.linea = false;
         this.bingo = false;
         this.linies = 0;
@@ -249,11 +259,10 @@ public class Usuari {
         this.platan = 0;
         this.missatgeEvent = "";
         this.tipusEvent = 0;
-        this.atacPlatan = false;       
+        this.atacPlatan = false;
         this.cartons = iniciaCartons(ncartons);
     }
-    
-        //Mètodes per fer funcionar el controlador
+
     public List<Carto> iniciaCartons(int ncartons) {
         int i;
         List<Carto> cartonsX = new ArrayList();
@@ -262,9 +271,66 @@ public class Usuari {
             cartoX.generaCarto();
             cartonsX.add(cartoX);
         }
+        this.cartons = cartonsX;
         return cartonsX;
     }
 
+    /**
+     * Aquest mètode ha de taxar els numeros que surtin als cartons de l'usuari
+     */
+    public void taxaNumeros(int numero) {
+        /**
+         * Recorrem els cartons i indicam quin numero ha de taxar
+         */
+        for (Carto cartoTmp : this.cartons) {
+            cartoTmp.taxaNumero(numero);
+        }
+    }
+
+    /**
+     * Aquest mètode ens diu si hi ha alguna linea en el carto
+     */
+    public boolean comprovaLinea() {
+        boolean result = false;
+        /**
+         * Recorrem els cartons i veim si tenim liniea
+         */
+        for (Carto cartoTmp : this.cartons) {
+            if (cartoTmp.esLinea()) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Aquest mètode ens diu si hi ha alguna linea en el carto
+     */
+    public boolean comprovaBingo() {
+        boolean result = false;
+        /**
+         * Recorrem els cartons i veim si tenim bingo
+         */
+        for (Carto cartoTmp : this.cartons) {
+            if (cartoTmp.esBingo()) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public boolean comprovaDarrerNumero() {
+        boolean result = false;
+        /**
+         * Recorrem els cartons i veim si tenim liniea
+         */
+        for (Carto cartoTmp : this.cartons) {
+            if (cartoTmp.getNumeros() == 14) {
+                result = true;
+            }
+        }
+        return result;
+    }
 
 
 

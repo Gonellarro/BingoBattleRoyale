@@ -40,7 +40,9 @@ public class Parrilla {
     public int getNUMBOLLES() {
         return this.NUMBOLLES;
     }
-
+    
+    
+//Metdodes
     public Bolla treureBolla() {
         boolean haSortit = true;
         Bolla bolla = new Bolla();
@@ -76,6 +78,11 @@ public class Parrilla {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Parrilla{" + "bombo=" + bombo + ", comptador=" + comptador + '}';
     }
 
 }
