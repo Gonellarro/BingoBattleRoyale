@@ -19,6 +19,10 @@ public class Sala {
     private String contrasenya;
     //Numero de cartos amb els que se juga en aquesta sala
     private int ncartons;
+    //Tipus de partida Easy o no
+    private boolean easyOn;
+    //Tipus de partida Battle o no
+    private boolean battleRoyale;
 
     public Sala() {
         this.nom = "Razzmataz";
@@ -28,6 +32,8 @@ public class Sala {
         this.id = 0;
         this.idSession = "";
         this.ncartons = 0;
+        this.easyOn = false;
+        this.battleRoyale = true;
     }
 
     public String getNom() {
@@ -85,6 +91,22 @@ public class Sala {
     public void setPartides(List<Partida> partides) {
         this.partides = partides;
     }
+    
+    public boolean isEasyOn() {
+        return easyOn;
+    }
+
+    public void setEasyOn(boolean easyOn) {
+        this.easyOn = easyOn;
+    }
+
+    public boolean isBattleRoyale() {
+        return battleRoyale;
+    }
+
+    public void setBattleRoyale(boolean battleRoyale) {
+        this.battleRoyale = battleRoyale;
+    }    
 
 //Metodes
     public int generaID() {
@@ -109,5 +131,7 @@ public class Sala {
     public String toString() {
         return "Sala{" + "nom=" + nom + ", id=" + id + ", usuaris=" + usuaris + ", contrasenya=" + contrasenya + ", ncartons=" + ncartons + '}';
     }
+
+
 
 }

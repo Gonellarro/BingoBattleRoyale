@@ -21,29 +21,22 @@ public class Battle {
         boolean torna = false;
         int tipusEvent = 3;//0: Res, 1: Linea, 2: Bingo, 3:Atac ok, 4: Rebot, 5: Rebot i atac ok
         //Si la víctima tés escut, l'empara i perd 1 escut
-        if (usuariVictima.getEscut() > 0) {
-            usuariVictima.setEscut(usuariVictima.getEscut() - 1);
+        if (usuariVictima.getPwup().getNom().equals("escut")) {
+            //Eliminam el powerup dela víctima
+            usuariVictima.getPwup().setNom("FLASH");
             missatge = usuariVictima.getNom() + " s'escuda de " + usuariAtacant.getNom() + "\r";
             ferit = false;
             tipusEvent = 4;
         }
         //Si la víctima té escut que rebota, l'empara i el torna, perdent un escut
         //Si l'atacant també té un escut, empara i el perd
-        if (usuariVictima.getEscutRebot() > 0) {
-            usuariVictima.setEscut(usuariVictima.getEscutRebot() - 1);
+        if (usuariVictima.getPwup().getNom().equals("escutRebot")) {
+            //Eliminam el powerup dela víctima
+            usuariVictima.getPwup().setNom("FLASH");
+
             torna = true;
             tipusEvent = 5;
             missatge = usuariVictima.getNom() + " s'escuda de " + usuariAtacant.getNom() + " i li torna\r";
-            if ((usuariAtacant.getEscut() > 0) || (usuariAtacant.getEscutRebot() > 0)) {
-                missatge = missatge + usuariAtacant.getNom() + " s'escuda també\r";
-                ferit = false;
-                tipusEvent = 4;
-                if (usuariAtacant.getEscut() > 0) {
-                    usuariAtacant.setEscut(usuariAtacant.getEscut() - 1);
-                } else {
-                    usuariAtacant.setEscutRebot(usuariAtacant.getEscutRebot() - 1);
-                }
-            }
         }
 
         //Ara hem de llevar la bolla a qui pertoqui, si s'ha de llevar
@@ -61,9 +54,8 @@ public class Battle {
         partida.afegirMissatgesEvent(missatge, "3");
         partida.setMissatgesLog(partida.getMissatgesLog() + missatge);
 
-        //Llevam el PowerUp
-        PowerUp pwup = new PowerUp();
-        usuariAtacant.setPwup(pwup);
+        //Llevam el PowerUp de l'atacant
+        usuariAtacant.getPwup().setNom("FLASH");
 
         return partida;
     }
@@ -158,7 +150,6 @@ public class Battle {
         while (!trobada) {
             //Collim el valor de la bolla del bombo
             valor = bolles.get(i).getValor() + 1;
-            System.out.println("Valor bolla[" + i + "]: " + valor);
             //Hem de veure a quina columna cau
             columna = (int) valor / 10;
             //El cas que el valor sigui 90
@@ -172,7 +163,6 @@ public class Battle {
             //Si hem collit tantes bolles com les que hi ha al bombo, és que no podem llevar-la
             if (cont > bolles.size()) {
                 trobada = true;
-                System.out.println("No se pot llevar");
                 //No hi ha cap bolla per posar
                 //Hem de veure que feim en aquest cas
             }
@@ -182,8 +172,6 @@ public class Battle {
             for (j = 0; j < 3; j++) {
                 valorTmp = carto.getLinies()[j][columna][0];
                 estatTmp = carto.getLinies()[j][columna][1];
-                System.out.println("ValorCarto[" + ncarto + "][" + j + "][" + columna + "]: " + valorTmp);
-                System.out.println("EstatCarto[" + ncarto + "][" + j + "][" + columna + "]: " + estatTmp);
                 //Si estatTmp = 1, vol dir que aquest està taxat
                 if (estatTmp == 1) {
                     //Hem trobat una bolla que podem eliminar
@@ -195,9 +183,8 @@ public class Battle {
                         }
                     }
                     if (trobada) {
-                        carto.assignaValor(j, columna, valor, 0);
+                        carto.assignaValor(j, columna, valor, 4);
                         carto.setNumeros(carto.getNumeros() - 1);
-                        //usuari.getCartons().set(ncarto, carto);
                         break;
                     }
                 }
@@ -208,7 +195,6 @@ public class Battle {
                 i++;
                 //Si hem arribat al final del números del bombo, hem de tornar pel principi
                 if (i == bolles.size()) {
-                    System.out.println("Reiniciam el comptador del bombo");
                     i = 0;
                 }
             }
@@ -222,11 +208,11 @@ public class Battle {
         int comptador = 0;
         int maxim = -1;
         Carto cartoTmp = new Carto();
-        
+
         while (!fi) {
             //Hem de llevar una bolla del cartó que li quedin menys bolles per tapar o que té més tapats
-            for (Carto carto:cartons){
-                if(carto.getNumeros() > maxim){
+            for (Carto carto : cartons) {
+                if (carto.getNumeros() > maxim) {
                     cartoTmp = carto;
                     maxim = carto.getNumeros();
                     ncarto = comptador;
@@ -234,10 +220,9 @@ public class Battle {
                 comptador++;
             }
             //A cartoTmp tenim el cartó que li queden menys bolles per tapar o té més números tapats
-            if (cartoTmp.getNumeros() > 0){
+            if (cartoTmp.getNumeros() > 0) {
                 fi = true;
-            }
-            else{
+            } else {
                 //A veure que feim si tiram a un carto que no té números tapats
                 ncarto = -1;
                 fi = true;
@@ -267,29 +252,37 @@ public class Battle {
         List<Carto> cartonsBons = new ArrayList();
         List<Carto> cartonsDolents = new ArrayList();
         Usuari usuariBo = new Usuari();
+        String missatge = "";
         usuariBo = cercaCartons(partida.getUsuaris(), usuari);
-        //Quan els tenim, 1. els revisam i llavors els canviam 
-        Utils ut = new Utils();
-        
-        //Revisam els cartons a canviar
-        cartonsBons = usuariBo.getCartons();
-        cartonsBons = ut.revisaCartons(cartonsBons, partida);
-        
-        cartonsDolents = usuari.getCartons();
-        cartonsDolents = ut.revisaCartons(cartonsDolents, partida);
-        
-        //Un cop revisats, els intercanviam
-        usuariBo.setCartons(cartonsDolents);
-        usuari.setCartons(cartonsBons);
-        
-        String missatge = usuari.getNom() + " canvia els cartons amb " + usuariBo.getNom();
+        if (!usuariBo.getPwup().getNom().equals("escut")) {
+            //Quan els tenim, 1. els revisam i llavors els canviam 
+            Utils ut = new Utils();
+
+            //Revisam els cartons a canviar
+            cartonsBons = usuariBo.getCartons();
+            cartonsBons = ut.revisaCartons(cartonsBons, partida);
+
+            cartonsDolents = usuari.getCartons();
+            cartonsDolents = ut.revisaCartons(cartonsDolents, partida);
+
+            //Un cop revisats, els intercanviam
+            usuariBo.setCartons(cartonsDolents);
+            usuari.setCartons(cartonsBons);
+            missatge = usuari.getNom() + " canvia els cartons amb " + usuariBo.getNom() + "\r";
+        } else {
+            missatge = usuari.getNom() + " canvia els cartons amb " + usuariBo.getNom() + " però l'esquiva!\r";
+            //Li llevam s'escut
+            PowerUp pwup = new PowerUp();
+            usuariBo.setPwup(pwup);
+        }
+
         //Hem d'afegir el missatge al log i als events
         partida.afegirMissatgesEvent(missatge, "5");
         partida.setMissatgesLog(partida.getMissatgesLog() + missatge);
 
         //Llevam el PowerUp
         PowerUp pwup = new PowerUp();
-        usuari.setPwup(pwup);
+        usuari.getPwup().setNom("FLASH");
 
         return partida;
     }
@@ -305,7 +298,6 @@ public class Battle {
                     if (cartoTmp.getNumeros() > maxim) {
                         usuariBo = usuTmp;
                         maxim = cartoTmp.getNumeros();
-                        System.out.println("Maximes bolles tapades: " + cartoTmp.getNumeros() + " i el té en " + usuTmp.getNom());
                     }
                 }
             }
@@ -314,20 +306,26 @@ public class Battle {
     }
 
     public Partida platan(Partida partida, Usuari usuari) {
+        String missatge = "";
         //Hem de seleccionar l'usuari a qui tirar-li el platan de forma atzarosa
         Usuari usuariVictima = cercaUsuariAtzar(partida, usuari.getIdSession());
-        partida.getUsuaris().remove(usuariVictima);
-        //Ara li hem d'activar que té l'egfecte del platan
-        usuariVictima.setAtacPlatan(true);
-        //L'actualitzam a la partida
-        partida.getUsuaris().add(usuariVictima);
-        //Avisam als usuaris
-        for (Usuari usuTmp : partida.getUsuaris()) {
-//            partida.setMissatgesEvents(usuari.getNom() + " ha llancat un platan a " + usuariVictima.getNom());
-            usuTmp.setPintarEvent(true);
-            usuTmp.setTipusEvent(6);
+        if (!usuariVictima.getPwup().getNom().equals("escut")) {
+            //Ara li hem d'activar que té l'egfecte del platan
+            usuariVictima.setAtacPlatan(true);
+            missatge = usuari.getNom() + " llança un platan a " + usuariVictima.getNom() + "\r";
+        } else {
+            missatge = usuari.getNom() + " llança un platan a " + usuariVictima.getNom() + " però l'esquiva!\r";
+            //Li llevam s'escut
+            usuariVictima.getPwup().setNom("FLASH");
         }
-        partida.setMissatgesLog(partida.getMissatgesLog() + usuari.getNom() + "  ha llancat un platan a " + usuariVictima.getNom() + "\r");
+
+        //Hem d'afegir el missatge al log i als events
+        partida.afegirMissatgesEvent(missatge, "3");
+        partida.setMissatgesLog(partida.getMissatgesLog() + missatge);
+
+        //Llevam el PowerUp de l'atacant
+        PowerUp pwup = new PowerUp();
+        usuari.setPwup(pwup);
         return partida;
     }
 

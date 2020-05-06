@@ -46,10 +46,12 @@
                                             </c:forEach>
                                         </div>
                                         <div class="col-3">
-                                            <c:if test="${usuari.pwup.nom ne 'FLASH'}"> 
-                                                <div class="bg-light text-right">
-                                                    <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.pwup.nom}"/>.png" width="42">
-                                                </div>
+                                            <c:if test="${sala.battleRoyale}"> 
+                                                <c:if test="${usuari.pwup.nom ne 'FLASH'}"> 
+                                                    <div class="bg-light text-right">
+                                                        <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.pwup.nom}"/>.png" width="42">
+                                                    </div>
+                                                </c:if>
                                             </c:if>
                                         </div>
                                     </div>
@@ -79,6 +81,9 @@
                                                                 </c:if>
                                                                 <c:if test="${valor[1] eq 3}">
                                                                 <td class="table-success"> 
+                                                                </c:if>
+                                                                <c:if test="${valor[1] eq 4}">
+                                                                <td class="table-dark text-warning"> 
                                                                 </c:if>
                                                                 <c:out value="${valor[0]}"/>
                                                             </c:if>
@@ -146,7 +151,18 @@
                                 <div class="col-4">
                                     <label><strong>Falten</strong></label>
                                     <h1 class="display-5">
-                                        <c:out value = "${90-partida.numeroBolles}"/>
+                                        <span
+                                            <c:if test="${avisPwrUp eq 'danger'}">
+                                                class="border border-light bg-danger" 
+                                            </c:if>
+                                            <c:if test="${avisPwrUp eq 'warning'}">
+                                                class="border border-light bg-warning" 
+                                            </c:if>
+                                            <c:if test="${avisPwrUp eq 'success'}">
+                                                class="border border-light bg-success" 
+                                            </c:if>
+                                            ><c:out value = "${90-partida.numeroBolles}"/>
+                                        </span>
                                     </h1>
                                 </div>
                             </div>
@@ -155,16 +171,19 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-6">   
-                                        <c:if test="${usuari.pwup.nom eq 'bomba'}">
-                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=bomba&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Bomba!</a>
-                                        </c:if> 
-                                        <c:if test="${usuari.pwup.nom eq 'platan'}">
-                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=platan&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Platan!</a>
-                                        </c:if> 
-                                        <c:if test="${usuari.pwup.nom eq 'canvi'}">
-                                            <a href="${pageContext.request.contextPath}/PartidesControler?accio=canvi&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Canvi!</a>
-                                        </c:if>                                             
-                                    </div>
+                                        <c:if test="${sala.battleRoyale}"> 
+                                            <c:if test="${usuari.pwup.nom eq 'bomba'}">
+                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=bomba&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Bomba!</a>
+                                            </c:if> 
+                                            <c:if test="${usuari.pwup.nom eq 'platan'}">
+                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=platan&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Platan!</a>
+                                            </c:if> 
+                                            <c:if test="${usuari.pwup.nom eq 'canvi'}">
+                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=canvi&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Canvi!</a>
+                                            </c:if>                                             
+
+                                        </div>
+                                    </c:if> 
                                     <div class="col-6 text-right"> 
                                         <button type="submit" id="enviar" class="btn btn-primary" >Enviar</button>
                                     </div>

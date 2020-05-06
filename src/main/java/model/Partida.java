@@ -31,6 +31,11 @@ public class Partida {
     private Usuari usuariLinea;
     //Numero de bolles que han sortit
     private int numeroBolles;
+    //Numero que indica cada quantes bolles hem de regenerar els powerups
+    private int frequenciaPowerups;
+    //Ve de la sala
+    private boolean easyOn;
+    private boolean battleRoyale;
 
     public Partida() {
         this.bingo = false;
@@ -61,6 +66,10 @@ public class Partida {
         this.numeroEvents = 0;
         //Inicialitzam el número de bolles que han sortit
         this.numeroBolles = 0;
+        //Inicialitzam a 10 la frequencia de canvi dels PowerUps
+        this.frequenciaPowerups = 10;
+        this.easyOn = false;
+        this.battleRoyale = true;
     }
 
     public boolean isBingo() {
@@ -130,14 +139,14 @@ public class Partida {
     public void setParrilla(Parrilla parrilla) {
         this.parrilla = parrilla;
     }
-    
+
     public int getNumeroBolles() {
         return this.bolles.size();
     }
 
     public void setNumeroBolles(int numeroBolles) {
         this.numeroBolles = numeroBolles;
-    }    
+    }
 
 //Metodes  
     public int donaBollesSortit() {
@@ -182,6 +191,30 @@ public class Partida {
         this.numeroEvents = numeroEvents;
     }
 
+    public int getFrequenciaPowerups() {
+        return frequenciaPowerups;
+    }
+
+    public void setFrequenciaPowerups(int frequenciaPowerups) {
+        this.frequenciaPowerups = frequenciaPowerups;
+    }
+
+    public boolean isEasyOn() {
+        return easyOn;
+    }
+
+    public void setEasyOn(boolean easyOn) {
+        this.easyOn = easyOn;
+    }
+
+    public boolean isBattleRoyale() {
+        return battleRoyale;
+    }
+
+    public void setBattleRoyale(boolean battleRoyale) {
+        this.battleRoyale = battleRoyale;
+    }
+
     @Override
     public String toString() {
         return "Partida{" + "bingo=" + bingo + ", linea=" + linea + ", cartons=" + cartons + ", tresBolles=" + tresBolles + ", usuaris=" + usuaris + ", missatgesLog=" + missatgesLog + ", parrilla=" + parrilla + '}';
@@ -195,14 +228,15 @@ public class Partida {
             this.numeroEvents++;
         }
     }
-    
-    public boolean comprovaDarrerNumero(List<Usuari> usuaris){
+
+    public boolean comprovaDarrerNumero(List<Usuari> usuaris) {
         boolean resultat = false;
-        for(Usuari usuariTmp:usuaris){
-            if(usuariTmp.comprovaDarrerNumero()){
+        for (Usuari usuariTmp : usuaris) {
+            if (usuariTmp.comprovaDarrerNumero()) {
                 resultat = true;
             }
         }
         return resultat;
     }
+
 }

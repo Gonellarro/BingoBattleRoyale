@@ -71,6 +71,11 @@ public class BingoControler extends HttpServlet {
                     sala = util.donaSala(session.getId(), this.bingo.getSales());
                     //Hem de crear una nova partida a aquesta sala
                     sala.afegiexPartida(partida);
+                    //Indicam quants cartons té la partida
+                    partida.setCartons(sala.getNcartons());
+                    //Posam a la partida els valors que li pertoquen de Easy on i Battle
+                    partida.setBattleRoyale(sala.isBattleRoyale());
+                    partida.setEasyOn(sala.isEasyOn());
                     //Carregam la graella de la partida acabada de crear
                     parrilla = partida.getParrilla();
                     //Posam la bolla a 0
@@ -118,6 +123,17 @@ public class BingoControler extends HttpServlet {
             //Hem de posar en marxa de la sala, nova sala i nova partida
             String titol = request.getParameter("titol");
             int cartons = Integer.parseInt(request.getParameter("cartons"));
+            String easyon = request.getParameter("easyon");
+            String battle = request.getParameter("battle");
+            int fpowerups = Integer.parseInt(request.getParameter("powerups"));
+            //Formatejam strings que no han de ser null
+            if (easyon == null){
+                easyon = "";
+            }
+            if (battle  == null){
+                battle = "";
+            }
+
             //Generam un ID per compartir amb els jugadors
             sala.generaID();
             //Guardam la sessio per identificar la sala cada pic
@@ -125,8 +141,21 @@ public class BingoControler extends HttpServlet {
             //Li posam el nom i els cartons a la sala
             sala.setNom(titol);
             sala.setNcartons(cartons);
+            if (easyon.equals("on")) {
+                sala.setEasyOn(true);
+            }
+            else{
+               sala.setEasyOn(false); 
+            }
+            if (battle.equals("on")) {
+                sala.setBattleRoyale(true);
+            }
+            else{
+                sala.setBattleRoyale(false);
+            }
             //Indicam a la partida el numero de cartosn
             partida.setCartons(cartons);
+            partida.setFrequenciaPowerups(fpowerups);
             //Afegim la partida a la sala
             sala.afegiexPartida(partida);
             //Afegim la sala al bingo

@@ -59,7 +59,7 @@ public class PartidesControler extends HttpServlet {
             this.sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
             this.partida = ut.donaDarreraPartida(sala);
             this.usuari = ut.donaUsuariSala(this.bingo, idSala, session.getId());
-            
+
             int nMissatgesEventPartida;
             int nMissatgesEventInici;
 
@@ -112,7 +112,7 @@ public class PartidesControler extends HttpServlet {
                     graella.setBomboPartida(this.partida.getBolles());
                     Battle batalla = new Battle();
                     this.partida = batalla.bomba(this.partida, session.getId(), graella);
-                    
+
                     nMissatgesEventPartida = this.partida.getNumeroEvents();
                     nMissatgesEventInici = this.usuari.getDarrerMissatgeVist();
                     this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
@@ -134,12 +134,12 @@ public class PartidesControler extends HttpServlet {
                     Battle batalla2 = new Battle();
                     this.partida = batalla2.canvi(this.partida, this.usuari);
                     this.usuari.setCanvi(0);
-                    
+
                     nMissatgesEventPartida = this.partida.getNumeroEvents();
                     nMissatgesEventInici = this.usuari.getDarrerMissatgeVist();
                     this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
-                    this.usuari.setPintarEvent(true);                    
-                    
+                    this.usuari.setPintarEvent(true);
+
                     getServletContext().setAttribute("bingo", this.bingo);
                     //Enviam les dades al jsp
                     request.setAttribute("idSala", idSala);
@@ -151,22 +151,28 @@ public class PartidesControler extends HttpServlet {
                     request.setAttribute("missatgesEventInici", nMissatgesEventInici);
                     request.setAttribute("jugadors", this.partida.getUsuaris().size());
                     request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                    break;
+                case "platan":
+                    Battle batalla3 = new Battle();
+                    this.partida = batalla3.platan(this.partida, this.usuari);
 
-//                    break;
-//                case "platan":
-//                    Battle batalla3 = new Battle();
-//                    this.partida = batalla3.platan(this.partida, this.usuari);
-//                    this.usuari.setPlatan(0);
-//
-//                    //Actualitzam la partida dins la llista de partides
-//                    //this.partides.remove(this.partida);
-//                    //this.partides.add(this.partida);
-//                    getServletContext().setAttribute("partides", this.partides);
-//                    session.setAttribute("partida", this.partida);
-//                    session.setAttribute("usuari", this.usuari);
-//                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
-//                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
-//                    break;
+                    nMissatgesEventPartida = this.partida.getNumeroEvents();
+                    nMissatgesEventInici = this.usuari.getDarrerMissatgeVist();
+                    this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
+                    this.usuari.setPintarEvent(true);
+
+                    getServletContext().setAttribute("bingo", this.bingo);
+                    //Enviam les dades al jsp
+                    request.setAttribute("idSala", idSala);
+                    request.setAttribute("sala", sala);
+                    request.setAttribute("partida", this.partida);
+                    request.setAttribute("usuari", this.usuari);
+                    request.setAttribute("estrella", this.partida.comprovaDarrerNumero(sala.getUsuaris()));
+                    request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
+                    request.setAttribute("missatgesEventInici", nMissatgesEventInici);
+                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
+                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                    break;
                 default:
                     break;
             }
@@ -292,12 +298,39 @@ public class PartidesControler extends HttpServlet {
                 this.usuari.setPintarEvent(true);
                 this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
             }
-            System.out.println("Usuari: " + this.usuari.getNom());
-            System.out.println("inicial: " + nMissatgesEventInici);
-            System.out.println("final: " + nMissatgesEventPartida);
+            /**
+             * Comprovam si hem de canviar els powerups
+             */
+            String avisPwrUp = "";
+            if (this.partida.getNumeroBolles() % this.partida.getFrequenciaPowerups() == 0) {
+                this.usuari.getPwup().donaPowerUp();
+                avisPwrUp = "success";
+            }
+            if ((this.partida.getNumeroBolles() + 1) % this.partida.getFrequenciaPowerups() == 0) {
+                avisPwrUp = "danger";
+            }
+            if ((this.partida.getNumeroBolles() + 2) % this.partida.getFrequenciaPowerups() == 0) {
+                avisPwrUp = "warning";
+            }
+
+            /**
+             * Comprovam si hem de verificar els cartons
+             */
+            if ((sala.isEasyOn()) && partida.getBolles().size() > 0) {
+                ut.revisaCartons(this.usuari.getCartons(), partida);
+                
+            }
+            /**
+             * Finalment, comprovam que no hem sigut atacats per deshabilitar
+             * tots els modificadors d'atac
+             */
+            if (!this.usuari.isPintarEvent()) {
+                this.usuari.setAtacPlatan(false);
+            }
 
             getServletContext().setAttribute("bingo", this.bingo);
             //Enviam les dades al jsp
+            request.setAttribute("avisPwrUp", avisPwrUp);
             request.setAttribute("idSala", idSala);
             request.setAttribute("sala", sala);
             request.setAttribute("partida", this.partida);

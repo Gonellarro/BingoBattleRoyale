@@ -6,7 +6,7 @@ import java.util.Random;
 public class Carto {
 
     //Tenim 3 linies que són un array multidimensional de sencers i un valor més que indica l'estat del núemro:
-    //-1: buid, 0: sense taxar, 1: taxat, 2: linea, 3: bingo
+    //-1: buid, 0: sense taxar, 1: taxat, 2: linea, 3: bingo, 4: modificada
     private int[][][] linies = new int[3][9][2];
     //Indica si aquesta linea ha sigut cantada o no
     private int[] linea = new int[3];
