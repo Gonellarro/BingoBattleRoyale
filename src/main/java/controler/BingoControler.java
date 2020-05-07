@@ -69,13 +69,17 @@ public class BingoControler extends HttpServlet {
                 case "reiniciar":
                     //Reiniciar vol dir que volem crear una nova partida dins la sala
                     sala = util.donaSala(session.getId(), this.bingo.getSales());
-                    //Hem de crear una nova partida a aquesta sala
-                    sala.afegiexPartida(partida);
-                    //Indicam quants cartons té la partida
+                    //Hem de crear una nova partida a aquesta sala 
+                    //Collim les dades necessaries de la partida anterior
+                    Partida partidaAnt = new Partida();
+                    partidaAnt = util.donaDarreraPartida(sala);
+                    partida.setUsuaris(partidaAnt.getUsuaris());
+                    partida.setEasyOn(partidaAnt.isEasyOn());
+                    partida.setBattleRoyale(partidaAnt.isBattleRoyale());
+                    partida.setFrequenciaPowerups(partidaAnt.getFrequenciaPowerups());
                     partida.setCartons(sala.getNcartons());
-                    //Posam a la partida els valors que li pertoquen de Easy on i Battle
-                    partida.setBattleRoyale(sala.isBattleRoyale());
-                    partida.setEasyOn(sala.isEasyOn());
+                    sala.afegiexPartida(partida);
+
                     //Carregam la graella de la partida acabada de crear
                     parrilla = partida.getParrilla();
                     //Posam la bolla a 0

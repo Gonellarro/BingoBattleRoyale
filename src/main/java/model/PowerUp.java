@@ -4,7 +4,7 @@ public class PowerUp {
 
     private String nom;
     private int probabilitat;
-    private static final int NUM_PWUPS = 4;
+    private static final int NUM_PWUPS = 5;
 
     public PowerUp() {
         this.nom = "FLASH";
@@ -44,6 +44,8 @@ public void donaPowerUp(){
         case 4:
             this.nom="canvi";
             break;
+        case 5:
+            this.nom="escutRebot";
         default:
             break;
     }

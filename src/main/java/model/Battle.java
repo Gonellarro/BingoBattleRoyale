@@ -36,7 +36,7 @@ public class Battle {
 
             torna = true;
             tipusEvent = 5;
-            missatge = usuariVictima.getNom() + " s'escuda de " + usuariAtacant.getNom() + " i li torna\r";
+            missatge = usuariVictima.getNom() + " s'escuda de " + usuariAtacant.getNom() + " i li torna. ";
         }
 
         //Ara hem de llevar la bolla a qui pertoqui, si s'ha de llevar
@@ -202,6 +202,7 @@ public class Battle {
         return usuari;
     }
 
+    //Cerca el cartó que està millor, és a dir, que li queden menys bolles per tapar
     public int cercaCarto(List<Carto> cartons) {
         int ncarto = 0;
         boolean fi = false;
@@ -231,6 +232,7 @@ public class Battle {
         return ncarto;
     }
 
+    //Diu si hi ha al menys un usuari que li falten 1 bolla per sortir
     public boolean nomesUn(Partida partida) {
         boolean resultat = false;
         int comptador = 0;
@@ -287,6 +289,7 @@ public class Battle {
         return partida;
     }
 
+    //Cerca l'usuari que té millor puntuació
     public Usuari cercaCartons(List<Usuari> usuaris, Usuari usuari) {
         Usuari usuariBo = new Usuari();
         int maxim = -1;
@@ -341,4 +344,63 @@ public class Battle {
         }
         return usuari;
     }
+
+    public void estrella(Partida partida, Usuari usuari) {
+        /**
+         * Hem de cercar un numero d'un cartó que no estigui marcat i canviar-lo
+         * per una bolla que no tengui a altre banda de la columna i que hagi
+         * sortit
+         */
+        /**
+         * Primer cercarem el cartó on li quedin menys bolles
+         */
+        int numCarto = cercaCarto(usuari.getCartons());
+        Carto carto = new Carto();
+        carto = usuari.getCartons().get(numCarto);
+
+        List<Bolla> bolles = partida.getBolles();
+        int valor;
+        int valorPosicioCarto;
+        int columna = 0 ;
+        int estat;
+        boolean trobat = false;
+        boolean fi;
+        int i;
+        int j;
+        int index = 0;
+        Bolla bolla = new Bolla();
+        int nbolla = 0;
+        while (!trobat) {
+            bolla = bolles.get(nbolla);
+            valor = bolla.getValor();
+            for (i = 0; i < 3; i++) {
+                columna = (int) valor / 10;
+                //Si trobam una bolla que no ha tapat
+                if (carto.getLinies()[i][columna][1] == 0) {
+                    trobat = true;
+                    index = i;
+                    //Hem de recorrerr les altres files per veure que aquesta bolla no està a les altres que tenim marcades
+                    for (j = 0; j < 3; j++) {
+                        //Si no és la mateixa bolla
+                        if (j != i) {
+                            //Si la bolla ha sortit i resulta que també la tenim al cartó l'hem de descartar
+                            if ((carto.getLinies()[i][columna][1] == 1) && (carto.getLinies()[i][columna][0] == valor)) {
+                                //És igual a una que ja tenim marcada
+                                //Hem de descartar aquesta bolla
+                                trobat = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (trobat){
+                carto.assignaValor(index, columna, valor, 1);
+            }
+            else{
+                nbolla++;
+            }
+        }
+    }
+
 }

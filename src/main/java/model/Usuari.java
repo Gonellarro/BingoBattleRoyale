@@ -29,6 +29,7 @@ public class Usuari {
     private int platan;
     private boolean atac;
     private boolean atacPlatan;
+    private boolean collirPwUp;
 
     public Usuari() {
         this.nom = "Innombrable";
@@ -48,6 +49,7 @@ public class Usuari {
         this.missatgeEvent = "";
         this.tipusEvent = 0;
         this.atacPlatan = false;
+        this.collirPwUp = false;
     }
 
     public String getNom() {
@@ -225,6 +227,14 @@ public class Usuari {
     public void setPwup(PowerUp pwup) {
         this.pwup = pwup;
     }
+    
+    public boolean isCollirPwUp() {
+        return collirPwUp;
+    }
+
+    public void setCollirPwUp(boolean collirPwUp) {
+        this.collirPwUp = collirPwUp;
+    }    
 
 //Mètodes    
     public void reinicia(int ncartons) {
@@ -316,5 +326,6 @@ public class Usuari {
         }
         return result;
     }
+
 
 }

@@ -114,6 +114,7 @@ public class Utils {
         int j;
         int valorBolla = 0;
         int comptador = 0;
+        int nBolles = 0;
         boolean trobat = false;
         for(i = 0; i < 3; i++){
             for(j = 0; j < 9; j++){

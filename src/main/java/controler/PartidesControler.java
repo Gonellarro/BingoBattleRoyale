@@ -50,6 +50,7 @@ public class PartidesControler extends HttpServlet {
          */
         if (request.getParameterMap().containsKey("accio")) {
             String accio = request.getParameter("accio");
+            System.out.println("Accio: " + accio);
             /**
              * Sempre hem de rebre la id de la sala on jugam així que ja el
              * collim
@@ -59,9 +60,6 @@ public class PartidesControler extends HttpServlet {
             this.sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
             this.partida = ut.donaDarreraPartida(sala);
             this.usuari = ut.donaUsuariSala(this.bingo, idSala, session.getId());
-
-            int nMissatgesEventPartida;
-            int nMissatgesEventInici;
 
             switch (accio) {
                 case "reiniciar":
@@ -73,31 +71,21 @@ public class PartidesControler extends HttpServlet {
                      * Per reiniciar, hem de saber quants de cartomns té la
                      * sala.Collim el número de la sala del parametre sala
                      */
-
                     this.usuari.reinicia(sala.getNcartons());
-
-                    getServletContext().setAttribute("bingo", this.bingo);
-                    //Enviam les dades al jsp
-                    request.setAttribute("idSala", idSala);
-                    request.setAttribute("sala", sala);
-                    request.setAttribute("partida", this.partida);
-                    request.setAttribute("usuari", this.usuari);
-                    request.setAttribute("estrella", false);
-                    request.setAttribute("missatgesEventFinal", 0);
-                    request.setAttribute("missatgesEventInici", 0);
-                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
-                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                    pintaJsp(request, response);
                     break;
                 case "graella":
                     Parrilla parrilla = new Parrilla();
-                    this.partida = ut.donaDarreraPartida(sala);
+                    this.partida = ut.donaDarreraPartida(this.sala);
                     parrilla.setBomboPartida(this.partida.getBolles());
                     request.setAttribute("parrilla", parrilla);
+                    request.setAttribute("sala", this.sala);
                     request.setAttribute("partida", this.partida);
                     request.getRequestDispatcher("bingoro.jsp").forward(request, response);
                     break;
                 case "estadistiques":
-                    this.partida = ut.donaDarreraPartida(sala);
+                    this.partida = ut.donaDarreraPartida(this.sala);
+                    request.setAttribute("sala", this.sala);
                     request.setAttribute("nusuaris", this.partida.getUsuaris().size());
                     request.setAttribute("usuaris", this.partida.getUsuaris());
                     request.getRequestDispatcher("estadistiques.jsp").forward(request, response);
@@ -112,66 +100,24 @@ public class PartidesControler extends HttpServlet {
                     graella.setBomboPartida(this.partida.getBolles());
                     Battle batalla = new Battle();
                     this.partida = batalla.bomba(this.partida, session.getId(), graella);
-
-                    nMissatgesEventPartida = this.partida.getNumeroEvents();
-                    nMissatgesEventInici = this.usuari.getDarrerMissatgeVist();
-                    this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
-                    this.usuari.setPintarEvent(true);
-
-                    getServletContext().setAttribute("bingo", this.bingo);
-                    //Enviam les dades al jsp
-                    request.setAttribute("idSala", idSala);
-                    request.setAttribute("sala", sala);
-                    request.setAttribute("partida", this.partida);
-                    request.setAttribute("usuari", this.usuari);
-                    request.setAttribute("estrella", this.partida.comprovaDarrerNumero(sala.getUsuaris()));
-                    request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
-                    request.setAttribute("missatgesEventInici", nMissatgesEventInici);
-                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
-                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                    pintaJsp(request, response);
                     break;
                 case "canvi":
                     Battle batalla2 = new Battle();
                     this.partida = batalla2.canvi(this.partida, this.usuari);
                     this.usuari.setCanvi(0);
+                    pintaJsp(request, response);
 
-                    nMissatgesEventPartida = this.partida.getNumeroEvents();
-                    nMissatgesEventInici = this.usuari.getDarrerMissatgeVist();
-                    this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
-                    this.usuari.setPintarEvent(true);
-
-                    getServletContext().setAttribute("bingo", this.bingo);
-                    //Enviam les dades al jsp
-                    request.setAttribute("idSala", idSala);
-                    request.setAttribute("sala", sala);
-                    request.setAttribute("partida", this.partida);
-                    request.setAttribute("usuari", this.usuari);
-                    request.setAttribute("estrella", this.partida.comprovaDarrerNumero(sala.getUsuaris()));
-                    request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
-                    request.setAttribute("missatgesEventInici", nMissatgesEventInici);
-                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
-                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
                     break;
                 case "platan":
                     Battle batalla3 = new Battle();
                     this.partida = batalla3.platan(this.partida, this.usuari);
-
-                    nMissatgesEventPartida = this.partida.getNumeroEvents();
-                    nMissatgesEventInici = this.usuari.getDarrerMissatgeVist();
-                    this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
-                    this.usuari.setPintarEvent(true);
-
-                    getServletContext().setAttribute("bingo", this.bingo);
-                    //Enviam les dades al jsp
-                    request.setAttribute("idSala", idSala);
-                    request.setAttribute("sala", sala);
-                    request.setAttribute("partida", this.partida);
-                    request.setAttribute("usuari", this.usuari);
-                    request.setAttribute("estrella", this.partida.comprovaDarrerNumero(sala.getUsuaris()));
-                    request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
-                    request.setAttribute("missatgesEventInici", nMissatgesEventInici);
-                    request.setAttribute("jugadors", this.partida.getUsuaris().size());
-                    request.getRequestDispatcher("cartons.jsp").forward(request, response);
+                    pintaJsp(request, response);
+                    break;
+                case "estrella":
+                    Battle batalla4 = new Battle();
+                    batalla4.estrella(this.partida, this.usuari);
+                    pintaJsp(request, response);
                     break;
                 default:
                     break;
@@ -184,6 +130,10 @@ public class PartidesControler extends HttpServlet {
         System.out.println("------------DOPOST-------------");
         HttpSession session = request.getSession();
         this.bingo = (Bingo) getServletContext().getAttribute("bingo");
+        int idSala = Integer.parseInt(request.getParameter("idSala"));
+        Utils ut = new Utils();
+        this.sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
+        this.partida = ut.donaDarreraPartida(sala);
 
         /**
          * Començam en el POST revisant si s'ha de crear un usuari nou o no En
@@ -196,7 +146,6 @@ public class PartidesControler extends HttpServlet {
         if (request.getParameterMap().containsKey("nom")) {
             String nom = request.getParameter("nom");
             String avatar = request.getParameter("avatar");
-            int idSala = Integer.parseInt(request.getParameter("idSala"));
             /**
              * Per tractar la gestio de l'usuari, tenim un BEAN: gestio
              * d'usuaris, amb el mètode crearUsuari Aquest mètode ens hauria de
@@ -205,26 +154,8 @@ public class PartidesControler extends HttpServlet {
              */
             GestioUsuaris gs = new GestioUsuaris();
             this.usuari = gs.crearUsuari(nom, avatar, idSala, this.bingo, session.getId());
-            Utils ut = new Utils();
-            Sala sala = new Sala();
-            sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
-            this.partida = ut.donaDarreraPartida(sala);
             //Usuari creat i assignat a la sala i partida
-
-            /**
-             * Hem d'enviar el número de sala, per recuperar-lo sempre, ja que
-             * un mateix usuari pot estar jugant en varies sales a la vegada
-             */
-            //Enviam les dades al jsp
-            request.setAttribute("idSala", idSala);
-            request.setAttribute("sala", sala);
-            request.setAttribute("partida", this.partida);
-            request.setAttribute("usuari", this.usuari);
-            request.setAttribute("estrella", false);
-            request.setAttribute("missatgesEventFinal", 0);
-            request.setAttribute("missatgesEventInici", 0);
-            request.setAttribute("jugadors", this.partida.getUsuaris().size());
-            request.getRequestDispatcher("cartons.jsp").forward(request, response);
+            pintaJsp(request, response);
         }
 
         /**
@@ -241,105 +172,103 @@ public class PartidesControler extends HttpServlet {
                 num = Integer.parseInt(numero);
             }
             /**
-             * El jsp ens ha de donar de forma HIDDEN el número de la sala en la
-             * que estam jugant i obtenim la partida
-             */
-            int idSala = Integer.parseInt(request.getParameter("idSala"));
-            Sala sala = new Sala();
-            Utils ut = new Utils();
-            sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
-            this.partida = ut.donaDarreraPartida(sala);
-            /**
              * Seleccionam l'usuari al que hem de taxar els cartons
              */
-
             this.usuari = ut.donaUsuariSala(this.bingo, idSala, session.getId());
             /**
              * Taxam els numneros dels cartons de l'usuari
              */
             this.usuari.taxaNumeros(num);
-            /**
-             * Ara hem de comprovar si hi ha linia/bingo per dir-ho com a
-             * missatge a tots els usuaris
-             */
-            /**
-             * Si no s'ha cantat linea, comprovam si en té l'usuari
-             */
-
-            if (!this.partida.isLinea()) {
-                if (this.usuari.comprovaLinea()) {
-                    this.partida.setLinea(true);
-                    String missatgeTmp = this.usuari.getNom() + " ha cantat linea!\r";
-                    this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
-                    this.partida.afegirMissatgesEvent(missatgeTmp, "1");
-                }
-            }
-
-            /**
-             * Si no s'ha cantat bingo, comprovam si en té l'usuari
-             */
-            if (!this.partida.isBingo()) {
-                if (this.usuari.comprovaBingo()) {
-                    this.partida.setBingo(true);
-                    String missatgeTmp = this.usuari.getNom() + " ha cantat bingo!\r";
-                    this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
-                    this.partida.afegirMissatgesEvent(missatgeTmp, "2");
-                }
-            }
-            /**
-             * Hem de comprovar si s'han de mostrar missatges d'events
-             */
-            int nMissatgesEventPartida = this.partida.getNumeroEvents();
-            int nMissatgesEventUsuari = this.usuari.getDarrerMissatgeVist();
-            int nMissatgesEventInici = nMissatgesEventUsuari;
-            this.usuari.setPintarEvent(false);
-            if (nMissatgesEventUsuari < nMissatgesEventPartida) {
-                System.out.println("Hi ha missatges per pintar");
-                this.usuari.setPintarEvent(true);
-                this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
-            }
-            /**
-             * Comprovam si hem de canviar els powerups
-             */
-            String avisPwrUp = "";
-            if (this.partida.getNumeroBolles() % this.partida.getFrequenciaPowerups() == 0) {
-                this.usuari.getPwup().donaPowerUp();
-                avisPwrUp = "success";
-            }
-            if ((this.partida.getNumeroBolles() + 1) % this.partida.getFrequenciaPowerups() == 0) {
-                avisPwrUp = "danger";
-            }
-            if ((this.partida.getNumeroBolles() + 2) % this.partida.getFrequenciaPowerups() == 0) {
-                avisPwrUp = "warning";
-            }
-
-            /**
-             * Comprovam si hem de verificar els cartons
-             */
-            if ((sala.isEasyOn()) && partida.getBolles().size() > 0) {
-                ut.revisaCartons(this.usuari.getCartons(), partida);
-                
-            }
-            /**
-             * Finalment, comprovam que no hem sigut atacats per deshabilitar
-             * tots els modificadors d'atac
-             */
-            if (!this.usuari.isPintarEvent()) {
-                this.usuari.setAtacPlatan(false);
-            }
-
-            getServletContext().setAttribute("bingo", this.bingo);
-            //Enviam les dades al jsp
-            request.setAttribute("avisPwrUp", avisPwrUp);
-            request.setAttribute("idSala", idSala);
-            request.setAttribute("sala", sala);
-            request.setAttribute("partida", this.partida);
-            request.setAttribute("usuari", this.usuari);
-            request.setAttribute("estrella", this.partida.comprovaDarrerNumero(sala.getUsuaris()));
-            request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
-            request.setAttribute("missatgesEventInici", nMissatgesEventInici);
-            request.setAttribute("jugadors", this.partida.getUsuaris().size());
-            request.getRequestDispatcher("cartons.jsp").forward(request, response);
+            pintaJsp(request, response);
         }
+    }
+
+    public void pintaJsp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /**
+         * Ara hem de comprovar si hi ha linia/bingo per dir-ho com a missatge a
+         * tots els usuaris
+         */
+        /**
+         * Si no s'ha cantat linea, comprovam si en té l'usuari
+         */
+        Utils ut = new Utils();
+        if (!this.partida.isLinea()) {
+            if (this.usuari.comprovaLinea()) {
+                this.partida.setLinea(true);
+                String missatgeTmp = this.usuari.getNom() + " ha cantat linea!\r";
+                this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
+                this.partida.afegirMissatgesEvent(missatgeTmp, "1");
+            }
+        }
+
+        /**
+         * Si no s'ha cantat bingo, comprovam si en té l'usuari
+         */
+        if (!this.partida.isBingo()) {
+            if (this.usuari.comprovaBingo()) {
+                this.partida.setBingo(true);
+                String missatgeTmp = this.usuari.getNom() + " ha cantat bingo!\r";
+                this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
+                this.partida.afegirMissatgesEvent(missatgeTmp, "2");
+            }
+        }
+        /**
+         * Hem de comprovar si s'han de mostrar missatges d'events
+         */
+        int nMissatgesEventPartida = this.partida.getNumeroEvents();
+        int nMissatgesEventUsuari = this.usuari.getDarrerMissatgeVist();
+        int nMissatgesEventInici = nMissatgesEventUsuari;
+        this.usuari.setPintarEvent(false);
+        if (nMissatgesEventUsuari < nMissatgesEventPartida) {
+            System.out.println("Hi ha missatges per pintar");
+            this.usuari.setPintarEvent(true);
+            this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
+        }
+        /**
+         * Comprovam si hem de canviar els powerups
+         */
+        String avisPwrUp = "";
+        if (this.partida.getNumeroBolles() % this.partida.getFrequenciaPowerups() == 0) {
+            this.usuari.setCollirPwUp(true);
+            avisPwrUp = "success";
+        }
+        if ((this.partida.getNumeroBolles() + 1) % this.partida.getFrequenciaPowerups() == 0) {
+            avisPwrUp = "danger";
+        }
+        if ((this.partida.getNumeroBolles() + 2) % this.partida.getFrequenciaPowerups() == 0) {
+            avisPwrUp = "warning";
+        }
+        if(this.usuari.isCollirPwUp()){
+            this.usuari.getPwup().donaPowerUp();
+            this.usuari.setCollirPwUp(false);
+        }
+
+        /**
+         * Comprovam si hem de verificar els cartons
+         */
+        if ((sala.isEasyOn()) && partida.getBolles().size() > 0) {
+            ut.revisaCartons(this.usuari.getCartons(), partida);
+
+        }
+        /**
+         * Finalment, comprovam que no hem sigut atacats per deshabilitar tots
+         * els modificadors d'atac
+         */
+        if (!this.usuari.isPintarEvent()) {
+            this.usuari.setAtacPlatan(false);
+        }
+
+        getServletContext().setAttribute("bingo", this.bingo);
+        //Enviam les dades al jsp
+        request.setAttribute("avisPwrUp", avisPwrUp);
+        request.setAttribute("idSala", sala.getId());
+        request.setAttribute("sala", sala);
+        request.setAttribute("partida", this.partida);
+        request.setAttribute("usuari", this.usuari);
+        request.setAttribute("estrella", this.partida.comprovaDarrerNumero(sala.getUsuaris()));
+        request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
+        request.setAttribute("missatgesEventInici", nMissatgesEventInici);
+        request.setAttribute("jugadors", this.partida.getUsuaris().size());
+        request.getRequestDispatcher("cartons.jsp").forward(request, response);
     }
 }

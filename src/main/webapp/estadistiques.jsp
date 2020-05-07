@@ -12,7 +12,7 @@
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
         <title>BingoWeb Battle Royale</title>
     </head>
-    
+
     <script>
         function goBack() {
             window.history.back();
@@ -61,10 +61,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">          
-                        <div class="row">
-                            <div class="col-12">    
-                                <button class="btn btn-primary btn-block" onclick="goBack()">Torna enrera</button>
+                    <div class="modal-footer">        
+                        <div class ="container">
+                            <div class="row">
+                                <div class="col-12">    
+                                    <button class="btn btn-primary" onclick="goBack()">Torna enrera</button>
+                                </div>
                             </div>
                         </div>
                     </div>

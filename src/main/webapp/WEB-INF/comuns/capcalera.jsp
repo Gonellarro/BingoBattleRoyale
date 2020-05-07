@@ -3,7 +3,7 @@
     <a class="navbar-brand" href="${pageContext.request.contextPath}"> 
         <img src="${pageContext.request.contextPath}/resources/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
         <c:if test="${sala.nom == ''}">
-            NoEstamBollats! -
+           BattleRoyale
         </c:if>
         <c:out value="${sala.nom}"/></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">

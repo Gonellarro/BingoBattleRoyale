@@ -13,13 +13,13 @@
 
         <title>BingoWeb Battle Royale</title>
     </head>
-    
+
     <script>
         function goBack() {
             window.history.back();
         }
     </script>    
-    
+
     <body background="${pageContext.request.contextPath}/resources/img/fons.png">
         <!-- Capçalera -->
         <jsp:include page="WEB-INF/comuns/capcalera.jsp"/>  
@@ -27,7 +27,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title"><strong>Partida: </strong><c:out value = "${partida.titol}"/></h4>
+                        <h4 class="modal-title"><strong>Partida: </strong><c:out value = "${sala.nom}"/></h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -50,10 +50,12 @@
                             </div>  
                         </div>  
                     </div>
-                    <div class="modal-footer">          
-                        <div class="row">
-                            <div class="col-12">   
-                                <button class="btn btn-primary" onclick="goBack()">Torna enrera</button>
+                    <div class="modal-footer">   
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">   
+                                    <button class="btn btn-primary" onclick="goBack()">Torna enrera</button>
+                                </div>
                             </div>
                         </div>
                     </div>

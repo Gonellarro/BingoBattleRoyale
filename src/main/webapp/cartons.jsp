@@ -23,18 +23,26 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header
-                             <c:if test="${estrella}">
-                                 bg-danger text-white
-                             </c:if>  
-                             <c:if test="${!estrella}">
-                                 text-dark bg-light
-                             </c:if>  
-                             ">
+                             <c:choose>
+                                 <c:when test="${estrella}">
+                                     bg-danger
+                                 </c:when>
+                                 <c:when test="${partida.linea}">
+                                     bg-warning 
+                                 </c:when>
+                                 <c:when test="${partida.bingo}">
+                                     bg-success 
+                                 </c:when>
+                                 <c:when test="${!estrella}">
+                                     bg-light
+                                 </c:when>
+                             </c:choose>
+                                     ">
                             <div class="container" >
                                 <h4 class="modal-title">
                                     <div class="row">
                                         <div class="col-3">
-                                            <div class="bg-light">
+                                            <div>
                                                 <img src="${pageContext.request.contextPath}/resources/img/mario/<c:out value="${usuari.avatar}"/>.png" width="42" alt="">
                                             </div>
 
@@ -42,13 +50,13 @@
                                         <div class="col-6 text-center text-light bg-secondary">
                                             ·
                                             <c:forEach var ="bolla" items="${partida.tresBolles}">
-                                                <c:out value="${bolla.valor + 1}"/>·
+                                                <small><c:out value="${bolla.valor + 1}"/></small>·
                                             </c:forEach>
                                         </div>
                                         <div class="col-3">
                                             <c:if test="${sala.battleRoyale}"> 
                                                 <c:if test="${usuari.pwup.nom ne 'FLASH'}"> 
-                                                    <div class="bg-light text-right">
+                                                    <div class="text-right">
                                                         <img src="${pageContext.request.contextPath}/resources/img/perfils/<c:out value = "${usuari.pwup.nom}"/>.png" width="42">
                                                     </div>
                                                 </c:if>
@@ -180,7 +188,10 @@
                                             </c:if> 
                                             <c:if test="${usuari.pwup.nom eq 'canvi'}">
                                                 <a href="${pageContext.request.contextPath}/PartidesControler?accio=canvi&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Canvi!</a>
-                                            </c:if>                                             
+                                            </c:if>   
+                                            <c:if test="${usuari.pwup.nom eq 'estrella'}">
+                                                <a href="${pageContext.request.contextPath}/PartidesControler?accio=estrella&idSala=<c:out value = "${sala.id}"/>" class="btn btn-danger" role="button">Estrella!</a>
+                                            </c:if>                                                 
 
                                         </div>
                                     </c:if> 
@@ -221,7 +232,7 @@
                 var platan = document.getElementById("platan").innerHTML;
                 if (platan == "true") {
                     clock();
-                    document.getElementById('enviar').innerHTML = 'Espera 5 segons';
+                    document.getElementById('enviar').innerHTML = 'Espera 10 segons';
                 }
             }
             function clock() {
