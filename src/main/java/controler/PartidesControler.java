@@ -235,6 +235,7 @@ public class PartidesControler extends HttpServlet {
                 String missatgeTmp = this.usuari.getNom() + " ha cantat linea!\r";
                 this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
                 this.partida.afegirMissatgesEvent(missatgeTmp, "1");
+                this.usuari.setLinies(this.usuari.getLinies()+1);
             }
         }
 
@@ -247,6 +248,7 @@ public class PartidesControler extends HttpServlet {
                 String missatgeTmp = this.usuari.getNom() + " ha cantat bingo!\r";
                 this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
                 this.partida.afegirMissatgesEvent(missatgeTmp, "2");
+                this.usuari.setBingos(this.usuari.getBingos()+1);
             }
         }
         /**
