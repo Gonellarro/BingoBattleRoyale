@@ -259,8 +259,6 @@ public class Usuari {
     public void reinicia(int ncartons) {
         this.linea = false;
         this.bingo = false;
-        this.linies = 0;
-        this.bingos = 0;
         this.pintarEvent = false;
         this.desactivarEvent = false;
         this.bomba = 0;
@@ -351,6 +349,8 @@ public class Usuari {
         this.nom = usuariFont.getNom();
         this.avatar = usuariFont.getAvatar();
         this.idSession = usuariFont.getIdSession();
+        this.linies = usuariFont.getLinies();
+        this.bingos = usuariFont.getBingos();
         reinicia(usuariFont.getCartons().size());
     }
 
