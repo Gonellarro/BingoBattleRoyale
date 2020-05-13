@@ -31,6 +31,7 @@ public class Usuari {
     private boolean atacPlatan;
     private boolean collirPwUp;
     private int nPartida;
+    private int nPowerUp;
 
     public Usuari() {
         this.nom = "Innombrable";
@@ -51,6 +52,7 @@ public class Usuari {
         this.tipusEvent = 0;
         this.atacPlatan = false;
         this.collirPwUp = false;
+        this.nPowerUp = 0;
     }
 
     public String getNom() {
@@ -244,6 +246,14 @@ public class Usuari {
     public void setnPartida(int nPartida) {
         this.nPartida = nPartida;
     }
+    
+    public int getnPowerUp() {
+        return nPowerUp;
+    }
+
+    public void setnPowerUp(int nPowerUp) {
+        this.nPowerUp = nPowerUp;
+    }    
 
 //Mètodes    
     public void reinicia(int ncartons) {
@@ -265,6 +275,7 @@ public class Usuari {
         this.darrerMissatgeVist = 0;
         this.pwup = new PowerUp();
         this.pwup.donaPowerUp();
+        this.nPowerUp = 0;
     }
 
     public List<Carto> iniciaCartons(int ncartons) {
@@ -342,5 +353,6 @@ public class Usuari {
         this.idSession = usuariFont.getIdSession();
         reinicia(usuariFont.getCartons().size());
     }
+
 
 }

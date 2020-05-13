@@ -23,7 +23,9 @@
             </c:forEach>
             <h2>Partides</h2>
             <c:forEach var ="partida" items="${sala.partides}">
-                #<c:out value="${partida.nPartida + 1}"/> - Bingo: <c:out value="${partida.bingo}"/> - Linea: <c:out value="${partida.linea}"/> - Bolles:<c:out value="${partida.parrilla.comptador}"/> <br>
+                #<c:out value="${partida.nPartida + 1}"/> - Bingo: <c:out value="${partida.bingo}"/>
+                - Linea: <c:out value="${partida.linea}"/> - Bolles:<c:out value="${partida.parrilla.comptador}"/>
+                - NPowerUp: <c:out value="${partida.nPowerUp}"/><br>
                 <c:forEach var ="usuari" items="${partida.usuaris}">
                     <c:out value="${usuari.nom}"/> 
                     <c:forEach var ="carto" items="${usuari.cartons}">

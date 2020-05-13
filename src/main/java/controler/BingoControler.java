@@ -194,6 +194,10 @@ public class BingoControler extends HttpServlet {
                     bolla = parrilla.treureBolla();
                     //També l'afegim a la partida per dur un compte de les bolles que han sortit
                     partida.afegeixBolla(bolla);
+                    //Finalment miram si hem de donar un powerup nou
+                    if (partida.getNumeroBolles() % partida.getFrequenciaPowerups() == 0) {
+                        partida.setnPowerUp(partida.getnPowerUp()+1);
+                    }
 
                     if (this.debug) {
                         System.out.println("Hem de donar una bolla");

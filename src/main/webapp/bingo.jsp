@@ -21,9 +21,18 @@
                 <div id="login-overlay" class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header  text-dark bg-light">
-                            <h5 class="modal-title">
-                                <strong>Id:</strong> <c:out value = "${sala.id}"/>
-                            </h5>
+                            <div class ="container">
+                                <h5 class="modal-title">
+                                    <div class="row">
+                                        <div class="col-6  text-left text-light bg-secondary">
+                                            <strong>Id:</strong> <c:out value = "${sala.id}"/> 
+                                        </div>
+                                        <div class="col-6 text-right text-light bg-secondary">
+                                            <strong>Bolles restants:</strong> <c:out value = "${90-parrilla.comptador}"/>
+                                        </div>
+                                    </div>
+                                </h5>
+                            </div>
                         </div>
                         <div class="modal-body">
                             <div class="row">

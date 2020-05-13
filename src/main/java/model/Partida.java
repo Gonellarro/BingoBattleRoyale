@@ -33,11 +33,14 @@ public class Partida {
     private int numeroBolles;
     //Numero que indica cada quantes bolles hem de regenerar els powerups
     private int frequenciaPowerups;
+    //Numero del power up en curs
+    private int nPowerUp;
     //Ve de la sala
     private boolean easyOn;
     private boolean battleRoyale;
     //Numero de la partida
     private int nPartida;
+    
 
     public Partida() {
         this.bingo = false;
@@ -73,6 +76,7 @@ public class Partida {
         this.easyOn = false;
         this.battleRoyale = true;
         this.nPartida = 0;
+        this.nPowerUp = 0;
     }
 
     public boolean isBingo() {
@@ -225,6 +229,14 @@ public class Partida {
     public void setnPartida(int nPartida) {
         this.nPartida = nPartida;
     }    
+    
+    public int getnPowerUp() {
+        return nPowerUp;
+    }
+
+    public void setnPowerUp(int nPowerUp) {
+        this.nPowerUp = nPowerUp;
+    }    
 
     @Override
     public String toString() {
@@ -256,6 +268,8 @@ public class Partida {
         this.battleRoyale = partidaFont.isBattleRoyale();
         this.frequenciaPowerups = partidaFont.getFrequenciaPowerups();
     }
+
+
 
 
 

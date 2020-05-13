@@ -265,8 +265,9 @@ public class PartidesControler extends HttpServlet {
          * Comprovam si hem de canviar els powerups
          */
         String avisPwrUp = "";
-        if (this.partida.getNumeroBolles() % this.partida.getFrequenciaPowerups() == 0) {
+        if (this.partida.getnPowerUp() > this.usuari.getnPowerUp()) {
             this.usuari.setCollirPwUp(true);
+            this.usuari.setnPowerUp(this.partida.getnPowerUp());
             avisPwrUp = "success";
         }
         if ((this.partida.getNumeroBolles() + 1) % this.partida.getFrequenciaPowerups() == 0) {
