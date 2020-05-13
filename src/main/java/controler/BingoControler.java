@@ -14,6 +14,9 @@ import model.Parrilla;
 import model.Partida;
 import model.Sala;
 import Beans.Utils;
+import java.util.ArrayList;
+import java.util.List;
+import model.Usuari;
 
 @WebServlet("/BingoControler")
 public class BingoControler extends HttpServlet {
@@ -73,11 +76,13 @@ public class BingoControler extends HttpServlet {
                     //Collim les dades necessaries de la partida anterior
                     Partida partidaAnt = new Partida();
                     partidaAnt = util.donaDarreraPartida(sala);
-                    partida.setUsuaris(partidaAnt.getUsuaris());
-                    partida.setEasyOn(partidaAnt.isEasyOn());
-                    partida.setBattleRoyale(partidaAnt.isBattleRoyale());
-                    partida.setFrequenciaPowerups(partidaAnt.getFrequenciaPowerups());
-                    partida.setCartons(sala.getNcartons());
+                    //Posam un missatge a la partida anterior per a què els usuaris que encara hi estiguin canviïn
+                    partidaAnt.afegirMissatgesEvent("Has de reiniciar la partda", "3");
+                    partidaAnt.setMissatgesLog(partidaAnt.getMissatgesLog()+"Has de reiniciar la partda\r");
+                    //Reiniciam la partida amb les dades de l'anterior
+                    partida.copia(partidaAnt);
+                    //Aumentam en un el número de la partida
+                    partida.setnPartida(partidaAnt.getnPartida()+1);
                     sala.afegiexPartida(partida);
 
                     //Carregam la graella de la partida acabada de crear

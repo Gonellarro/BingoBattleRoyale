@@ -5,7 +5,8 @@
         <c:if test="${sala.nom == ''}">
            BattleRoyale
         </c:if>
-        <c:out value="${sala.nom}"/></a>
+        <c:out value="${sala.nom}"/> - Partida: <c:out value="${usuari.nPartida}"/>
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>

@@ -34,6 +34,8 @@ public class Sala {
         this.ncartons = 0;
         this.easyOn = false;
         this.battleRoyale = true;
+        this.partides.clear();
+        this.usuaris.clear();
     }
 
     public String getNom() {

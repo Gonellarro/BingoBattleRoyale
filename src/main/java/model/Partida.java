@@ -36,6 +36,8 @@ public class Partida {
     //Ve de la sala
     private boolean easyOn;
     private boolean battleRoyale;
+    //Numero de la partida
+    private int nPartida;
 
     public Partida() {
         this.bingo = false;
@@ -70,6 +72,7 @@ public class Partida {
         this.frequenciaPowerups = 10;
         this.easyOn = false;
         this.battleRoyale = true;
+        this.nPartida = 0;
     }
 
     public boolean isBingo() {
@@ -214,6 +217,14 @@ public class Partida {
     public void setBattleRoyale(boolean battleRoyale) {
         this.battleRoyale = battleRoyale;
     }
+    
+    public int getnPartida() {
+        return nPartida;
+    }
+
+    public void setnPartida(int nPartida) {
+        this.nPartida = nPartida;
+    }    
 
     @Override
     public String toString() {
@@ -238,5 +249,14 @@ public class Partida {
         }
         return resultat;
     }
+    
+    public void copia(Partida partidaFont){
+        this.cartons = partidaFont.getCartons();
+        this.easyOn = partidaFont.isEasyOn();
+        this.battleRoyale = partidaFont.isBattleRoyale();
+        this.frequenciaPowerups = partidaFont.getFrequenciaPowerups();
+    }
+
+
 
 }

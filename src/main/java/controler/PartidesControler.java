@@ -57,9 +57,11 @@ public class PartidesControler extends HttpServlet {
              */
             int idSala = Integer.parseInt(request.getParameter("idSala"));
             Utils ut = new Utils();
-            this.sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
-            this.partida = ut.donaDarreraPartida(sala);
-            this.usuari = ut.donaUsuariSala(this.bingo, idSala, session.getId());
+            if (idSala != 0) {
+                this.sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
+                this.partida = ut.donaDarreraPartida(sala);
+                this.usuari = ut.donaUsuariSala(this.bingo, idSala, session.getId());
+            }
 
             switch (accio) {
                 case "reiniciar":
@@ -71,7 +73,18 @@ public class PartidesControler extends HttpServlet {
                      * Per reiniciar, hem de saber quants de cartomns té la
                      * sala.Collim el número de la sala del parametre sala
                      */
-                    this.usuari.reinicia(sala.getNcartons());
+                    //Hem de llevar l'usuari de la sala per després afegir-lo actualitzat
+                    this.sala.getUsuaris().remove(this.usuari);
+                    //Cream un usuari copia
+                    Usuari usuariTmp = new Usuari();
+                    usuariTmp.copia(this.usuari);
+                    this.usuari = usuariTmp;
+                    //this.usuari.reinicia(sala.getNcartons());
+                    this.usuari.setnPartida(sala.getPartides().size());
+                    //Afegim l'usuari a la sala
+                    this.sala.afegeixUsuari(this.usuari);
+                    //Afegim l'usuari a la partida nova
+                    this.partida.afegeixUsuari(this.usuari);
                     pintaJsp(request, response);
                     break;
                 case "graella":
@@ -119,6 +132,9 @@ public class PartidesControler extends HttpServlet {
                     batalla4.estrella(this.partida, this.usuari);
                     pintaJsp(request, response);
                     break;
+                case "panell":
+                    request.setAttribute("bingo", this.bingo);
+                    request.getRequestDispatcher("panelldecontrol.jsp").forward(request, response);
                 default:
                     break;
             }
@@ -133,7 +149,6 @@ public class PartidesControler extends HttpServlet {
         int idSala = Integer.parseInt(request.getParameter("idSala"));
         Utils ut = new Utils();
         this.sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
-        this.partida = ut.donaDarreraPartida(sala);
 
         /**
          * Començam en el POST revisant si s'ha de crear un usuari nou o no En
@@ -154,6 +169,7 @@ public class PartidesControler extends HttpServlet {
              */
             GestioUsuaris gs = new GestioUsuaris();
             this.usuari = gs.crearUsuari(nom, avatar, idSala, this.bingo, session.getId());
+            this.partida = ut.donaDarreraPartida(sala);
             //Usuari creat i assignat a la sala i partida
             pintaJsp(request, response);
         }
@@ -165,33 +181,54 @@ public class PartidesControler extends HttpServlet {
          */
         if (request.getParameterMap().containsKey("numero")) {
             String numero = request.getParameter("numero");
-            int num;
-            if (numero.equals("")) {
-                num = 0;
-            } else {
-                num = Integer.parseInt(numero);
-            }
-            /**
-             * Seleccionam l'usuari al que hem de taxar els cartons
-             */
             this.usuari = ut.donaUsuariSala(this.bingo, idSala, session.getId());
-            /**
-             * Taxam els numneros dels cartons de l'usuari
-             */
-            this.usuari.taxaNumeros(num);
-            pintaJsp(request, response);
+            //Llevam un al numero de la partida, ja que l'usuari guarda el SIZE de partides i no el número de la partida
+            this.partida = sala.getPartides().get(this.usuari.getnPartida() - 1);
+            //Si es número de sa partida és sa mateixa que en la que estam 
+            if (this.usuari.getnPartida() == this.sala.getPartides().size()) {
+                //Si estam en un bingo cantat
+                if (this.partida.isBingo()) {
+
+                    pintaSenseComprovarJsp(request, response);
+                } else {
+                    int num;
+                    if (numero.equals("")) {
+                        num = 0;
+                    } else {
+                        num = Integer.parseInt(numero);
+                    }
+                    /**
+                     * Seleccionam l'usuari al que hem de taxar els cartons
+                     */
+                    //this.usuari = ut.donaUsuariSala(this.bingo, idSala, session.getId());
+                    /**
+                     * Taxam els numneros dels cartons de l'usuari
+                     */
+                    this.usuari.taxaNumeros(num);
+
+                    pintaJsp(request, response);
+                }
+            } //Si ja hi ha bingo, no hem de deixar que es faci res
+            else {
+                //Hem de dir que ha reiniciar ja que hi ha una altra partida en marxa
+                System.out.println("Ha de reiniciar ja que hi ha una altra partida en marxa");
+                pintaSenseComprovarJsp(request, response);
+            }
         }
     }
 
     public void pintaJsp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /**
-         * Ara hem de comprovar si hi ha linia/bingo per dir-ho com a missatge a
-         * tots els usuaris
-         */
-        /**
-         * Si no s'ha cantat linea, comprovam si en té l'usuari
-         */
+
         Utils ut = new Utils();
+
+        /**
+         * Comprovam si hem de verificar els cartons
+         */
+        if ((sala.isEasyOn()) && partida.getBolles().size() > 0) {
+            ut.revisaCartons(this.usuari.getCartons(), partida);
+
+        }
+
         if (!this.partida.isLinea()) {
             if (this.usuari.comprovaLinea()) {
                 this.partida.setLinea(true);
@@ -238,18 +275,11 @@ public class PartidesControler extends HttpServlet {
         if ((this.partida.getNumeroBolles() + 2) % this.partida.getFrequenciaPowerups() == 0) {
             avisPwrUp = "warning";
         }
-        if(this.usuari.isCollirPwUp()){
+        if (this.usuari.isCollirPwUp()) {
             this.usuari.getPwup().donaPowerUp();
             this.usuari.setCollirPwUp(false);
         }
 
-        /**
-         * Comprovam si hem de verificar els cartons
-         */
-        if ((sala.isEasyOn()) && partida.getBolles().size() > 0) {
-            ut.revisaCartons(this.usuari.getCartons(), partida);
-
-        }
         /**
          * Finalment, comprovam que no hem sigut atacats per deshabilitar tots
          * els modificadors d'atac
@@ -265,7 +295,34 @@ public class PartidesControler extends HttpServlet {
         request.setAttribute("sala", sala);
         request.setAttribute("partida", this.partida);
         request.setAttribute("usuari", this.usuari);
-        request.setAttribute("estrella", this.partida.comprovaDarrerNumero(sala.getUsuaris()));
+        request.setAttribute("estrella", this.partida.comprovaDarrerNumero(this.partida.getUsuaris()));
+        request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
+        request.setAttribute("missatgesEventInici", nMissatgesEventInici);
+        request.setAttribute("jugadors", this.partida.getUsuaris().size());
+        request.getRequestDispatcher("cartons.jsp").forward(request, response);
+    }
+
+    public void pintaSenseComprovarJsp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //Així eliminam el powerup i no el pot tornar a tirar
+        this.usuari.getPwup().setNom("FLASH");
+        //No hem de colorejar el temsp que queda de poweup
+        String avisPwrUp = "";
+        //Hem de mostrar el missatge del bingo sempre
+        this.usuari.setPintarEvent(true);
+        //Hem de veure si hem arribat aquí perque ha de reiniciar o perque ha de dir que estam en bingo
+        int nMissatgesEventPartida = this.partida.getNumeroEvents();
+        this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida - 1);
+        int nMissatgesEventInici = this.usuari.getDarrerMissatgeVist();
+        System.out.println("Numero de missatges: " + nMissatgesEventPartida);
+        System.out.println("Primer missatge no vist: " + nMissatgesEventInici);
+
+        request.setAttribute("avisPwrUp", avisPwrUp);
+        request.setAttribute("idSala", sala.getId());
+        request.setAttribute("sala", sala);
+        request.setAttribute("partida", this.partida);
+        request.setAttribute("usuari", this.usuari);
+        //Posam que no hi ha ningú amb 1 sol número per acabar
+        request.setAttribute("estrella", false);
         request.setAttribute("missatgesEventFinal", nMissatgesEventPartida);
         request.setAttribute("missatgesEventInici", nMissatgesEventInici);
         request.setAttribute("jugadors", this.partida.getUsuaris().size());

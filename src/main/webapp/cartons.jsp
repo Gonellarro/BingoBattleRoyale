@@ -24,20 +24,20 @@
                     <div class="modal-content">
                         <div class="modal-header
                              <c:choose>
-                                 <c:when test="${estrella}">
-                                     bg-danger
-                                 </c:when>
-                                 <c:when test="${partida.linea}">
-                                     bg-warning 
-                                 </c:when>
                                  <c:when test="${partida.bingo}">
                                      bg-success 
                                  </c:when>
+                                 <c:when test="${estrella}">
+                                     bg-danger
+                                 </c:when>                                     
+                                 <c:when test="${partida.linea}">
+                                     bg-warning 
+                                 </c:when>                                     
                                  <c:when test="${!estrella}">
                                      bg-light
                                  </c:when>
                              </c:choose>
-                                     ">
+                             ">
                             <div class="container" >
                                 <h4 class="modal-title">
                                     <div class="row">

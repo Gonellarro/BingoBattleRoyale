@@ -30,6 +30,7 @@ public class Usuari {
     private boolean atac;
     private boolean atacPlatan;
     private boolean collirPwUp;
+    private int nPartida;
 
     public Usuari() {
         this.nom = "Innombrable";
@@ -227,14 +228,22 @@ public class Usuari {
     public void setPwup(PowerUp pwup) {
         this.pwup = pwup;
     }
-    
+
     public boolean isCollirPwUp() {
         return collirPwUp;
     }
 
     public void setCollirPwUp(boolean collirPwUp) {
         this.collirPwUp = collirPwUp;
-    }    
+    }
+
+    public int getnPartida() {
+        return nPartida;
+    }
+
+    public void setnPartida(int nPartida) {
+        this.nPartida = nPartida;
+    }
 
 //Mètodes    
     public void reinicia(int ncartons) {
@@ -327,5 +336,11 @@ public class Usuari {
         return result;
     }
 
+    public void copia(Usuari usuariFont) {
+        this.nom = usuariFont.getNom();
+        this.avatar = usuariFont.getAvatar();
+        this.idSession = usuariFont.getIdSession();
+        reinicia(usuariFont.getCartons().size());
+    }
 
 }

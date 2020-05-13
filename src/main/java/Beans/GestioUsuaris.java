@@ -50,6 +50,8 @@ public class GestioUsuaris {
             partida.afegeixUsuari(usuari);
             sala.afegeixUsuari(usuari);
             usuari.iniciaCartons(sala.getNcartons());
+            System.out.println("<<GESTIO USUARIS-CREACIO USUARI>> NPartides sala: " + sala.getPartides().size());
+            usuari.setnPartida(sala.getPartides().size());            
         } else {
             /**
              * Si hem trobat una sala, actualitzam les dades de l'usuari dins
@@ -68,6 +70,7 @@ public class GestioUsuaris {
             int i;
             i = sala.getUsuaris().lastIndexOf(usuari);
             usuari.iniciaCartons(sala.getNcartons());
+            usuari.setnPartida(sala.getPartides().size());
         }
         /**
          * Tornam l'usuari al servlet
