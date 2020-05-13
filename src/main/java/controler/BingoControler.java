@@ -71,7 +71,9 @@ public class BingoControler extends HttpServlet {
                     break;
                 case "reiniciar":
                     //Reiniciar vol dir que volem crear una nova partida dins la sala
-                    sala = util.donaSala(session.getId(), this.bingo.getSales());
+                    int idSala = Integer.parseInt(request.getParameter("idSala"));
+                    sala = util.donaSalaPerID(idSala, this.bingo.getSales());
+                    //sala = util.donaSala(session.getId(), this.bingo.getSales());
                     //Hem de crear una nova partida a aquesta sala 
                     //Collim les dades necessaries de la partida anterior
                     Partida partidaAnt = new Partida();
@@ -182,10 +184,12 @@ public class BingoControler extends HttpServlet {
         //Hem de donar una nova bolla
         if (request.getParameterMap().containsKey("accio")) {
             String accio = request.getParameter("accio");
+            int idSala = Integer.parseInt(request.getParameter("idSala"));
             if (accio.equals("bolla")) {
                 //Si encara se poden treure més bolles, collim la sala i parrilla
                 Utils util = new Utils();
-                sala = util.donaSala(session.getId(), this.bingo.getSales());
+                //sala = util.donaSala(session.getId(), this.bingo.getSales());
+                sala = util.donaSalaPerID(idSala, this.bingo.getSales());
                 partida = util.donaDarreraPartida(sala);
                 parrilla = partida.getParrilla();
                 //Si queden bolles per treure

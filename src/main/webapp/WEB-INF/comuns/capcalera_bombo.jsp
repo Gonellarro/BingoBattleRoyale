@@ -9,7 +9,7 @@
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/BingoControler?accio=reiniciar">
+                <a class="nav-link" href="${pageContext.request.contextPath}/BingoControler?accio=reiniciar&idSala=<c:out value = "${sala.id}"/>">
                     Reiniciar</a>
             </li>
             <li class="nav-item">

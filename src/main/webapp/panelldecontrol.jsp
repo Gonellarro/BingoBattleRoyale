@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
     <head>
         <!-- Required meta tags -->
@@ -11,30 +12,87 @@
         <link rel="stylesheet" type="text/css" href="resources/css/styles.css"> 
         <title>BingoWeb Battle Royale</title>
     </head>
-    <body>
-        <h1>Panell de control</h1>
-        <h2><c:out value="${bingo.nom}"/></h2>
-        <c:forEach var ="sala" items="${bingo.sales}">
-            <c:out value="${sala.nom}"/> - <c:out value="${sala.id}"/><br>
-            <h2>Usuaris</h2>
-            <c:forEach var ="usuari" items="${sala.usuaris}">
-                <c:out value="${usuari.nom}"/> 
-                <br>
-            </c:forEach>
-            <h2>Partides</h2>
-            <c:forEach var ="partida" items="${sala.partides}">
-                #<c:out value="${partida.nPartida + 1}"/> - Bingo: <c:out value="${partida.bingo}"/>
-                - Linea: <c:out value="${partida.linea}"/> - Bolles:<c:out value="${partida.parrilla.comptador}"/>
-                - NPowerUp: <c:out value="${partida.nPowerUp}"/><br>
-                <c:forEach var ="usuari" items="${partida.usuaris}">
-                    <c:out value="${usuari.nom}"/> 
-                    <c:forEach var ="carto" items="${usuari.cartons}">
-                        <c:out value="${carto.numeros}"/> 
-                    </c:forEach>
-                    <br>
-                </c:forEach>                
-            </c:forEach>                
-        </c:forEach>
 
+
+
+    <body background="${pageContext.request.contextPath}/resources/img/fons.png">
+        <!-- Capçalera -->
+        <div class ="container">
+            <div id="login-overlay" class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Bingo <c:out value="${bingo.nom}"/></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <c:forEach var ="sala" items="${bingo.sales}">
+                                    <h4><strong>Sala: </strong> <c:out value="${sala.nom}"/> - 
+                                        <strong>Id: </strong><c:out value="${sala.id}"/></h4>
+                                    <h5>Partides</h5>
+
+                                    <c:forEach var ="partida" items="${sala.partides}">
+                                        <table class="table table-striped table-sm table-primary">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Bingo</th>
+                                                <th scope="col">Linea</th>
+                                                <th scope="col">Bolles</th>
+                                                <th scope="col">EasyOn</th>
+                                                <th scope="col">BattleRoyale</th>
+                                            </tr>                                            
+                                            <tr>
+                                                <td><c:out value="${partida.nPartida + 1}"/></td>
+                                                <td><c:out value="${partida.bingo}"/></td>
+                                                <td><c:out value="${partida.linea}"/></td>
+                                                <td><c:out value="${partida.parrilla.comptador}"/></td>
+                                                <td><c:out value="${partida.easyOn}"/></td>
+                                                <td><c:out value="${partida.battleRoyale}"/></td>
+                                            </tr>
+                                        </table>
+                                        <table class="table table-striped table-sm table-success">
+                                            <tr>
+                                                <th scope="col">Nom</th>
+                                                <th scope="col">Cartons</th>
+                                                <th scope="col">Linea</th>
+                                                <th scope="col">Bingo</th>
+                                                <th scope="col">PowerUp</th>
+                                            </tr>
+                                            <c:forEach var ="usuari" items="${partida.usuaris}">
+                                                <tr>
+                                                    <td>
+                                                        <c:out value="${usuari.nom}"/> 
+                                                    </td>
+                                                    <td>
+                                                        <c:forEach var ="carto" items="${usuari.cartons}">
+                                                            <c:out value="${carto.numeros}"/> 
+                                                        </c:forEach>
+                                                    </td>
+                                                    <td><c:out value="${usuari.linea}"/> </td>
+                                                    <td><c:out value="${usuari.bingo}"/> </td>
+                                                    <td><c:out value="${usuari.pwup.nom}"/> </td>
+                                                </tr>
+                                            </c:forEach>   
+                                        </table>
+                                    </c:forEach>
+                                    </table>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">        
+                        <div class ="container">
+                            <div class="row">
+                                <div class="col-12">    
+                                    <button class="btn btn-primary" onclick="window.location.reload();">Refrescar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
+
+
 </html>
