@@ -17,10 +17,11 @@ public class GestioUsuaris {
      * llevar-lo. Tornam l'usuari per tal d'actualitzar el bingo al servlet i no
      * al bean
      */
-    public Usuari crearUsuari(String nom, String avatar, int idPartida, Bingo bingo, String idSessio) {
+    public Usuari crearUsuari(String nom, String avatar, int idSala, Bingo bingo, String idSessio) {
         /**
          * Necessitam tornar l'usuari, amb la qual cosa, ja el cream
          */
+        System.out.println("Cream usuari...");
         Usuari usuari = new Usuari();
         usuari.setNom(nom);
         usuari.setAvatar(avatar);
@@ -40,17 +41,17 @@ public class GestioUsuaris {
          * una sala, vol dir que l'usuari ja hi estava i no l'hem de tornar a
          * posar
          */
-        sala = ut.cercaSalaUsuari(idPartida, bingo, idSessio);
+        sala = ut.cercaSalaUsuari(idSala, bingo, idSessio);
         if (sala == null) {
+            System.out.println("Usuari nou a la sala");
             /**
              * Podem ficar l'usuari nou a la sala i a la partida
              */
-            sala = ut.donaSalaPerID(idPartida, bingo.getSales());
+            sala = ut.donaSalaPerID(idSala, bingo.getSales());
             partida = ut.donaDarreraPartida(sala);
             partida.afegeixUsuari(usuari);
             sala.afegeixUsuari(usuari);
             usuari.iniciaCartons(sala.getNcartons());
-            System.out.println("<<GESTIO USUARIS-CREACIO USUARI>> NPartides sala: " + sala.getPartides().size());
             usuari.setnPartida(sala.getPartides().size());            
         } else {
             /**
@@ -63,18 +64,20 @@ public class GestioUsuaris {
             for (Usuari usuariTmp : sala.getUsuaris()) {
                 if (usuariTmp.getIdSession().equals(idSessio)) {
                     usuari = usuariTmp;
+                    System.out.println("Usuari trobat a la sala en curs");
                 }
             }
             usuari.setNom(nom);
             usuari.setAvatar(avatar);
-            int i;
-            i = sala.getUsuaris().lastIndexOf(usuari);
+//            int i;
+//            i = sala.getUsuaris().lastIndexOf(usuari);
             usuari.iniciaCartons(sala.getNcartons());
             usuari.setnPartida(sala.getPartides().size());
         }
         /**
          * Tornam l'usuari al servlet
          */
+        System.out.println("Usuari creat!");
         return usuari;
     }
 

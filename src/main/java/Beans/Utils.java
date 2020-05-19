@@ -107,7 +107,7 @@ public class Utils {
     }
     
     public Carto revisaCarto(Carto carto, Partida partida){
-        /**Hem de recorrer el carto i veure si el número ha sortit
+        /**Hem de recorrer el carto i veure si el número ha sortit o no
          * 
          */
         int i;
@@ -119,28 +119,25 @@ public class Utils {
         for(i = 0; i < 3; i++){
             for(j = 0; j < 9; j++){
                 //Fins aquí recorrem el cartó. Ara hem de recorrer els números que han sortit a la partida
+                //Primer revisam els que han sortit i no hem marcat
                 comptador = 0;
                 trobat = false;
-                while(!trobat){
+                while((!trobat) || (comptador == partida.getNumeroBolles()) ){
                     //Si el valor ha sortit i l'estat és no taxat, l'hem de taxar
                     valorBolla = partida.getBolles().get(comptador).getValor();
                     valorBolla = valorBolla + 1;
-                    if ((valorBolla == carto.getLinies()[i][j][0]) && 
-                           (carto.getLinies()[i][j][1] == 0)){
+                    if ((valorBolla == carto.getLinies()[i][j][0]) && (carto.getLinies()[i][j][1] == 0)){
                         carto.assignaValor(i, j, carto.getLinies()[i][j][0], 1);
                         carto.setNumeros(carto.getNumeros()+1);
                         trobat = true;
                     }
                     comptador++;
-                    //Si arribam al final
-                    if(comptador == partida.getNumeroBolles()){
-                        trobat = true;
-                    }
                 }
             }
         }
         return carto;
     }
+    
     
     public List<Carto> revisaCartons(List<Carto> cartons, Partida partida){
         for(Carto carto:cartons){

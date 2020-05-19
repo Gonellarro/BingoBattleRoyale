@@ -291,12 +291,12 @@ public class Usuari {
     /**
      * Aquest mètode ha de taxar els numeros que surtin als cartons de l'usuari
      */
-    public void taxaNumeros(int numero) {
+    public void taxaNumeros(int numero, List<Bolla> bolles) {
         /**
          * Recorrem els cartons i indicam quin numero ha de taxar
          */
         for (Carto cartoTmp : this.cartons) {
-            cartoTmp.taxaNumero(numero);
+            cartoTmp.taxaNumero(numero, bolles);
         }
     }
 

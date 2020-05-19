@@ -41,7 +41,7 @@ public class PartidesControler extends HttpServlet {
     //DOGET I DOPOST
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("-------------DOGET------------");
+        System.out.println("Partida Controler: -------------DOGET------------");
         HttpSession session = request.getSession();
         this.bingo = (Bingo) getServletContext().getAttribute("bingo");
 
@@ -50,7 +50,6 @@ public class PartidesControler extends HttpServlet {
          */
         if (request.getParameterMap().containsKey("accio")) {
             String accio = request.getParameter("accio");
-            System.out.println("Accio: " + accio);
             /**
              * Sempre hem de rebre la id de la sala on jugam així que ja el
              * collim
@@ -143,7 +142,7 @@ public class PartidesControler extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("------------DOPOST-------------");
+        System.out.println("Partida Controler: ------------DOPOST-------------");
         HttpSession session = request.getSession();
         this.bingo = (Bingo) getServletContext().getAttribute("bingo");
         int idSala = Integer.parseInt(request.getParameter("idSala"));
@@ -170,6 +169,12 @@ public class PartidesControler extends HttpServlet {
             GestioUsuaris gs = new GestioUsuaris();
             this.usuari = gs.crearUsuari(nom, avatar, idSala, this.bingo, session.getId());
             this.partida = ut.donaDarreraPartida(sala);
+
+            if(this.debug){
+                System.out.println("Usuari creat: " + this.usuari.getNom());
+                System.out.println("Sala: " + idSala);
+                System.out.println("Partida: " + this.partida.getnPartida());
+            }            
             //Usuari creat i assignat a la sala i partida
             pintaJsp(request, response);
         }
@@ -204,7 +209,7 @@ public class PartidesControler extends HttpServlet {
                     /**
                      * Taxam els numneros dels cartons de l'usuari
                      */
-                    this.usuari.taxaNumeros(num);
+                    this.usuari.taxaNumeros(num, this.partida.getBolles());
 
                     pintaJsp(request, response);
                 }

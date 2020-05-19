@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Carto {
@@ -110,7 +111,7 @@ public class Carto {
                 this.linies[i][mascaraFila[j]][0] = vectors[mascaraFila[j]][i];
                 //Posam que la linea se pot veure
                 this.linies[i][mascaraFila[j]][1] = 0;
-                
+
             }
         }
     }
@@ -165,16 +166,23 @@ public class Carto {
         return posicions;
     }
 
-    public void taxaNumero(int numero) {
+    public void taxaNumero(int numero, List<Bolla> bolles) {
         int i;
         int j;
-        for (i = 0; i < 9; i++) {
-            for (j = 0; j < 3; j++) {
-                if (this.linies[j][i][0] == numero) {
-                    //Per taxar el número, ho indicam a la columna[1] amb un 1
-                    this.linies[j][i][1] = 1;
-                    this.numeros++;
+        //Lo primer, veure si la bolla a sortit o no
+        for (Bolla bolla : bolles) {
+            //System.out.println("Bolla: " + bolla.getValor());
+            if (bolla.getValor()+1 == numero) {
+                for (i = 0; i < 9; i++) {
+                    for (j = 0; j < 3; j++) {
+                        if (this.linies[j][i][0] == numero) {
+                            //Per taxar el número, ho indicam a la columna[1] amb un 1
+                            this.linies[j][i][1] = 1;
+                            this.numeros++;
+                        }
+                    }
                 }
+                break;
             }
         }
     }
@@ -217,7 +225,7 @@ public class Carto {
             bingo = true;
             marcaBingo();
         }
-        
+
         return bingo;
     }
 
