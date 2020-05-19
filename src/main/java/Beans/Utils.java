@@ -122,8 +122,10 @@ public class Utils {
                 //Primer revisam els que han sortit i no hem marcat
                 comptador = 0;
                 trobat = false;
-                while((!trobat) || (comptador == partida.getNumeroBolles()) ){
+                while((!trobat) && (comptador < partida.getNumeroBolles()) ){
                     //Si el valor ha sortit i l'estat és no taxat, l'hem de taxar
+                    System.out.println("Comptador: " + comptador);
+                    System.out.println("Total bolles: " + partida.getNumeroBolles());
                     valorBolla = partida.getBolles().get(comptador).getValor();
                     valorBolla = valorBolla + 1;
                     if ((valorBolla == carto.getLinies()[i][j][0]) && (carto.getLinies()[i][j][1] == 0)){
