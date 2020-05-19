@@ -128,7 +128,7 @@ public class Partida {
     }
 
     public void setMissatgesLog(String missatgesLog) {
-        this.missatgesLog = missatgesLog;
+        this.missatgesLog = "-" + missatgesLog;
     }
 
     public String[][] getMissatgesEvent() {

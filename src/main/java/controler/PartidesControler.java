@@ -152,7 +152,7 @@ public class PartidesControler extends HttpServlet {
         System.out.println("Partida Controler: ------------DOPOST-------------");
         HttpSession session = request.getSession();
         this.bingo = (Bingo) getServletContext().getAttribute("bingo");
-        int idSala = Integer.parseInt(request.getParameter("idSala"));
+        int idSala = Integer.parseInt(request.getParameter("idSala").trim());
         Utils ut = new Utils();
         this.sala = ut.donaSalaPerID(idSala, this.bingo.getSales());
 
@@ -271,7 +271,6 @@ public class PartidesControler extends HttpServlet {
         int nMissatgesEventInici = nMissatgesEventUsuari;
         this.usuari.setPintarEvent(false);
         if (nMissatgesEventUsuari < nMissatgesEventPartida) {
-            System.out.println("Hi ha missatges per pintar");
             this.usuari.setPintarEvent(true);
             this.usuari.setDarrerMissatgeVist(nMissatgesEventPartida);
         }
