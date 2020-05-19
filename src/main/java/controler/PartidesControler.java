@@ -73,17 +73,24 @@ public class PartidesControler extends HttpServlet {
                      * sala.Collim el número de la sala del parametre sala
                      */
                     //Hem de llevar l'usuari de la sala per després afegir-lo actualitzat
-                    this.sala.getUsuaris().remove(this.usuari);
-                    //Cream un usuari copia
-                    Usuari usuariTmp = new Usuari();
-                    usuariTmp.copia(this.usuari);
-                    this.usuari = usuariTmp;
-                    //this.usuari.reinicia(sala.getNcartons());
-                    this.usuari.setnPartida(sala.getPartides().size());
-                    //Afegim l'usuari a la sala
-                    this.sala.afegeixUsuari(this.usuari);
-                    //Afegim l'usuari a la partida nova
-                    this.partida.afegeixUsuari(this.usuari);
+                    //Primer hem de veure si reinicia dins la mateixa partida o no 
+
+                    if (this.partida.getnPartida() + 1 == this.usuari.getnPartida()) {
+                        //Reiniciam dins la mateixa partida
+                        this.usuari.iniciaCartons(this.sala.getNcartons());
+                    } else {
+                        //Reiniciam dins una partida diferent
+                        this.sala.getUsuaris().remove(this.usuari);
+                        //Cream un usuari copia
+                        Usuari usuariTmp = new Usuari();
+                        usuariTmp.copia(this.usuari);
+                        this.usuari = usuariTmp;
+                        this.usuari.setnPartida(sala.getPartides().size());
+                        //Afegim l'usuari a la sala
+                        this.sala.afegeixUsuari(this.usuari);
+                        //Afegim l'usuari a la partida nova
+                        this.partida.afegeixUsuari(this.usuari);
+                    }
                     pintaJsp(request, response);
                     break;
                 case "graella":
@@ -170,11 +177,11 @@ public class PartidesControler extends HttpServlet {
             this.usuari = gs.crearUsuari(nom, avatar, idSala, this.bingo, session.getId());
             this.partida = ut.donaDarreraPartida(sala);
 
-            if(this.debug){
+            if (this.debug) {
                 System.out.println("Usuari creat: " + this.usuari.getNom());
                 System.out.println("Sala: " + idSala);
                 System.out.println("Partida: " + this.partida.getnPartida());
-            }            
+            }
             //Usuari creat i assignat a la sala i partida
             pintaJsp(request, response);
         }
@@ -240,7 +247,7 @@ public class PartidesControler extends HttpServlet {
                 String missatgeTmp = this.usuari.getNom() + " ha cantat linea!\r";
                 this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
                 this.partida.afegirMissatgesEvent(missatgeTmp, "1");
-                this.usuari.setLinies(this.usuari.getLinies()+1);
+                this.usuari.setLinies(this.usuari.getLinies() + 1);
             }
         }
 
@@ -253,7 +260,7 @@ public class PartidesControler extends HttpServlet {
                 String missatgeTmp = this.usuari.getNom() + " ha cantat bingo!\r";
                 this.partida.setMissatgesLog(this.partida.getMissatgesLog() + missatgeTmp);
                 this.partida.afegirMissatgesEvent(missatgeTmp, "2");
-                this.usuari.setBingos(this.usuari.getBingos()+1);
+                this.usuari.setBingos(this.usuari.getBingos() + 1);
             }
         }
         /**

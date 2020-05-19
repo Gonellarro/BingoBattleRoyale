@@ -86,6 +86,8 @@ public class BingoControler extends HttpServlet {
                     //Aumentam en un el número de la partida
                     partida.setnPartida(partidaAnt.getnPartida()+1);
                     sala.afegiexPartida(partida);
+                    System.out.println("Nombre d'usuaris a la nova partida. " + partida.getUsuaris().size());
+                    System.out.println("Numero de la partida: " + partida.getnPartida());
 
                     //Carregam la graella de la partida acabada de crear
                     parrilla = partida.getParrilla();

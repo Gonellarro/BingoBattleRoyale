@@ -57,6 +57,7 @@
                                                 <th scope="col">Linea</th>
                                                 <th scope="col">Bingo</th>
                                                 <th scope="col">PowerUp</th>
+                                                <th scope="col">AtacPlatan</th>
                                             </tr>
                                             <c:forEach var ="usuari" items="${partida.usuaris}">
                                                 <tr>
@@ -71,6 +72,7 @@
                                                     <td><c:out value="${usuari.linea}"/> </td>
                                                     <td><c:out value="${usuari.bingo}"/> </td>
                                                     <td><c:out value="${usuari.pwup.nom}"/> </td>
+                                                    <td><c:out value="${usuari.atacPlatan}"/> </td>
                                                 </tr>
                                             </c:forEach>   
                                         </table>
